@@ -5,45 +5,15 @@
 [build.environment]
   NODE_VERSION = "20"
 
-# v1 → v2 phase slug redirects
-[[redirects]]
-  from = "/roadmap/programming-foundations"
-  to = "/roadmap/genai-foundations"
-  status = 301
-
-[[redirects]]
-  from = "/roadmap/programming-foundations/*"
-  to = "/roadmap/genai-foundations/:splat"
-  status = 301
-
+# Legacy slug redirects → hybrid roadmap phases
 [[redirects]]
   from = "/roadmap/ai-engineering-foundations"
-  to = "/roadmap/agent-foundations"
+  to = "/roadmap/transformer-foundations"
   status = 301
 
 [[redirects]]
   from = "/roadmap/ai-engineering-foundations/*"
-  to = "/roadmap/agent-foundations/:splat"
-  status = 301
-
-[[redirects]]
-  from = "/roadmap/llm-engineering"
-  to = "/roadmap/genai-foundations"
-  status = 301
-
-[[redirects]]
-  from = "/roadmap/llm-engineering/*"
-  to = "/roadmap/genai-foundations/:splat"
-  status = 301
-
-[[redirects]]
-  from = "/roadmap/rag-engineering"
-  to = "/roadmap/genai-foundations"
-  status = 301
-
-[[redirects]]
-  from = "/roadmap/rag-engineering/*"
-  to = "/roadmap/genai-foundations/:splat"
+  to = "/roadmap/transformer-foundations/:splat"
   status = 301
 
 [[redirects]]
@@ -67,16 +37,6 @@
   status = 301
 
 [[redirects]]
-  from = "/roadmap/advanced-ai"
-  to = "/roadmap/multimodal-agents"
-  status = 301
-
-[[redirects]]
-  from = "/roadmap/advanced-ai/*"
-  to = "/roadmap/multimodal-agents/:splat"
-  status = 301
-
-[[redirects]]
   from = "/roadmap/interview-projects"
   to = "/roadmap/capstone-projects"
   status = 301
@@ -84,4 +44,45 @@
 [[redirects]]
   from = "/roadmap/interview-projects/*"
   to = "/roadmap/capstone-projects/:splat"
+  status = 301
+
+# Old v2-only slugs that were merged/renamed
+[[redirects]]
+  from = "/roadmap/genai-foundations/llm-basics"
+  to = "/roadmap/genai-foundations/llms"
+  status = 301
+
+[[redirects]]
+  from = "/roadmap/genai-foundations/rag-basics"
+  to = "/roadmap/rag-engineering/rag"
+  status = 301
+
+[[redirects]]
+  from = "/roadmap/genai-foundations/google-gemini"
+  to = "/roadmap/llm-engineering/gemini"
+  status = 301
+
+[[redirects]]
+  from = "/roadmap/genai-foundations/langchain-basics"
+  to = "/roadmap/rag-engineering/langchain-basics"
+  status = 301
+
+[[redirects]]
+  from = "/roadmap/genai-foundations/chromadb"
+  to = "/roadmap/rag-engineering/chromadb"
+  status = 301
+
+[[redirects]]
+  from = "/roadmap/genai-foundations/streamlit"
+  to = "/roadmap/rag-engineering/streamlit"
+  status = 301
+
+[[redirects]]
+  from = "/roadmap/genai-foundations/basic-tool-calling"
+  to = "/roadmap/tool-calling/function-calling"
+  status = 301
+
+[[redirects]]
+  from = "/roadmap/agent-foundations/evolution-of-ai"
+  to = "/roadmap/genai-foundations/what-is-ai"
   status = 301

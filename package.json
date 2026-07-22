@@ -15,9 +15,10 @@
     "dev:clean": "node scripts/dev.mjs",
     "dev:webpack": "rm -rf .next && next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "npx serve@latest out -l 3000",
     "serve": "node scripts/serve.mjs",
     "preview": "node scripts/serve.mjs",
+    "generate:lessons": "node scripts/generate-v2-lessons.mjs",
     "lint": "next lint"
   },
   "dependencies": {

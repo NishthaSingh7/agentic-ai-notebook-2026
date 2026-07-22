@@ -18,8 +18,8 @@ rmSync(".next", { recursive: true, force: true });
 console.log("Building production site...");
 execSync("npm run build", { stdio: "inherit" });
 
-console.log("Starting production server at http://localhost:3000");
-const child = spawn("npx", ["next", "start"], {
+console.log("Starting static preview at http://localhost:3000");
+const child = spawn("npx", ["serve@latest", "out", "-l", "3000"], {
   stdio: "inherit",
   shell: true,
 });

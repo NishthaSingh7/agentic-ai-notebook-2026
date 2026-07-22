@@ -14,9 +14,8 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { phases, getPhaseBySlug, getModule } from "@/data/roadmap";
-import { getLessonContent, getDefaultLesson, hasLessonContent, getLessonReadTime, isPhaseComplete } from "@/data/lessons";
+import { getLessonContent, getLessonReadTime } from "@/data/lessons";
 import { LessonNav, LessonSection, RevisionCard, InterviewQ } from "@/components/lesson";
-import { ContentStatusBanner } from "@/components/content-status-banner";
 import { MermaidDiagram } from "@/components/mermaid-diagram";
 
 interface Props {
@@ -60,8 +59,8 @@ export default async function ModulePage({ params }: Props) {
   const mod = getModule(slug, moduleSlug);
   if (!phase || !mod) notFound();
 
-  const content = getLessonContent(slug, moduleSlug) ?? getDefaultLesson(mod.title, phase.title);
-  const isComplete = hasLessonContent(slug, moduleSlug);
+  const content = getLessonContent(slug, moduleSlug);
+  if (!content) notFound();
   const readTime = getLessonReadTime(slug, moduleSlug);
 
   const moduleIndex = phase.modules.findIndex((m) => m.slug === moduleSlug);
@@ -93,16 +92,12 @@ export default async function ModulePage({ params }: Props) {
           <header>
             <span className="text-xs font-mono text-accent">{phase.subtitle}</span>
             <h1 className="text-3xl font-bold mt-1 mb-2">{mod.title}</h1>
-            {isComplete && readTime ? (
+            {readTime ? (
               <p className="text-sm text-text-muted">
                 ~{readTime} min read
               </p>
-            ) : (
-              <p className="text-sm text-amber-400/80">Draft — full lesson content coming soon</p>
-            )}
+            ) : null}
           </header>
-
-          {!isComplete && !isPhaseComplete(slug) && <ContentStatusBanner />}
 
           <LessonSection id="concept" title="Concept" icon={<BookOpen className="h-5 w-5 text-accent" />}>
             <p>{content.concept}</p>

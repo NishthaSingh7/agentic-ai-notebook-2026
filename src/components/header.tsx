@@ -8,11 +8,12 @@ import {
   X,
   Search,
   BookOpen,
+  Code,
   Map,
   Brain,
   Bot,
+  Terminal,
   FolderKanban,
-  MessageSquare,
   BookMarked,
   Library,
   FileText,
@@ -24,10 +25,10 @@ import { SearchDialog } from "./search-dialog";
 const navigation = [
   { name: "Home", href: "/", icon: BookOpen },
   { name: "Roadmap", href: "/roadmap", icon: Map },
-  { name: "GenAI Foundations", href: "/roadmap/genai-foundations", icon: Brain },
-  { name: "Agent Foundations", href: "/roadmap/agent-foundations", icon: Bot },
+  { name: "Programming", href: "/roadmap/programming-foundations", icon: Terminal },
+  { name: "GenAI", href: "/roadmap/genai-foundations", icon: Brain },
+  { name: "Agents", href: "/roadmap/agent-foundations", icon: Bot },
   { name: "Projects", href: "/projects", icon: FolderKanban },
-  { name: "Interview Prep", href: "/interview", icon: MessageSquare },
   { name: "Glossary", href: "/glossary", icon: BookMarked },
   { name: "Resources", href: "/resources", icon: Library },
   { name: "Blog", href: "/blog", icon: FileText },
@@ -65,7 +66,7 @@ export function Header() {
 
           <nav className="hidden items-center gap-1 lg:flex">
             {navigation.filter((item) =>
-              ["Home", "Roadmap", "Projects", "Interview Prep", "Glossary", "Resources"].includes(item.name)
+              ["Home", "Roadmap", "Projects", "Glossary", "Resources"].includes(item.name)
             ).map((item) => (
               <Link
                 key={item.href}

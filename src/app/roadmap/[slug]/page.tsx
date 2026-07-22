@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, BookOpen, FolderKanban } from "lucide-react";
 import { getPhaseBySlug, phases } from "@/data/roadmap";
-import { hasLessonContent, getLessonReadTime } from "@/data/lessons";
+import { getLessonReadTime } from "@/data/lessons";
 import { ModuleList } from "@/components/module-list";
 
 interface Props {
@@ -35,9 +35,7 @@ export default async function PhasePage({ params }: Props) {
   const modules = phase.modules.map((mod) => ({
     slug: mod.slug,
     title: mod.title,
-    hasContent: hasLessonContent(phase.slug, mod.slug),
     readTime: getLessonReadTime(phase.slug, mod.slug),
-    status: mod.status,
   }));
 
   return (
@@ -60,7 +58,7 @@ export default async function PhasePage({ params }: Props) {
           </span>
         </div>
         <p className="text-xs text-text-muted mt-2">
-          Study time is shown per module only when full lesson content is available.
+          Estimated read time is shown per module based on lesson length.
         </p>
       </div>
 

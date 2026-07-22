@@ -9,7 +9,7 @@ const includes = [
   { icon: BookOpen, label: "Structured lessons" },
   { icon: Code, label: "Code & projects" },
   { icon: MessageSquare, label: "Interview prep" },
-  { icon: Layers, label: "11-phase roadmap" },
+  { icon: Layers, label: "22-phase hybrid roadmap" },
 ];
 
 export function HomeHero() {
@@ -60,10 +60,10 @@ export function HomeHero() {
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                href="/roadmap/agent-foundations"
+                href="/roadmap/programming-foundations"
                 className="inline-flex items-center gap-2 rounded-lg border border-border bg-surface px-6 py-3 text-sm font-medium text-text-primary hover:bg-surface-elevated transition-colors"
               >
-                Jump to Agent Foundations
+                Start with Programming
               </Link>
             </div>
 

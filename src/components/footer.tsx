@@ -30,8 +30,9 @@ export function Footer() {
             <h3 className="text-sm font-semibold mb-3">Learn</h3>
             <ul className="space-y-2 text-sm text-text-muted">
               <li><Link href="/roadmap" className="hover:text-text-secondary transition-colors">Roadmap</Link></li>
-              <li><Link href="/roadmap/genai-foundations" className="hover:text-text-secondary transition-colors">GenAI Foundations</Link></li>
-              <li><Link href="/roadmap/agent-foundations" className="hover:text-text-secondary transition-colors">Agent Foundations</Link></li>
+              <li><Link href="/roadmap/programming-foundations" className="hover:text-text-secondary transition-colors">Programming</Link></li>
+              <li><Link href="/roadmap/genai-foundations" className="hover:text-text-secondary transition-colors">GenAI</Link></li>
+              <li><Link href="/roadmap/agent-foundations" className="hover:text-text-secondary transition-colors">Agents</Link></li>
               <li><Link href="/projects" className="hover:text-text-secondary transition-colors">Projects</Link></li>
             </ul>
           </div>
@@ -39,7 +40,6 @@ export function Footer() {
           <div>
             <h3 className="text-sm font-semibold mb-3">Prepare</h3>
             <ul className="space-y-2 text-sm text-text-muted">
-              <li><Link href="/interview" className="hover:text-text-secondary transition-colors">Interview Prep</Link></li>
               <li><Link href="/glossary" className="hover:text-text-secondary transition-colors">Glossary</Link></li>
               <li><Link href="/resources" className="hover:text-text-secondary transition-colors">Resources</Link></li>
             </ul>

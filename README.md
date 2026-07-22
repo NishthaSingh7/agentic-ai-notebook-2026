@@ -2,7 +2,9 @@
 
 **Study agents. Build systems. Ship to production.**
 
-A free, open-source curriculum notebook for **software engineers** and **future AI engineers** who want to learn Agentic AI the practical way — structured lessons, real code, interview prep, and hands-on projects.
+A free, open-source curriculum notebook for **software engineers** and **future AI engineers** who want to learn Agentic AI the practical way — structured lessons, real code, diagrams, examples, and hands-on projects.
+
+**Live site:** [agentic-ai-notebook-2026.netlify.app](https://agentic-ai-notebook-2026.netlify.app)
 
 ---
 
@@ -24,13 +26,12 @@ This website is built for **engineers, by engineers** — whether you are alread
 
 | | |
 |---|---|
-| **17 phases** | GenAI → Agents → Memory → Frameworks → Production |
-| **155 modules** | Concept, diagram, code, project, interview Qs |
-| **280 questions** | Interview prep across 14 topics |
+| **22 phases** | Programming → GenAI → RAG → Agents → Frameworks → Production → Capstones |
+| **267 modules** | Concept, diagram, code example, project tie-in, and revision notes |
 | **8 projects** | Beginner to production portfolio ideas |
 | **69 glossary terms** | Definitions, analogies, and interview tips |
 
-Phases 0–1 are taught (lesson pages publishing next). Phases 2–16 follow the v2 roadmap.
+All roadmap phases and modules are live with lesson content. Interview prep is built but hidden from navigation until a later release.
 
 ---
 
@@ -43,8 +44,11 @@ npm install
 # Development (with hot reload)
 npm run dev
 
-# Stable local preview (recommended if dev mode acts up)
+# Stable local preview (static export — same as production)
 npm run serve
+
+# Production build
+npm run build
 ```
 
 Open [http://localhost:3000](http://localhost:3000).

@@ -3,15 +3,9 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, BookOpen, CheckCircle2 } from "lucide-react";
-import type { Phase, PhaseStatus } from "@/data/roadmap";
+import type { Phase } from "@/data/roadmap";
 import { cn } from "@/lib/utils";
 import { useProgress } from "@/hooks/use-progress";
-
-const statusLabels: Record<PhaseStatus, { label: string; className: string }> = {
-  completed: { label: "Completed", className: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" },
-  "in-progress": { label: "In Progress", className: "bg-blue-500/10 text-blue-400 border-blue-500/20" },
-  upcoming: { label: "Upcoming", className: "bg-zinc-500/10 text-zinc-400 border-zinc-500/20" },
-};
 
 interface PhaseCardProps {
   phase: Phase;
@@ -21,14 +15,13 @@ interface PhaseCardProps {
 export function PhaseCard({ phase, index }: PhaseCardProps) {
   const { getPhaseProgress } = useProgress();
   const progress = getPhaseProgress(phase.slug);
-  const status = statusLabels[phase.status];
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 12 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.05 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ delay: Math.min(index * 0.02, 0.12), duration: 0.25 }}
     >
       <Link
         href={`/roadmap/${phase.slug}`}
@@ -41,14 +34,6 @@ export function PhaseCard({ phase, index }: PhaseCardProps) {
               <h3 className="text-lg font-semibold group-hover:text-accent transition-colors">
                 {phase.title}
               </h3>
-              <span
-                className={cn(
-                  "rounded-full border px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide",
-                  status.className
-                )}
-              >
-                {status.label}
-              </span>
             </div>
           </div>
           <div

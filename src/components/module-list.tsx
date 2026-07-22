@@ -11,9 +11,7 @@ interface ModuleListProps {
   modules: {
     slug: string;
     title: string;
-    hasContent: boolean;
     readTime: number | null;
-    status?: "completed" | "next" | "upcoming";
   }[];
 }
 
@@ -24,7 +22,7 @@ export function ModuleList({ phaseSlug, modules }: ModuleListProps) {
     <div className="space-y-1">
       {modules.map((mod, i) => {
         const done = isCompleted(phaseSlug, mod.slug);
-        const { hasContent, readTime, status } = mod;
+        const { readTime } = mod;
 
         return (
           <div
@@ -54,23 +52,8 @@ export function ModuleList({ phaseSlug, modules }: ModuleListProps) {
               <span className={cn("text-sm", done ? "text-text-secondary line-through" : "text-text-primary")}>
                 <span className="text-text-muted font-mono text-xs mr-2">{i + 1}.</span>
                 {mod.title}
-                {status === "completed" && !hasContent && (
-                  <span className="ml-2 text-[10px] uppercase tracking-wide text-emerald-400/90 font-normal">
-                    Taught
-                  </span>
-                )}
-                {status === "next" && (
-                  <span className="ml-2 text-[10px] uppercase tracking-wide text-accent font-normal">
-                    Next
-                  </span>
-                )}
-                {!hasContent && !status && (
-                  <span className="ml-2 text-[10px] uppercase tracking-wide text-amber-400/80 font-normal">
-                    Draft
-                  </span>
-                )}
               </span>
-              {hasContent && readTime ? (
+              {readTime ? (
                 <span
                   className="flex items-center gap-1 text-xs text-text-muted shrink-0"
                   title="Estimated read time based on lesson content length"
