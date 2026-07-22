@@ -25,7 +25,7 @@ const navigation = [
   { name: "Home", href: "/", icon: BookOpen },
   { name: "Roadmap", href: "/roadmap", icon: Map },
   { name: "GenAI Foundations", href: "/roadmap/genai-foundations", icon: Brain },
-  { name: "Agentic AI", href: "/roadmap/agentic-ai", icon: Bot },
+  { name: "Agent Foundations", href: "/roadmap/agent-foundations", icon: Bot },
   { name: "Projects", href: "/projects", icon: FolderKanban },
   { name: "Interview Prep", href: "/interview", icon: MessageSquare },
   { name: "Glossary", href: "/glossary", icon: BookMarked },

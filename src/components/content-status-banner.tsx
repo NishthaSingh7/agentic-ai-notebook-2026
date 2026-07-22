@@ -8,10 +8,11 @@ export function ContentStatusBanner() {
       <div className="flex items-start gap-3">
         <AlertCircle className="h-5 w-5 text-amber-400 shrink-0 mt-0.5" />
         <div>
-          <h3 className="font-semibold text-sm text-amber-200 mb-1">Coming in a future update</h3>
+          <h3 className="font-semibold text-sm text-amber-200 mb-1">Lesson publishing in progress</h3>
           <p className="text-sm text-text-secondary leading-relaxed">
-            Phases 7–10 are being developed incrementally. Phases 0–6 have full lessons with diagrams,
-            code, and revision notes — start there while we finish this content.
+            Phases 0–1 were taught live — module pages are being published to match the v2
+            curriculum. Explore the roadmap structure and use Glossary / Interview Prep while
+            lessons are added.
           </p>
         </div>
       </div>

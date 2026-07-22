@@ -37,6 +37,7 @@ export default async function PhasePage({ params }: Props) {
     title: mod.title,
     hasContent: hasLessonContent(phase.slug, mod.slug),
     readTime: getLessonReadTime(phase.slug, mod.slug),
+    status: mod.status,
   }));
 
   return (

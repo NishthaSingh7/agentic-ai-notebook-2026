@@ -14,7 +14,7 @@ export function RoadmapVisualization() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ delay: i * 0.08 }}
-            className="relative flex items-center justify-center rounded-xl border border-border bg-surface-elevated px-6 py-3 min-w-[160px] text-sm font-medium hover:border-success/30 transition-colors"
+            className="relative flex items-center justify-center rounded-lg border border-border bg-surface-elevated px-4 py-2 min-w-[140px] text-xs font-medium hover:border-success/30 transition-colors"
           >
             <span
               className="absolute -left-1 top-1/2 -translate-y-1/2 h-2 w-2 rounded-full"

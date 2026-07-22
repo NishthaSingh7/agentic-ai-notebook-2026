@@ -3,9 +3,15 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, BookOpen, CheckCircle2 } from "lucide-react";
-import type { Phase } from "@/data/roadmap";
+import type { Phase, PhaseStatus } from "@/data/roadmap";
 import { cn } from "@/lib/utils";
 import { useProgress } from "@/hooks/use-progress";
+
+const statusLabels: Record<PhaseStatus, { label: string; className: string }> = {
+  completed: { label: "Completed", className: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" },
+  "in-progress": { label: "In Progress", className: "bg-blue-500/10 text-blue-400 border-blue-500/20" },
+  upcoming: { label: "Upcoming", className: "bg-zinc-500/10 text-zinc-400 border-zinc-500/20" },
+};
 
 interface PhaseCardProps {
   phase: Phase;
@@ -15,6 +21,7 @@ interface PhaseCardProps {
 export function PhaseCard({ phase, index }: PhaseCardProps) {
   const { getPhaseProgress } = useProgress();
   const progress = getPhaseProgress(phase.slug);
+  const status = statusLabels[phase.status];
 
   return (
     <motion.div
@@ -30,9 +37,19 @@ export function PhaseCard({ phase, index }: PhaseCardProps) {
         <div className="flex items-start justify-between mb-4">
           <div>
             <span className="text-xs font-mono text-text-muted">{phase.subtitle}</span>
-            <h3 className="text-lg font-semibold mt-1 group-hover:text-accent transition-colors">
-              {phase.title}
-            </h3>
+            <div className="flex flex-wrap items-center gap-2 mt-1">
+              <h3 className="text-lg font-semibold group-hover:text-accent transition-colors">
+                {phase.title}
+              </h3>
+              <span
+                className={cn(
+                  "rounded-full border px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide",
+                  status.className
+                )}
+              >
+                {status.label}
+              </span>
+            </div>
           </div>
           <div
             className={cn(

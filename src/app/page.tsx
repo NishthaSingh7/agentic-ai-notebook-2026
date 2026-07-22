@@ -134,11 +134,10 @@ export default function HomePage() {
             Ready to build <span className="gradient-text">Agentic AI</span> systems?
           </h2>
           <p className="text-text-secondary mb-8 max-w-xl mx-auto">
-            Start with Phase 0 for programming foundations, or jump to GenAI Foundations if
-            you already ship code as a software engineer.
+            Start with Phase 0 (GenAI Foundations), or jump to Agent Foundations if you&apos;ve covered the basics.
           </p>
           <Link
-            href="/roadmap/programming-foundations"
+            href="/roadmap/genai-foundations"
             className="inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-medium text-background hover:bg-accent/90 transition-colors"
           >
             Begin Phase 0 <ArrowRight className="h-4 w-4" />

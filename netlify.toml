@@ -5,12 +5,83 @@
 [build.environment]
   NODE_VERSION = "20"
 
+# v1 → v2 phase slug redirects
 [[redirects]]
-  from = "/roadmap/capstone-projects"
-  to = "/roadmap/interview-projects"
+  from = "/roadmap/programming-foundations"
+  to = "/roadmap/genai-foundations"
   status = 301
 
 [[redirects]]
-  from = "/roadmap/capstone-projects/*"
-  to = "/roadmap/interview-projects/:splat"
+  from = "/roadmap/programming-foundations/*"
+  to = "/roadmap/genai-foundations/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/roadmap/ai-engineering-foundations"
+  to = "/roadmap/agent-foundations"
+  status = 301
+
+[[redirects]]
+  from = "/roadmap/ai-engineering-foundations/*"
+  to = "/roadmap/agent-foundations/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/roadmap/llm-engineering"
+  to = "/roadmap/genai-foundations"
+  status = 301
+
+[[redirects]]
+  from = "/roadmap/llm-engineering/*"
+  to = "/roadmap/genai-foundations/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/roadmap/rag-engineering"
+  to = "/roadmap/genai-foundations"
+  status = 301
+
+[[redirects]]
+  from = "/roadmap/rag-engineering/*"
+  to = "/roadmap/genai-foundations/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/roadmap/agentic-ai"
+  to = "/roadmap/agent-foundations"
+  status = 301
+
+[[redirects]]
+  from = "/roadmap/agentic-ai/*"
+  to = "/roadmap/agent-foundations/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/roadmap/production-ai"
+  to = "/roadmap/production-agents"
+  status = 301
+
+[[redirects]]
+  from = "/roadmap/production-ai/*"
+  to = "/roadmap/production-agents/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/roadmap/advanced-ai"
+  to = "/roadmap/multimodal-agents"
+  status = 301
+
+[[redirects]]
+  from = "/roadmap/advanced-ai/*"
+  to = "/roadmap/multimodal-agents/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/roadmap/interview-projects"
+  to = "/roadmap/capstone-projects"
+  status = 301
+
+[[redirects]]
+  from = "/roadmap/interview-projects/*"
+  to = "/roadmap/capstone-projects/:splat"
   status = 301

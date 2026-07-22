@@ -24,13 +24,13 @@ This website is built for **engineers, by engineers** — whether you are alread
 
 | | |
 |---|---|
-| **11 phases** | Programming → GenAI → Agents → Production |
+| **17 phases** | GenAI → Agents → Memory → Frameworks → Production |
 | **155 modules** | Concept, diagram, code, project, interview Qs |
 | **280 questions** | Interview prep across 14 topics |
 | **8 projects** | Beginner to production portfolio ideas |
 | **69 glossary terms** | Definitions, analogies, and interview tips |
 
-Phases 0–6 have full lesson content. Phases 7–10 are in progress.
+Phases 0–1 are taught (lesson pages publishing next). Phases 2–16 follow the v2 roadmap.
 
 ---
 

@@ -31,7 +31,7 @@ export function Footer() {
             <ul className="space-y-2 text-sm text-text-muted">
               <li><Link href="/roadmap" className="hover:text-text-secondary transition-colors">Roadmap</Link></li>
               <li><Link href="/roadmap/genai-foundations" className="hover:text-text-secondary transition-colors">GenAI Foundations</Link></li>
-              <li><Link href="/roadmap/agentic-ai" className="hover:text-text-secondary transition-colors">Agentic AI</Link></li>
+              <li><Link href="/roadmap/agent-foundations" className="hover:text-text-secondary transition-colors">Agent Foundations</Link></li>
               <li><Link href="/projects" className="hover:text-text-secondary transition-colors">Projects</Link></li>
             </ul>
           </div>

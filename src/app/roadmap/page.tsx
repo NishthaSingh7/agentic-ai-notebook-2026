@@ -6,18 +6,18 @@ import { RoadmapVisualization } from "@/components/roadmap-visualization";
 
 export const metadata: Metadata = {
   title: "Roadmap",
-  description: `Complete AI Engineering roadmap — ${siteStats.phases} phases from programming foundations to production Agentic AI.`,
+  description: `Agentic AI Master Roadmap v2 — ${siteStats.phases} phases from GenAI foundations to interview system design.`,
 };
 
 export default function RoadmapPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
       <div className="mb-12">
-        <h1 className="text-3xl font-bold mb-3">AI Engineering Roadmap</h1>
+        <h1 className="text-3xl font-bold mb-3">Agentic AI Master Roadmap v2</h1>
         <p className="text-text-secondary max-w-2xl leading-relaxed">
-          A structured path from software engineering fundamentals to production-grade
-          Agentic AI. {siteStats.phases} phases, {siteStats.modules} modules,
-          and hands-on projects at every stage.
+          Foundations → implementation → frameworks → production → specialization.
+          {siteStats.phases} phases, {siteStats.modules} modules, and hands-on projects
+          at every stage.
         </p>
       </div>
 
