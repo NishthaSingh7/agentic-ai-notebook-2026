@@ -89,4 +89,6 @@ Built by **[NishthaSingh7](https://github.com/NishthaSingh7)** — follow for up
 
 ## License
 
-Open source. Contributions welcome.
+Copyright © 2026 [Nishtha Singh](https://github.com/NishthaSingh7). Released under the [MIT License](LICENSE).
+
+You may fork and use this project, but please keep the original copyright notice and credit the source repository.

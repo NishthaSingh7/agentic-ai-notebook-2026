@@ -71,7 +71,29 @@ export function Footer() {
         </div>
 
         <div className="mt-10 border-t border-border pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-text-muted">
-          <p>{siteConfig.tagline}</p>
+          <div className="text-center sm:text-left">
+            <p>{siteConfig.tagline}</p>
+            <p className="mt-1 text-xs">
+              © {siteConfig.copyright.year}{" "}
+              <a
+                href={siteConfig.github.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-text-secondary transition-colors"
+              >
+                {siteConfig.copyright.holder}
+              </a>
+              {" · "}
+              <a
+                href={siteConfig.copyright.repoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-text-secondary transition-colors"
+              >
+                MIT License
+              </a>
+            </p>
+          </div>
           <a
             href={siteConfig.github.url}
             target="_blank"

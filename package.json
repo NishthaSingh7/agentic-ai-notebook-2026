@@ -1,7 +1,15 @@
 {
-  "name": "agentic-ai-roadmap",
+  "name": "agentic-ai-notebook-2026",
   "version": "1.0.0",
   "private": true,
+  "description": "Open-source Agentic AI curriculum for software engineers.",
+  "author": "Nishtha Singh (https://github.com/NishthaSingh7)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NishthaSingh7/agentic-ai-notebook-2026.git"
+  },
+  "homepage": "https://agentic-ai-notebook-2026.netlify.app",
   "scripts": {
     "dev": "node scripts/dev.mjs",
     "dev:clean": "node scripts/dev.mjs",
