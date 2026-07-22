@@ -4,7 +4,7 @@
 
 A free, open-source curriculum notebook for **software engineers** and **future AI engineers** who want to learn Agentic AI the practical way — structured lessons, real code, interview prep, and hands-on projects.
 
-🔗 **Live site:** coming soon (run locally with the steps below)
+🔗 **Live site:** [agentic-ai-notebook-2026.netlify.app](https://agentic-ai-notebook-2026.netlify.app)
 
 ---
 
