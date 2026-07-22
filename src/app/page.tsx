@@ -56,23 +56,21 @@ export default function HomePage() {
 
       {/* Roadmap Flow */}
       <section className="border-y border-border bg-surface">
-        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-2xl font-bold mb-2">Your learning path</h2>
-              <p className="text-text-secondary mb-6">
-                {siteStats.phases} phases from programming foundations to interview projects.
-                Each phase builds on the previous — no gaps, no guesswork.
-              </p>
-              <Link
-                href="/roadmap"
-                className="inline-flex items-center gap-2 text-sm text-accent hover:underline"
-              >
-                View full roadmap <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-            </div>
-            <RoadmapVisualization />
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
+          <div className="mb-8 max-w-2xl">
+            <h2 className="text-2xl font-bold mb-2">Your learning path</h2>
+            <p className="text-text-secondary mb-4">
+              {siteStats.phases} phases from programming foundations to interview projects.
+              Each phase builds on the previous — no gaps, no guesswork.
+            </p>
+            <Link
+              href="/roadmap"
+              className="inline-flex items-center gap-2 text-sm text-accent hover:underline"
+            >
+              View full roadmap <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
           </div>
+          <RoadmapVisualization />
         </div>
       </section>
 

@@ -34,7 +34,7 @@ export default function RoadmapPage() {
         ))}
       </div>
 
-      <div className="rounded-xl border border-border bg-surface p-6 max-w-md mx-auto">
+      <div className="rounded-xl border border-border bg-surface p-6 max-w-xl mx-auto">
         <h3 className="text-sm font-semibold mb-4 text-center">Learning path overview</h3>
         <RoadmapVisualization />
       </div>
