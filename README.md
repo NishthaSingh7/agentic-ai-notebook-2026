@@ -83,16 +83,6 @@ See the [About page](src/app/about/page.tsx) for more on how to contribute.
 
 ---
 
-## Roadmap for this project
-
-| Phase | Focus | Status |
-|-------|--------|--------|
-| **Phase 1** | Static curriculum site (lessons, roadmap, glossary) | ✅ Current |
-| **Phase 2** | MongoDB — user accounts and progress persistence | 🔜 Planned |
-| **Phase 3** | Google OAuth login | 🔜 Planned |
-
----
-
 ## Author
 
 Built by **[NishthaSingh7](https://github.com/NishthaSingh7)** — follow for updates and contribute if this helps your learning journey.
