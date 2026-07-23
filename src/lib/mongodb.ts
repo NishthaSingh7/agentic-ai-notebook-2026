@@ -1,7 +1,12 @@
 import { MongoClient, type MongoClientOptions } from "mongodb";
 
 const uri = process.env.MONGODB_URI;
-const options: MongoClientOptions = {};
+
+const options: MongoClientOptions = {
+  maxPoolSize: 10,
+  serverSelectionTimeoutMS: 10000,
+  socketTimeoutMS: 45000,
+};
 
 declare global {
   // eslint-disable-next-line no-var
@@ -18,14 +23,10 @@ function connect(): Promise<MongoClient> {
 }
 
 function getClientPromise(): Promise<MongoClient> {
-  if (process.env.NODE_ENV === "development") {
-    if (!global._mongoClientPromise) {
-      global._mongoClientPromise = connect();
-    }
-    return global._mongoClientPromise;
+  if (!global._mongoClientPromise) {
+    global._mongoClientPromise = connect();
   }
-
-  return connect();
+  return global._mongoClientPromise;
 }
 
 const clientPromise = {
