@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SearchDialog } from "./search-dialog";
+import { UserMenu } from "./user-menu";
 
 const navigation = [
   { name: "Home", href: "/", icon: BookOpen },
@@ -83,17 +84,20 @@ export function Header() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             <button
               onClick={() => setSearchOpen(true)}
-              className="flex items-center gap-2 rounded-lg border border-border bg-surface px-3 py-1.5 text-sm text-text-muted transition-colors hover:border-border hover:text-text-secondary"
+              className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-surface text-text-muted transition-colors hover:text-text-secondary sm:w-auto sm:px-3 sm:gap-2"
+              title="Search (⌘K)"
             >
-              <Search className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">Search</span>
-              <kbd className="hidden rounded border border-border bg-surface-elevated px-1.5 py-0.5 text-[10px] font-mono sm:inline">
+              <Search className="h-4 w-4" />
+              <span className="hidden lg:inline text-sm">Search</span>
+              <kbd className="hidden lg:inline rounded border border-border bg-surface-elevated px-1.5 py-0.5 text-[10px] font-mono">
                 ⌘K
               </kbd>
             </button>
+
+            <UserMenu />
 
             <button
               onClick={() => setMobileOpen(!mobileOpen)}

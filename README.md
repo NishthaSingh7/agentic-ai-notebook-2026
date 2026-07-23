@@ -41,13 +41,16 @@ All roadmap phases and modules are live with lesson content. Interview prep is b
 # Install dependencies
 npm install
 
+# Copy env template and fill in values (see Auth setup below)
+cp .env.example .env.local
+
 # Development (with hot reload)
 npm run dev
 
-# Stable local preview (static export — same as production)
+# Production build + server preview
 npm run serve
 
-# Production build
+# Production build only
 npm run build
 ```
 
@@ -55,9 +58,27 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ---
 
+## Auth setup (Phase 2)
+
+Google Sign-In and MongoDB power saved progress across devices.
+
+1. **MongoDB Atlas** — create a free cluster and database user. Copy the connection string into `MONGODB_URI`.
+2. **Google OAuth** — in [Google Cloud Console](https://console.cloud.google.com/apis/credentials), create an OAuth 2.0 Web client.
+   - Authorized redirect URI (local): `http://localhost:3000/api/auth/callback/google`
+   - Authorized redirect URI (production): `https://agentic-ai-notebook-2026.netlify.app/api/auth/callback/google`
+3. **Auth.js secret** — run `openssl rand -base64 32` and set `AUTH_SECRET`.
+4. Copy `.env.example` → `.env.local` and fill in all values.
+5. On Netlify, add the same env vars under **Site settings → Environment variables**.
+
+Signed-in users sync module progress to MongoDB. Guests still use browser `localStorage`.
+
+---
+
 ## Tech stack
 
 - **Next.js 15** · React 19 · TypeScript
+- **Auth.js (NextAuth)** · Google Sign-In
+- **MongoDB Atlas** · user sessions & progress sync
 - **Tailwind CSS v4**
 - **Mermaid** for architecture diagrams
 - **Framer Motion** for UI animations
