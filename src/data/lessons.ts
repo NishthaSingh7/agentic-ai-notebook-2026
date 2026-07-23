@@ -7,6 +7,7 @@ import {
   getUnifiedLesson,
 } from "./lessons/unified-registry";
 import { enrichLesson } from "./lessons/enrich-lessons";
+import { normalizeCurriculumLesson } from "@/lib/normalize-curriculum-lesson";
 
 export type { LessonContent } from "./lesson-types";
 
@@ -41,12 +42,11 @@ for (const phase of phases) {
     const raw =
       rawLessonMaps[phase.slug]?.[mod.slug] ??
       getDefaultLesson(mod.title, phase.title);
-    phaseLessonMaps[phase.slug][mod.slug] = enrichLesson(
-      raw,
-      mod.slug,
-      mod.title,
+    phaseLessonMaps[phase.slug][mod.slug] = normalizeCurriculumLesson(
+      enrichLesson(raw, mod.slug, mod.title, phase.slug, phase.title),
       phase.slug,
-      phase.title
+      mod.slug,
+      mod.title
     );
   }
 }

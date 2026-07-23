@@ -138,3 +138,37 @@ code {
 .glow {
   box-shadow: 0 0 60px -12px color-mix(in srgb, var(--color-accent) 25%, transparent);
 }
+
+/* Phase 0 sketch diagrams — force dark readable text on light boxes */
+.mermaid-sketch svg text,
+.mermaid-sketch svg tspan,
+.mermaid-sketch svg .nodeLabel,
+.mermaid-sketch svg .nodeLabel p,
+.mermaid-sketch svg .cluster-label,
+.mermaid-sketch svg .cluster-label span,
+.mermaid-sketch svg .label,
+.mermaid-sketch svg .edgeLabel,
+.mermaid-sketch svg .edgeLabel p,
+.mermaid-sketch svg foreignObject div,
+.mermaid-sketch svg foreignObject span,
+.mermaid-sketch svg foreignObject p {
+  color: #0f0f0f !important;
+  fill: #0f0f0f !important;
+}
+
+.mermaid-sketch svg .cluster rect {
+  fill: #f5f5f4 !important;
+  stroke: #1c1917 !important;
+}
+
+.mermaid-sketch svg .node rect,
+.mermaid-sketch svg .node circle,
+.mermaid-sketch svg .node polygon {
+  fill: #ffffff !important;
+  stroke: #1c1917 !important;
+}
+
+.mermaid-sketch svg .edgePath path,
+.mermaid-sketch svg .flowchart-link {
+  stroke: #292524 !important;
+}

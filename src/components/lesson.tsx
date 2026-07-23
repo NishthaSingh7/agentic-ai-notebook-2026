@@ -44,18 +44,51 @@ export function LessonNav({ sections }: LessonNavProps) {
   );
 }
 
+type RevisionVariant = "fiveMin" | "fifteenMin" | "oneHour" | "cheatSheet";
+
 interface RevisionCardProps {
   title: string;
   duration: string;
   items: string[];
+  variant?: RevisionVariant;
 }
 
-export function RevisionCard({ title, duration, items }: RevisionCardProps) {
+const revisionVariants: Record<RevisionVariant, string> = {
+  fiveMin:
+    "border-emerald-500/30 bg-emerald-500/5 shadow-[inset_0_1px_0_0_rgba(52,211,153,0.15)]",
+  fifteenMin:
+    "border-sky-500/30 bg-sky-500/5 shadow-[inset_0_1px_0_0_rgba(56,189,248,0.15)]",
+  oneHour:
+    "border-violet-500/30 bg-violet-500/5 shadow-[inset_0_1px_0_0_rgba(167,139,250,0.15)]",
+  cheatSheet:
+    "border-amber-500/30 bg-amber-500/5 shadow-[inset_0_1px_0_0_rgba(251,191,36,0.15)]",
+};
+
+const revisionBadgeVariants: Record<RevisionVariant, string> = {
+  fiveMin: "bg-emerald-500/15 text-emerald-400",
+  fifteenMin: "bg-sky-500/15 text-sky-400",
+  oneHour: "bg-violet-500/15 text-violet-400",
+  cheatSheet: "bg-amber-500/15 text-amber-400",
+};
+
+export function RevisionCard({ title, duration, items, variant }: RevisionCardProps) {
   return (
-    <div className="rounded-xl border border-border bg-surface p-5">
+    <div
+      className={cn(
+        "rounded-xl border p-5 transition-colors",
+        variant ? revisionVariants[variant] : "border-border bg-surface"
+      )}
+    >
       <div className="flex items-center justify-between mb-3">
         <h4 className="font-medium text-sm">{title}</h4>
-        <span className="text-xs text-text-muted font-mono">{duration}</span>
+        <span
+          className={cn(
+            "text-xs font-mono rounded-full px-2 py-0.5",
+            variant ? revisionBadgeVariants[variant] : "text-text-muted"
+          )}
+        >
+          {duration}
+        </span>
       </div>
       <ul className="space-y-1.5">
         {items.map((item, i) => (
@@ -64,6 +97,44 @@ export function RevisionCard({ title, duration, items }: RevisionCardProps) {
             {item}
           </li>
         ))}
+      </ul>
+    </div>
+  );
+}
+
+interface CommandsCardProps {
+  commands: string[];
+}
+
+function parseCommandEntry(cmd: string): { command: string; comment: string | null } {
+  const hashIndex = cmd.indexOf(" # ");
+  if (hashIndex === -1) return { command: cmd, comment: null };
+  return {
+    command: cmd.slice(0, hashIndex),
+    comment: cmd.slice(hashIndex + 3),
+  };
+}
+
+export function CommandsCard({ commands }: CommandsCardProps) {
+  return (
+    <div className="not-prose rounded-xl border border-royal/30 bg-royal/5 p-5">
+      <p className="text-xs font-semibold uppercase tracking-wider text-royal mb-3">
+        Commands to Remember
+      </p>
+      <ul className="space-y-2">
+        {commands.map((cmd, i) => {
+          const { command, comment } = parseCommandEntry(cmd);
+          return (
+            <li key={i}>
+              <code className="block text-sm font-mono bg-surface-elevated border border-border rounded-lg px-3 py-2 leading-relaxed">
+                <span className="text-text-primary">{command}</span>
+                {comment ? (
+                  <span className="text-emerald-400/90 ml-2"># {comment}</span>
+                ) : null}
+              </code>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

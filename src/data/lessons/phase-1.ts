@@ -260,15 +260,18 @@ print(output.shape)  # (1, 10, 64)`,
       "The prompt 'Explain quantum computing in simple terms' is ~7 tokens. The 500-word response is ~650 tokens. At $0.15/1M input tokens, the prompt costs fractions of a cent — but at 10K requests/day, token economics matter.",
     code: `import tiktoken
 
+# Load the tokenizer for your model
 enc = tiktoken.encoding_for_model("gpt-4o-mini")
 
 text = "Explain quantum computing in simple terms"
-tokens = enc.encode(text)
+
+# Text → token IDs (this is where tokenization happens)
+>>> tokens = enc.encode(text)
 print(f"Token count: {len(tokens)}")
 print(f"Token IDs: {tokens}")
-print(f"Decoded: {enc.decode(tokens)}")
+print(f"Decoded: {enc.decode(tokens)}")  # convert IDs back to text
 
-# Estimate cost
+# Estimate API cost from token counts
 input_tokens = len(enc.encode(system_prompt + user_message))
 output_tokens = 500  # max_tokens setting
 cost = (input_tokens * 0.15 + output_tokens * 0.60) / 1_000_000

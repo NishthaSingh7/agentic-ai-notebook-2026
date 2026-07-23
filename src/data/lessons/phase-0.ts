@@ -1,812 +1,1075 @@
 import type { LessonContent } from "../lesson-types";
-import { createLesson, iq } from "./builder";
+import { createLesson } from "./builder";
 
 export const phase0Lessons: Record<string, LessonContent> = {
   python: createLesson({
     concept:
-      "Python is the primary programming language for AI Engineering — used for building LLM applications, RAG pipelines, agents, data processing, and API backends.",
-    whyItExists:
-      "AI's ecosystem (PyTorch, LangChain, Hugging Face, FastAPI) is Python-first. As an AI engineer, you'll write Python daily — calling APIs, processing documents, building agents, and deploying services.",
-    analogy:
-      "Python is the English of AI engineering — not the only language, but the one everyone speaks. Learning it unlocks every tool, library, and tutorial in the field.",
+      "Python is the main programming language for AI engineering — used to call LLM APIs, process data, build agents, and deploy backends.",
     technicalExplanation:
-      "Python is a high-level, interpreted language known for readable syntax and a massive ecosystem. For AI engineering specifically, you'll use: list/dict comprehensions for data transforms, async/await for concurrent API calls, type hints for maintainability, virtual environments (venv) for dependency isolation, and packages like openai, langchain, fastapi, pandas, and pydantic. Python's dynamic typing speeds prototyping, while type hints and Pydantic models add safety at API boundaries.",
-    architecture:
-      "Typical AI Python project structure: src/ (application code), tests/, requirements.txt or pyproject.toml, .env for secrets, Dockerfile for deployment. Use FastAPI for APIs, Pydantic for data validation, and pytest for testing.",
+      "It has readable syntax, a huge AI library ecosystem (OpenAI SDK, FastAPI, Pydantic), and tools like venv for managing dependencies.",
+    whyItExists:
+      "Nearly every AI tool, tutorial, and job listing expects Python. Learning it unlocks the full AI engineering stack.",
+    analogy:
+      "Python is the English of AI engineering — not the only language, but the one everyone speaks to collaborate.",
+    analogyDiagram: `flowchart LR
+    A[Java dev] --> E[Python]
+    B[Go dev] --> E
+    C[JS dev] --> E
+    E --> D[Everyone builds AI together]`,
     diagram: `flowchart TD
-    A[Developer writes Python] --> B[Virtual env isolates deps]
-    B --> C[FastAPI / CLI app]
-    C --> D[LLM SDK calls]
-    C --> E[Vector DB client]
-    C --> F[Data processing]
-    D --> G[Deployed via Docker]`,
+    PY([Python])
+
+    subgraph Syntax["Core Language"]
+        S1[Variables and data types]
+        S2[Functions and classes]
+        S3[Type hints]
+        S4[List and dict operations]
+    end
+
+    subgraph Libs["AI Libraries"]
+        L1[OpenAI SDK]
+        L2[FastAPI]
+        L3[Pydantic]
+        L4[LangChain / Hugging Face]
+        L5[pytest]
+    end
+
+    subgraph Setup["Project Setup"]
+        P1[venv - isolate dependencies]
+        P2[pip + requirements.txt]
+        P3[.env for API keys]
+        P4[src/ tests/ Dockerfile]
+    end
+
+    subgraph Uses["AI Engineering Uses"]
+        U1[Call LLM APIs]
+        U2[Build RAG pipelines]
+        U3[Create agents]
+        U4[Serve FastAPI backends]
+        U5[async/await for concurrent calls]
+    end
+
+    PY --> Syntax
+    PY --> Libs
+    PY --> Setup
+    PY --> Uses`,
     example:
-      "You're building a PDF chat app. Python loads the PDF with pypdf, chunks text, calls OpenAI embeddings API, stores vectors in ChromaDB, and serves a FastAPI endpoint that retrieves context and calls GPT-4.",
-    code: `# Core Python patterns for AI Engineering
-import os
-from dotenv import load_dotenv
-from openai import OpenAI
-from pydantic import BaseModel
-
-load_dotenv()
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
-def ask_llm(prompt: str) -> str:
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0,
-    )
-    return response.choices[0].message.content or ""
-
-class ChatRequest(BaseModel):
-    message: str
-    user_id: str
-
-documents = ["doc1 text", "doc2 text"]
-summaries = [ask_llm(f"Summarize: {doc}") for doc in documents]`,
-    project:
-      "Build a CLI tool that takes a text file, sends it to an LLM for summarization, and saves the result. Use argparse, python-dotenv, and the OpenAI SDK.",
-    interviewQuestions: [
-      iq("Why is Python dominant in AI engineering?", "Ecosystem maturity (PyTorch, LangChain, Hugging Face), readability, rapid prototyping, strong async support for API-heavy apps, and industry adoption by every major AI company.", "easy"),
-      iq("How do you manage Python dependencies in AI projects?", "Use virtual environments (venv/conda), pin versions in requirements.txt or pyproject.toml, use Docker for reproducible deployments, and never commit .env files with API keys.", "medium"),
-      iq("When should you use async vs sync in Python AI apps?", "Sync is simpler for scripts. Async (asyncio + httpx) is essential when making many concurrent API calls — agents calling multiple tools, batch embedding, parallel retrieval.", "medium"),
+      "You need to summarize 50 customer support tickets overnight.",
+    exampleSolution:
+      "Write a Python script that reads each file, calls the OpenAI API, and saves summaries — done in under 30 lines.",
+    commandsToRemember: [
+      "python -m venv .venv  # create virtual environment",
+      "source .venv/bin/activate  # activate venv on Mac/Linux",
+      "pip install -r requirements.txt  # install project dependencies",
+      "python script.py  # run a Python script",
+      "uvicorn main:app --reload  # start FastAPI dev server with auto-reload",
     ],
+    interviewQuestions: [],
     revisionNotes: {
-      fiveMin: [
-        "Python is the default language for AI engineering",
-        "Key packages: openai, langchain, fastapi, pydantic, pytest",
-        "Always use venv + requirements.txt for dependency management",
-        "Never hardcode API keys — use .env files",
-      ],
-      fifteenMin: [
-        "List comprehensions and dict operations for data processing",
-        "Type hints improve code maintainability in team projects",
-        "Pydantic models for request/response validation in APIs",
-        "async/await for concurrent LLM API calls",
-        "Project structure: src/, tests/, .env, Dockerfile",
-        "FastAPI for building production AI API endpoints",
-      ],
-      oneHour: [
-        "Set up a full Python AI project from scratch",
-        "Virtual env, dependencies, .env, OpenAI SDK integration",
-        "Build a FastAPI endpoint that calls an LLM",
-        "Add Pydantic models for input/output validation",
-        "Write pytest tests with mocked LLM responses",
-        "Dockerize the application for deployment",
-      ],
+      fiveMin: [],
+      fifteenMin: [],
+      oneHour: [],
       cheatSheet: [
-        "venv: python -m venv .venv",
-        "Install: pip install -r requirements.txt",
-        "Run API: uvicorn main:app --reload",
-        "Env vars: os.getenv() + python-dotenv",
-        "Type hints: def fn(x: str) -> dict:",
-        "Async: async def + await + httpx.AsyncClient",
+        "Default language for AI — readable syntax, huge ecosystem",
+        "Key libraries: openai, fastapi, pydantic, pytest",
+        "Always use venv + requirements.txt for dependencies",
+        "Store API keys in .env — never hardcode in source",
+        "async/await for concurrent LLM API calls",
+        "FastAPI for production backends, Pydantic for validation",
       ],
     },
     glossary: ["CLI", "REST APIs", "JSON"],
     commonMistakes: [
-      "Not using virtual environments — dependency conflicts across projects",
-      "Hardcoding API keys in source code instead of environment variables",
-      "Ignoring type hints — leads to bugs in large AI codebases",
-      "Using sync code for I/O-heavy agent systems — kills performance",
+      "Skipping virtual environments",
+      "Hardcoding API keys in source code",
+      "Using sync code for I/O-heavy agent systems",
     ],
   }),
 
   git: createLesson({
     concept:
-      "Git is a version control system that tracks code changes, enables collaboration, and is essential for every software and AI engineering workflow.",
-    whyItExists:
-      "AI projects iterate fast — prompt changes, model swaps, pipeline tweaks. Git lets you track every change, collaborate with teams, roll back mistakes, and maintain separate branches for experiments vs production.",
-    analogy:
-      "Git is like Google Docs version history for code — you can see who changed what, when, and revert to any previous version. Branches let you experiment without breaking the main project.",
+      "Git tracks every change in your code — commits, branches, and history let you experiment safely and collaborate with teams.",
     technicalExplanation:
-      "Git stores snapshots of your project in a repository. Key concepts: commits (saved snapshots), branches (parallel development lines), merges (combining branches), remotes (GitHub/GitLab hosting), and pull requests (code review workflow). For AI projects, version-control your prompts, configs, and evaluation datasets alongside code. Use .gitignore to exclude secrets, model weights, and large data files.",
-    architecture:
-      "Local repo (working directory → staging → commits) syncs with remote (origin on GitHub). Feature branches fork from main, changes merge via pull request after review. CI runs on each push/PR.",
-    diagram: `flowchart LR
-    A[Working Directory] -->|git add| B[Staging Area]
-    B -->|git commit| C[Local Repo]
-    C -->|git push| D[Remote Repo]
-    D -->|git pull| C
-    E[feature branch] -->|PR + review| F[main branch]`,
+      "You save snapshots with commits, branch off for experiments, and sync with GitHub via push/pull. Pull requests add review before merging.",
+    whyItExists:
+      "AI projects change constantly — new prompts, models, pipelines. Git keeps you organized and lets you roll back mistakes.",
+    analogy:
+      "Git is Google Docs version history for code — see every change and revert to any previous version.",
+    analogyDiagram: `flowchart LR
+    A[v1] --> B[v2]
+    B --> C[v3]
+    C --> D[Restore any version]`,
+    diagram: `flowchart TD
+    GIT([Git])
+
+    subgraph Local["Local Workflow"]
+        W1[Working Directory - edit files]
+        W2[Staging Area - git add]
+        W3[Local Repo - git commit]
+    end
+
+    subgraph Remote["Remote Sync"]
+        R1[git push - upload to GitHub]
+        R2[git pull - download changes]
+    end
+
+    subgraph Branch["Branching"]
+        B1[main - production code]
+        B2[feature/* - experiments]
+        B3[Pull Request - code review]
+        B4[Merge - combine branches]
+    end
+
+    subgraph Safety["Safety Rules"]
+        S1[.gitignore - exclude .env and secrets]
+        S2[Never commit API keys]
+        S3[git log - view history]
+        S4[git diff - see changes]
+    end
+
+    GIT --> Local
+    Local --> W1 --> W2 --> W3
+    W3 --> Remote
+    GIT --> Branch
+    GIT --> Safety`,
     example:
-      "You're experimenting with 3 different RAG chunking strategies. Create branch experiment/chunking-v2, test it, compare eval scores, then merge the winner into main via pull request.",
-    code: `# Essential Git workflow for AI projects
-git init
-git add .
-git commit -m "feat: initial RAG pipeline setup"
-
-git checkout -b experiment/hybrid-search
-git add src/retriever.py
-git commit -m "feat: add BM25 + vector hybrid search"
-git push -u origin experiment/hybrid-search
-
-# Commit message format: feat | fix | docs | refactor | eval`,
-    project:
-      "Set up a GitHub repo for your AI project. Practice branching, committing prompt changes, opening a PR, and writing a meaningful README with setup instructions.",
-    interviewQuestions: [
-      iq("Explain a git branching strategy for AI teams.", "main (production), develop (integration), feature/* (experiments). Tag releases. Never commit API keys — use .gitignore for .env files.", "medium"),
-      iq("What should you version-control in an AI project?", "Code, prompts (as files), configs, evaluation datasets, Dockerfile, requirements.txt. NOT: model weights (use model registry), large datasets (use DVC), secrets.", "medium"),
-      iq("What is the difference between merge and rebase?", "Merge preserves branch history with a merge commit. Rebase replays commits on top of another branch for linear history. Use merge for shared branches; rebase cautiously on local feature branches.", "hard"),
+      "You want to test a new RAG chunking strategy without breaking the working version.",
+    exampleSolution:
+      "Create branch experiment/chunking, test it, compare results, then merge the winner into main via pull request.",
+    commandsToRemember: [
+      "git status  # see which files changed",
+      "git add .  # stage all changes for commit",
+      "git commit -m \"message\"  # save a snapshot locally",
+      "git push  # upload commits to GitHub",
+      "git pull  # download remote changes",
+      "git checkout -b branch-name  # create and switch to a new branch",
+      "git log --oneline  # view compact commit history",
     ],
+    interviewQuestions: [],
     revisionNotes: {
-      fiveMin: ["git add → git commit → git push", "Branches for experiments", "Never commit .env or API keys", ".gitignore is essential"],
-      fifteenMin: ["Commit messages: feat/fix/docs format", "Pull requests for code review", "git stash for temporary saves", "git log and git diff for history", "Merge vs rebase basics", "Version-control prompt files as .md or .yaml"],
-      oneHour: ["Full branching workflow practice", "Resolve a merge conflict", "GitHub PR with review", "Version-control prompt files", "Set up .gitignore for AI projects", "Tag a release after eval improvements"],
-      cheatSheet: ["git status — see changes", "git checkout -b name — new branch", "git pull — get remote changes", "git merge branch — combine branches", ".gitignore — exclude .env, __pycache__"],
+      fiveMin: [],
+      fifteenMin: [],
+      oneHour: [],
+      cheatSheet: [
+        "Workflow: git add → git commit → git push",
+        "Use branches for experiments — don't work directly on main",
+        "Pull requests add code review before merging",
+        ".gitignore excludes .env, secrets, and cache files",
+        "git pull before push to avoid merge conflicts",
+        "Version-control prompts and configs alongside code",
+      ],
     },
     glossary: ["CLI", "CI/CD"],
     commonMistakes: [
       "Committing API keys or .env files",
-      "Giant commits with unrelated changes",
-      "Not pulling before pushing (merge conflicts)",
       "Working directly on main branch",
+      "Not pulling before pushing",
     ],
   }),
 
   linux: createLesson({
     concept:
-      "Linux is the operating system that powers most cloud servers, containers, and AI infrastructure — knowing its shell and file system is essential for deployment and debugging.",
-    whyItExists:
-      "When you deploy AI apps, they run on Linux VMs or containers. You need to navigate file systems, manage processes, inspect logs, set permissions, and troubleshoot production issues from a terminal.",
-    analogy:
-      "Linux is the backstage of a theater — users see the web app (the stage), but engineers work behind the scenes managing servers, logs, and processes.",
+      "Linux is the operating system behind most cloud servers and containers — you use its terminal to deploy, debug, and manage AI apps.",
     technicalExplanation:
-      "Linux is a Unix-like OS built around a kernel, shell (bash/zsh), and file hierarchy starting at /. Key skills: navigating with cd/ls, viewing files with cat/less, searching with grep/find, process management with ps/kill, permissions with chmod/chown, and piping commands. Most AI deployments use Ubuntu or Debian-based images. Environment variables are set in shell profiles or systemd units.",
-    architecture:
-      "User runs shell commands → shell interprets → kernel handles I/O, processes, networking. Services run as systemd units or inside containers. Logs go to /var/log or stdout captured by Docker.",
+      "Key skills: navigate files (cd, ls), read logs (tail, grep), manage processes (ps, kill), and set permissions (chmod).",
+    whyItExists:
+      "Your AI app runs on a Linux server in production. You need the terminal to fix crashes, read logs, and restart services.",
+    analogy:
+      "Linux is the backstage of a theater — users see the app on stage, engineers work behind the scenes.",
+    analogyDiagram: `flowchart LR
+    A[Audience sees app] --> B[Stage]
+    C[Engineer] --> D[Backstage servers and logs]`,
     diagram: `flowchart TD
-    A[Engineer SSH into VM] --> B[Shell bash/zsh]
-    B --> C[Navigate filesystem]
-    B --> D[Manage processes]
-    B --> E[View logs]
-    C --> F[Deploy AI app]
-    D --> F
-    E --> F`,
+    LX([Linux])
+
+    subgraph Access["Remote Access"]
+        A1[SSH into cloud server]
+        A2[Terminal shell - bash/zsh]
+    end
+
+    subgraph Files["File Commands"]
+        F1[ls - list files]
+        F2[cd - change directory]
+        F3[pwd - current path]
+        F4[cat / tail - read files]
+        F5[grep - search in files]
+    end
+
+    subgraph Process["Process Management"]
+        P1[ps - list processes]
+        P2[kill - stop process]
+        P3[systemctl - manage services]
+    end
+
+    subgraph System["System Checks"]
+        S1[df -h - disk space]
+        S2[chmod - file permissions]
+        S3[Environment variables / .env]
+    end
+
+    LX --> Access
+    Access --> Files
+    Access --> Process
+    Access --> System
+    Files --> Deploy[Deploy or fix AI app]`,
     example:
-      "Your RAG API is crashing in production. SSH into the EC2 instance, run docker logs api-container, grep for ERROR, check disk space with df -h, and restart the service with systemctl restart myapp.",
-    code: `# Essential Linux commands for AI engineers
-ls -la                    # list files with permissions
-cd /var/log && tail -f app.log   # follow live logs
-ps aux | grep uvicorn     # find running API process
-df -h                     # check disk space
-chmod 600 .env            # restrict env file permissions
-export OPENAI_API_KEY=sk-...  # set env var for session
-grep -r "timeout" logs/   # search logs for errors`,
-    project:
-      "Spin up a free-tier Linux VM (or use WSL). Install Python, clone a repo, run a FastAPI app with nohup or systemd, and practice reading logs when it fails.",
-    interviewQuestions: [
-      iq("How do you debug a crashed process on a Linux server?", "Check logs (journalctl, docker logs, /var/log), inspect process status (ps, systemctl status), verify disk/memory (df, free), check port binding (ss -tlnp), and review recent deployments.", "medium"),
-      iq("What does chmod 600 do?", "Sets file permissions so only the owner can read and write. Critical for .env files containing API keys on shared servers.", "easy"),
-      iq("Explain pipes and redirection in bash.", "Pipe (|) sends stdout of one command as stdin to another. > redirects output to a file. 2>&1 combines stderr with stdout. Essential for log filtering and scripting.", "medium"),
+      "Your RAG API crashes in production and users see a 500 error.",
+    exampleSolution:
+      "SSH into the server, run docker logs to find the ERROR, check disk space with df -h, and restart the service.",
+    commandsToRemember: [
+      "ls -la  # list files with permissions and hidden files",
+      "cd /path && pwd  # navigate to a folder and show current path",
+      "tail -f app.log  # follow live log output in real time",
+      "ps aux | grep name  # find a running process by name",
+      "chmod 600 .env  # restrict file access to owner only",
+      "df -h  # check available disk space",
+      "grep -r \"pattern\" dir/  # search for text inside files",
     ],
+    interviewQuestions: [],
     revisionNotes: {
-      fiveMin: ["Most cloud servers run Linux", "SSH to access remote machines", "Logs live in /var/log or docker logs", "Never run production as root"],
-      fifteenMin: ["File permissions: rwx for owner/group/other", "grep, find, tail for log analysis", "ps/kill for process management", "Environment variables in shell vs .env", "df/du for disk usage", "systemctl for service management"],
-      oneHour: ["SSH into a VM and deploy a Python app", "Set up a systemd service", "Configure log rotation", "Debug a permission error", "Write a bash deploy script", "Use htop to monitor resources during inference"],
-      cheatSheet: ["ls -la, cd, pwd", "tail -f file.log", "ps aux | grep name", "chmod 600 .env", "df -h, free -m", "grep -r pattern dir/"],
+      fiveMin: [],
+      fifteenMin: [],
+      oneHour: [],
+      cheatSheet: [
+        "Most cloud servers run Linux — access via SSH",
+        "Navigate: ls, cd, pwd · Read logs: tail -f, grep",
+        "Manage processes: ps, kill, systemctl",
+        "chmod 600 .env — protect API keys on server",
+        "df -h — check disk space (common crash cause)",
+        "Never run production services as root",
+      ],
     },
     glossary: ["CLI", "Docker", "CI/CD"],
     commonMistakes: [
-      "Running everything as root — security risk",
-      "Not checking disk space before indexing large document sets",
-      "Forgetting to make scripts executable (chmod +x)",
-      "Leaving API keys in shell history instead of .env files",
+      "Running everything as root",
+      "Not checking disk space before large indexing jobs",
+      "Leaving API keys in shell history",
     ],
   }),
 
   networking: createLesson({
     concept:
-      "Networking fundamentals — IP addresses, DNS, ports, TCP/UDP, and firewalls — explain how your AI services communicate over the internet and inside cloud infrastructure.",
-    whyItExists:
-      "AI apps are distributed systems: browsers call APIs, APIs call LLM providers, agents call tools across networks. Understanding networking helps you debug timeouts, configure security groups, and design reliable architectures.",
-    analogy:
-      "Networking is the postal system for computers — IP addresses are street addresses, ports are apartment numbers, DNS is the phone book that translates domain names to addresses, and firewalls are security guards at the door.",
+      "Networking is how computers communicate — IP addresses, ports, DNS, and firewalls control every connection in your AI stack.",
     technicalExplanation:
-      "Devices communicate via IP (IPv4/IPv6) and ports. TCP provides reliable ordered delivery (HTTP, database connections). UDP is faster but unreliable (some streaming). DNS resolves hostnames to IPs. TLS encrypts traffic (HTTPS). In cloud AI deployments, you configure VPCs, subnets, security groups (allow port 443 inbound), load balancers, and NAT gateways. Latency to LLM APIs directly affects user experience.",
-    architecture:
-      "Client → DNS lookup → Load Balancer (port 443) → API server (port 8000) → outbound HTTPS to OpenAI API. Internal services communicate via private subnets; only the load balancer is public.",
-    diagram: `flowchart LR
-    A[Browser] -->|HTTPS 443| B[Load Balancer]
-    B --> C[FastAPI :8000]
-    C -->|HTTPS 443| D[OpenAI API]
-    C --> E[Vector DB :5432]
-    F[DNS] -.->|resolves| B`,
-    example:
-      "Your agent can't reach the vector database. You discover the DB is in a private subnet with no route from the API container. You add a security group rule allowing port 5432 from the API subnet only.",
-    code: `# Quick network debugging commands
-ping api.openai.com          # check reachability
-nslookup api.openai.com      # DNS resolution
-curl -v https://api.openai.com/v1/models  # test HTTPS endpoint
-nc -zv db.internal 5432      # test if port is open
-traceroute api.openai.com    # trace network path
+      "TCP is reliable (HTTP, databases). DNS maps domain names to IPs. HTTPS adds TLS encryption. Security groups act as firewalls in the cloud.",
+    whyItExists:
+      "Your browser calls your API, your API calls OpenAI, agents call tools — all over the network. You need this to debug timeouts and secure services.",
+    analogy:
+      "IP = street address, port = apartment number, DNS = phone book, firewall = security guard.",
+    analogyDiagram: `flowchart LR
+    A[Street Address] --> B[Building]
+    B --> C[Apartment Number]
+    C --> D[Security Guard]`,
+    diagram: `flowchart TD
+    NET([Networking])
 
-# Security group rule (conceptual AWS)
-# Inbound: TCP 443 from 0.0.0.0/0 (public API)
-# Inbound: TCP 5432 from sg-api-only (database)`,
-    project:
-      "Deploy a FastAPI app behind nginx as a reverse proxy. Configure HTTPS with Let's Encrypt. Document which ports are open and why.",
-    interviewQuestions: [
-      iq("What is the difference between TCP and UDP?", "TCP is connection-oriented, reliable, and ordered — used by HTTP and databases. UDP is connectionless and faster but may lose packets — used for DNS queries and some real-time streaming.", "medium"),
-      iq("Why do AI APIs use HTTPS?", "TLS encrypts data in transit, protecting API keys and user prompts from interception. Certificate validation prevents man-in-the-middle attacks.", "easy"),
-      iq("How do security groups affect AI microservices?", "They act as virtual firewalls controlling inbound/outbound traffic. Principle of least privilege: only open ports needed (e.g., 8000 for API, 5432 for Postgres from API subnet only).", "hard"),
+    subgraph Address["Addressing"]
+        AD1[IP Address - device location]
+        AD2[Port - service door number]
+        AD3[DNS - domain name to IP]
+    end
+
+    subgraph Protocols["Protocols"]
+        PR1[TCP - reliable ordered delivery]
+        PR2[UDP - fast may drop packets]
+        PR3[HTTP / HTTPS - web traffic]
+    end
+
+    subgraph Ports["Common Ports"]
+        PO1[80 - HTTP]
+        PO2[443 - HTTPS]
+        PO3[5432 - PostgreSQL]
+        PO4[8000 - FastAPI]
+    end
+
+    subgraph Security["Security"]
+        SE1[TLS - encrypts HTTPS traffic]
+        SE2[Firewall / Security Groups]
+        SE3[Public vs Private Subnets]
+        SE4[Load Balancer]
+    end
+
+    NET --> Address
+    NET --> Protocols
+    NET --> Ports
+    NET --> Security
+    Browser[Client] --> DNS[DNS lookup] --> IP[IP + Port] --> Server[AI Server]`,
+    example:
+      "Your agent can't connect to the vector database — connection times out every time.",
+    exampleSolution:
+      "The DB is in a private subnet. Add a security group rule allowing port 5432 from the API subnet only.",
+    commandsToRemember: [
+      "ping hostname  # test if a host is reachable",
+      "nslookup hostname  # resolve domain name to IP address",
+      "curl -v https://url  # test an HTTP endpoint with full details",
+      "nc -zv host port  # check if a specific port is open",
+      "traceroute hostname  # trace the network path hop by hop",
     ],
+    interviewQuestions: [],
     revisionNotes: {
-      fiveMin: ["IP + port identifies a service", "DNS maps domains to IPs", "HTTPS = HTTP + TLS encryption", "Firewalls control allowed traffic"],
-      fifteenMin: ["TCP vs UDP trade-offs", "Common ports: 80 HTTP, 443 HTTPS, 5432 Postgres", "Public vs private subnets in VPC", "Load balancers distribute traffic", "Latency impacts streaming UX", "curl and ping for debugging"],
-      oneHour: ["Draw network diagram for a RAG app", "Configure nginx reverse proxy", "Set up security groups in cloud", "Debug a connection refused error", "Measure latency to LLM API", "Understand NAT and outbound-only access"],
-      cheatSheet: ["DNS: domain → IP", "TCP: reliable, UDP: fast", "Port 443 = HTTPS", "curl -v for HTTP debug", "Security groups = firewall rules", "Private subnet = no direct internet"],
+      fiveMin: [],
+      fifteenMin: [],
+      oneHour: [],
+      cheatSheet: [
+        "IP + port identifies every service on the network",
+        "DNS translates domain names to IP addresses",
+        "TCP = reliable · UDP = fast but may drop packets",
+        "HTTPS = HTTP encrypted with TLS",
+        "Common ports: 80 HTTP, 443 HTTPS, 5432 Postgres",
+        "Security groups / firewalls control allowed traffic",
+      ],
     },
     glossary: ["HTTP", "REST APIs", "Docker"],
     commonMistakes: [
-      "Exposing database ports to the public internet",
-      "Ignoring latency to LLM providers when choosing regions",
-      "Not setting timeouts on outbound HTTP calls",
-      "Confusing security groups with IAM permissions",
+      "Exposing database ports to the internet",
+      "No timeouts on outbound HTTP calls",
+      "Ignoring latency when choosing cloud regions",
     ],
   }),
 
   http: createLesson({
     concept:
-      "HTTP (Hypertext Transfer Protocol) is the request-response protocol that powers web APIs, including every LLM provider endpoint you'll integrate with.",
-    whyItExists:
-      "LLM providers, vector databases, and your own services all communicate via HTTP. Understanding methods, headers, status codes, and bodies is non-negotiable for building and debugging AI applications.",
-    analogy:
-      "HTTP is like ordering at a restaurant — you make a request (method + order details), the kitchen processes it, and returns a response (your food or an error if they're out of stock).",
+      "HTTP is the request-response protocol behind every web API — including every LLM provider you'll ever integrate with.",
     technicalExplanation:
-      "HTTP is stateless: each request is independent. Methods: GET (read), POST (create/action), PUT/PATCH (update), DELETE (remove). Headers carry metadata (Authorization, Content-Type). Body holds payload (JSON for AI APIs). Status codes: 2xx success, 4xx client error, 5xx server error. HTTP/2 enables multiplexing; HTTP/3 uses QUIC. LLM APIs use POST with JSON bodies and stream responses via chunked transfer encoding.",
-    architecture:
-      "Client sends HTTP request (method, URL, headers, body) → server processes → returns response (status, headers, body). TLS wraps HTTP as HTTPS. Reverse proxies (nginx) terminate TLS and forward to app servers.",
+      "A client sends a method (GET/POST), URL, headers, and optional body. The server returns a status code and response body. LLM APIs use POST with JSON.",
+    whyItExists:
+      "Every AI service speaks HTTP. You need to understand methods, headers, status codes, and bodies to build and debug integrations.",
+    analogy:
+      "HTTP is ordering at a restaurant — you place an order (request), the kitchen works on it, and brings food or an error back (response).",
+    analogyDiagram: `flowchart LR
+    A[You order] --> B[Kitchen cooks]
+    B --> C[Food delivered]`,
     diagram: `flowchart TD
-    A[Client POST /v1/chat/completions] --> B[Headers: Authorization, Content-Type]
-    A --> C[Body: JSON messages]
-    B --> D[Server processes]
-    C --> D
-    D --> E[Response 200 + JSON]
-    D --> F[Response 429 rate limited]`,
-    example:
-      "Your chat app returns 401 Unauthorized. You check the Authorization header — the Bearer token is missing. After adding it, you get 200 with the LLM response in the JSON body.",
-    code: `# HTTP request to an LLM API (conceptual)
-import httpx
+    HTTP([HTTP Protocol])
 
-response = httpx.post(
-    "https://api.openai.com/v1/chat/completions",
-    headers={
-        "Authorization": "Bearer sk-...",
-        "Content-Type": "application/json",
-    },
-    json={
-        "model": "gpt-4o-mini",
-        "messages": [{"role": "user", "content": "Hello"}],
-    },
-    timeout=30.0,
-)
-print(response.status_code)  # 200
-print(response.json())`,
-    project:
-      "Use curl and httpx to call three different APIs (OpenAI, a public REST API, your own FastAPI endpoint). Log status codes, headers, and response times.",
-    interviewQuestions: [
-      iq("What HTTP method do LLM chat APIs typically use and why?", "POST — because sending a prompt creates a computation/action on the server and the request body carries the message payload, which can be large.", "easy"),
-      iq("Explain common HTTP status codes for AI APIs.", "200 OK (success), 400 Bad Request (invalid JSON/payload), 401 Unauthorized (bad API key), 429 Too Many Requests (rate limit), 500 Internal Server Error (provider outage).", "medium"),
-      iq("How does HTTP streaming work for LLM responses?", "Server uses Transfer-Encoding: chunked to send partial response bodies as tokens are generated. Client reads the stream incrementally instead of waiting for the full response.", "hard"),
+    subgraph Methods["HTTP Methods"]
+        M1[GET - Read data]
+        M2[POST - Create or run action]
+        M3[PUT - Replace entire resource]
+        M4[PATCH - Partial update]
+        M5[DELETE - Remove resource]
+    end
+
+    subgraph Request["Every Request Has"]
+        R1[URL - endpoint address]
+        R2[Headers - metadata and auth]
+        R3[Body - JSON payload optional]
+    end
+
+    subgraph KeyHeaders["Key Headers"]
+        H1[Authorization: Bearer token]
+        H2[Content-Type: application/json]
+    end
+
+    subgraph Status["Status Codes"]
+        S1[2xx Success - 200 OK]
+        S2[4xx Client Error - 401 Unauthorized]
+        S3[4xx Client Error - 429 Rate Limited]
+        S4[5xx Server Error - 500 Internal Error]
+    end
+
+    subgraph Concepts["Key Concepts"]
+        C1[Stateless - each request is independent]
+        C2[HTTPS - HTTP + TLS encryption]
+        C3[LLM APIs use POST + JSON body]
+        C4[Streaming - chunked token delivery]
+        C5[Always set request timeouts]
+    end
+
+    HTTP --> Methods
+    HTTP --> Request
+    Request --> KeyHeaders
+    HTTP --> Status
+    HTTP --> Concepts
+    Client[Client] --> Request
+    Request --> Server[Server]
+    Server --> Status
+    Status --> Response[Response Body - JSON]`,
+    example:
+      "Your chat app returns 401 Unauthorized when a user sends a message.",
+    exampleSolution:
+      "The Authorization header with the Bearer token was missing. Adding it returns 200 with the LLM response.",
+    commandsToRemember: [
+      "curl -X GET https://api.example.com/data  # send a GET request to read data",
+      "curl -X POST -H \"Content-Type: application/json\" -d '{\"key\":\"val\"}' URL  # send POST with JSON body",
+      "curl -v URL  # verbose mode — see headers, status code, and response",
     ],
+    interviewQuestions: [],
     revisionNotes: {
-      fiveMin: ["GET read, POST create/action", "Headers carry auth and content type", "Status codes: 2xx ok, 4xx client, 5xx server", "LLM APIs use POST + JSON"],
-      fifteenMin: ["HTTP is stateless — each request independent", "Authorization: Bearer token header", "Content-Type: application/json", "Timeouts prevent hung requests", "curl -v shows full request/response", "Streaming uses chunked encoding"],
-      oneHour: ["Call LLM API with httpx", "Handle 401, 429, 500 errors gracefully", "Implement request timeouts and retries", "Compare sync vs streaming responses", "Inspect traffic with browser dev tools", "Write middleware to log HTTP metrics"],
-      cheatSheet: ["GET / POST / PUT / DELETE", "Authorization: Bearer KEY", "Content-Type: application/json", "200 OK, 401, 429, 500", "httpx.post(url, headers, json)", "timeout=30.0 always"],
+      fiveMin: [],
+      fifteenMin: [],
+      oneHour: [],
+      cheatSheet: [
+        "Methods: GET read · POST action · PUT replace · PATCH update · DELETE remove",
+        "Every request has: URL, Headers, Body (optional)",
+        "Key headers: Authorization Bearer token, Content-Type application/json",
+        "Status codes: 200 OK · 401 Unauthorized · 429 Rate Limited · 500 Server Error",
+        "Stateless — each request is independent",
+        "LLM APIs use POST + JSON · always set timeouts",
+        "HTTPS = HTTP + TLS encryption",
+      ],
     },
     glossary: ["REST APIs", "JSON", "CLI"],
     commonMistakes: [
-      "No timeout on HTTP calls — app hangs when provider is slow",
-      "Sending API keys in URL query params instead of headers",
-      "Ignoring 429 rate limits instead of implementing backoff",
-      "Not checking status code before parsing JSON body",
+      "No timeout on HTTP calls",
+      "API keys in URL instead of headers",
+      "Ignoring 429 rate limits",
     ],
   }),
 
   "rest-apis": createLesson({
     concept:
-      "REST (Representational State Transfer) is an architectural style for designing web APIs using HTTP resources, standard methods, and JSON payloads — the pattern behind most AI service integrations.",
-    whyItExists:
-      "REST provides a predictable, language-agnostic way to expose and consume services. LLM providers, embedding APIs, vector DBs, and your own backends all follow REST conventions, making integration straightforward.",
-    analogy:
-      "REST is like a library catalog system — each book (resource) has a unique URL, you can browse (GET), add (POST), update (PUT), or remove (DELETE) books using standard procedures everyone understands.",
+      "REST is a design pattern for web APIs — resources at URLs, standard HTTP methods, and JSON payloads.",
     technicalExplanation:
-      "REST organizes APIs around resources identified by URLs (/users/123, /documents). HTTP methods map to CRUD operations. Responses use standard status codes and JSON bodies. Stateless: each request contains all needed info (auth headers). Versioning via URL (/v1/) or headers. HATEOAS is optional. For AI engineering, you'll build REST APIs with FastAPI and consume provider REST endpoints. Pagination, filtering, and idempotency matter at scale.",
-    architecture:
-      "Client → API Gateway → REST endpoints → business logic → database/LLM. Resources are nouns (documents, chats), methods are verbs (GET, POST). Authentication via API keys or OAuth Bearer tokens.",
+      "Resources are nouns (/documents, /chats). Methods are verbs (GET read, POST create). Each request is stateless with auth in headers.",
+    whyItExists:
+      "REST is predictable and universal. Every LLM provider, vector DB, and backend you build follows these conventions.",
+    analogy:
+      "REST is a library catalog — each book has a unique ID, and everyone uses the same rules to browse, add, or remove.",
+    analogyDiagram: `flowchart LR
+    A[Browse shelf] --> B[Pick book by ID]
+    B --> C[Return or add book]`,
     diagram: `flowchart TD
-    A[Client App] -->|GET /documents| B[API Server]
-    A -->|POST /chat| B
-    B --> C[Business Logic]
-    C --> D[(PostgreSQL)]
-    C --> E[LLM Provider API]
-    C --> F[(Vector DB)]`,
+    REST([REST API])
+
+    subgraph Design["Design Rules"]
+        D1[Resources = nouns in URLs]
+        D2["/documents /chats /users"]
+        D3[Stateless - no server sessions]
+        D4[Version with /v1/ in URL]
+    end
+
+    subgraph CRUD["HTTP Methods = CRUD"]
+        C1[GET - Read resource]
+        C2[POST - Create resource or action]
+        C3[PUT - Replace resource]
+        C4[PATCH - Partial update]
+        C5[DELETE - Remove resource]
+    end
+
+    subgraph Data["Request and Response"]
+        DA1[JSON request body]
+        DA2[JSON response body]
+        DA3[Proper status codes - 200 404 400]
+        DA4[Auth in every request header]
+    end
+
+    subgraph Tools["Tools"]
+        T1[FastAPI - build APIs in Python]
+        T2[Pydantic - validate input/output]
+        T3[OpenAPI docs at /docs]
+    end
+
+    REST --> Design
+    REST --> CRUD
+    REST --> Data
+    REST --> Tools
+    Client[Client App] --> API[API Server] --> DB[(Database / LLM)]`,
     example:
-      "You build a document Q&A REST API: POST /documents uploads and indexes a file, GET /documents/{id} retrieves metadata, POST /chat sends a question and returns an answer with source citations.",
-    code: `# FastAPI REST endpoints for an AI service
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-
-app = FastAPI()
-
-class ChatRequest(BaseModel):
-    question: str
-    document_id: str
-
-class ChatResponse(BaseModel):
-    answer: str
-    sources: list[str]
-
-@app.get("/documents/{doc_id}")
-def get_document(doc_id: str):
-    doc = db.find(doc_id)
-    if not doc:
-        raise HTTPException(status_code=404, detail="Not found")
-    return doc
-
-@app.post("/chat", response_model=ChatResponse)
-def chat(req: ChatRequest):
-    context = retriever.search(req.question, req.document_id)
-    answer = llm.generate(req.question, context)
-    return ChatResponse(answer=answer, sources=context.sources)`,
-    project:
-      "Build a minimal REST API with FastAPI that has CRUD endpoints for 'prompts' and a POST /run endpoint that sends the prompt to an LLM and returns the result.",
-    interviewQuestions: [
-      iq("What makes an API RESTful?", "Resources identified by URLs, standard HTTP methods for CRUD, stateless requests, JSON representations, and standard HTTP status codes. No server-side session state required.", "medium"),
-      iq("How do you version a REST API?", "URL path versioning (/v1/chat) is most common and explicit. Header versioning (Accept: application/vnd.api+json;version=1) is alternative. Never break existing clients without a version bump.", "medium"),
-      iq("What is idempotency and why does it matter for AI APIs?", "Repeating the same request produces the same result. GET, PUT, DELETE should be idempotent. POST to /chat is not — retries may duplicate charges. Use idempotency keys for paid LLM calls.", "hard"),
+      "You need an API where users upload documents and ask questions about them.",
+    exampleSolution:
+      "POST /documents uploads a file, GET /documents/{id} returns metadata, POST /chat returns an answer with source citations.",
+    commandsToRemember: [
+      "curl http://localhost:8000/docs  # open auto-generated API documentation",
+      "curl http://localhost:8000/documents/1  # GET a resource by ID",
+      "curl -X POST -H \"Content-Type: application/json\" -d '{...}' URL  # POST JSON to an endpoint",
     ],
+    interviewQuestions: [],
     revisionNotes: {
-      fiveMin: ["Resources = nouns in URLs", "HTTP methods = CRUD operations", "JSON request/response bodies", "Stateless — auth in every request"],
-      fifteenMin: ["FastAPI for Python REST APIs", "Pydantic for request validation", "404 for not found, 400 for bad input", "API versioning with /v1/", "Pagination with limit/offset or cursor", "OpenAPI docs auto-generated by FastAPI"],
-      oneHour: ["Build CRUD API with FastAPI", "Add authentication middleware", "Implement error handling with proper status codes", "Write API integration tests", "Generate OpenAPI spec", "Deploy behind nginx with HTTPS"],
-      cheatSheet: ["GET read, POST create", "PUT update, DELETE remove", "/v1/resource/{id}", "FastAPI + Pydantic", "HTTPException(status_code=404)", "OpenAPI at /docs"],
+      fiveMin: [],
+      fifteenMin: [],
+      oneHour: [],
+      cheatSheet: [
+        "Resources = nouns in URLs (/documents, /chats)",
+        "HTTP methods map to CRUD: GET read · POST create · PUT/PATCH update · DELETE remove",
+        "Stateless — auth token in every request header",
+        "JSON request and response bodies with proper status codes",
+        "Version APIs with /v1/ in the URL path",
+        "Build with FastAPI + Pydantic · docs at /docs",
+      ],
     },
     glossary: ["HTTP", "JSON", "CLI"],
     commonMistakes: [
-      "Using GET for operations that modify data",
-      "Inconsistent URL naming (verbs in paths like /getUser)",
-      "Returning 200 with error messages in body instead of proper status codes",
-      "No API versioning — breaking changes affect all clients",
+      "Using GET to modify data",
+      "Verbs in URLs like /getUser",
+      "Returning 200 with errors in body",
     ],
   }),
 
   json: createLesson({
     concept:
-      "JSON (JavaScript Object Notation) is the universal data format for AI APIs — every LLM request, response, tool schema, and config file uses it.",
-    whyItExists:
-      "AI systems exchange structured data constantly: chat messages, embedding vectors, tool definitions, evaluation results. JSON is human-readable, language-agnostic, and natively supported by every HTTP library and LLM SDK.",
-    analogy:
-      "JSON is the standardized form every department in a company uses — whether you're in Python, JavaScript, or Go, everyone fills out the same fields in the same format.",
+      "JSON is the universal data format for AI — every LLM request, response, tool schema, and config file uses it.",
     technicalExplanation:
-      "JSON supports objects ({key: value}), arrays ([1,2,3]), strings, numbers, booleans, and null. Keys must be double-quoted strings. LLM APIs use nested JSON: messages array with role/content objects, tool schemas as JSON Schema, streaming responses as JSON lines. Python uses json module or Pydantic for serialization. Watch for: trailing commas (invalid), single quotes (invalid), large payloads affecting latency, and Unicode handling.",
-    architecture:
-      "Application objects → serialize to JSON string → HTTP body → deserialize on receiver → validate with schema (Pydantic/JSON Schema) → use in business logic.",
-    diagram: `flowchart LR
-    A[Python dict/Pydantic model] -->|json.dumps| B[JSON string]
-    B -->|HTTP POST body| C[LLM API]
-    C -->|JSON response| D[json.loads]
-    D --> E[Python object]`,
+      "Objects {key: value}, arrays, strings, numbers, booleans, null. Keys need double quotes. Python uses json.dumps and json.loads.",
+    whyItExists:
+      "AI systems constantly exchange structured data. JSON is readable, lightweight, and works in every programming language.",
+    analogy:
+      "JSON is a standardized form every department fills out the same way — whether you're in Python, JavaScript, or Go.",
+    analogyDiagram: `flowchart LR
+    A[Python team] --> F[JSON form]
+    B[JS team] --> F
+    C[Go team] --> F
+    F --> D[Same data everywhere]`,
+    diagram: `flowchart TD
+    JSON([JSON])
+
+    subgraph Types["Data Types"]
+        T1[Object - key: value pairs]
+        T2[Array - list of values]
+        T3[String - double quotes only]
+        T4[Number / Boolean / null]
+    end
+
+    subgraph Rules["Rules"]
+        R1[Double quotes for all keys]
+        R2[No trailing commas]
+        R3[No single quotes]
+    end
+
+    subgraph AIUses["Used in AI For"]
+        A1[LLM request and response bodies]
+        A2[Chat messages array]
+        A3[Tool / function schemas]
+        A4[Config files]
+    end
+
+    subgraph Python["Python Tools"]
+        P1[json.dumps - object to string]
+        P2[json.loads - string to object]
+        P3[Pydantic - validate structure]
+        P4[JSON Schema for tool definitions]
+    end
+
+    JSON --> Types
+    JSON --> Rules
+    JSON --> AIUses
+    JSON --> Python
+    Dict[Python Dict] --> Dumps[json.dumps] --> String[JSON String] --> API[HTTP / LLM API]`,
     example:
-      "You define a function-calling tool schema in JSON, send it with the chat request, and the LLM returns a JSON object with the function name and arguments to execute.",
-    code: `import json
-from pydantic import BaseModel
-
-# Python dict to JSON
-payload = {
-    "model": "gpt-4o-mini",
-    "messages": [{"role": "user", "content": "Hello"}],
-    "temperature": 0.7,
-}
-json_str = json.dumps(payload)
-
-# JSON Schema for tool definition
-tool_schema = {
-    "type": "function",
-    "function": {
-        "name": "get_weather",
-        "parameters": {
-            "type": "object",
-            "properties": {"city": {"type": "string"}},
-            "required": ["city"],
-        },
-    },
-}
-
-class ChatMessage(BaseModel):
-    role: str
-    content: str`,
-    project:
-      "Create a config.json for your AI app (model name, temperature, max_tokens). Load it at startup, validate with Pydantic, and override values via environment variables.",
-    interviewQuestions: [
-      iq("Why is JSON the standard for LLM APIs?", "Human-readable, lightweight, natively parsed by all languages, maps naturally to HTTP bodies, and supports nested structures needed for messages, tools, and metadata.", "easy"),
-      iq("How do you validate JSON from an LLM response?", "Use Pydantic models or JSON Schema validation. Parse with json.loads, catch JSONDecodeError, and retry or ask the model to fix malformed output.", "medium"),
-      iq("What are common JSON pitfalls in AI applications?", "LLMs generating invalid JSON (trailing commas, markdown fences), large payloads increasing latency, not handling Unicode in multilingual apps, and not validating before use.", "medium"),
+      "You need the LLM to call a weather function with a city name.",
+    exampleSolution:
+      "Define the tool schema in JSON, send it with the chat request, and the LLM returns JSON with the function name and arguments.",
+    commandsToRemember: [
+      "python -c \"import json; print(json.dumps({'a':1}))\"  # convert Python dict to JSON string",
+      "python -c \"import json; print(json.loads('{\\\"a\\\":1}'))\"  # parse JSON string to Python dict",
     ],
+    interviewQuestions: [],
     revisionNotes: {
-      fiveMin: ["JSON: objects, arrays, strings, numbers", "Double quotes required for keys", "Standard format for all AI APIs", "json.dumps / json.loads in Python"],
-      fifteenMin: ["Pydantic for validation and serialization", "JSON Schema for tool definitions", "Nested structures for chat messages", "Handle JSONDecodeError gracefully", "LLMs may wrap JSON in markdown code blocks", "Config files as JSON or JSON-compatible YAML"],
-      oneHour: ["Serialize/deserialize LLM request/response", "Define tool schemas in JSON", "Validate LLM output with Pydantic", "Build config loader with env overrides", "Handle malformed JSON from LLMs", "Compare JSON vs MessagePack for performance"],
-      cheatSheet: ["json.dumps(obj)", "json.loads(str)", "Pydantic BaseModel", "JSON Schema for tools", 'Double quotes only', "Catch JSONDecodeError"],
+      fiveMin: [],
+      fifteenMin: [],
+      oneHour: [],
+      cheatSheet: [
+        "Universal format for all AI APIs — objects, arrays, strings, numbers",
+        "Keys must use double quotes — no trailing commas or single quotes",
+        "Used for LLM requests, chat messages, tool schemas, and configs",
+        "Python: json.dumps (object → string) · json.loads (string → object)",
+        "Validate structure with Pydantic or JSON Schema",
+        "LLMs may wrap JSON in markdown fences — strip before parsing",
+      ],
     },
     glossary: ["HTTP", "REST APIs", "Structured Outputs"],
     commonMistakes: [
-      "Not validating JSON from LLM outputs before using",
-      "Assuming LLM always returns valid JSON",
-      "Using single quotes in JSON (invalid)",
-      "Forgetting to strip markdown code fences from LLM JSON responses",
+      "Not validating JSON from LLM outputs",
+      "Single quotes in JSON (invalid)",
+      "Forgetting to strip markdown fences",
     ],
   }),
 
   cli: createLesson({
     concept:
-      "The Command Line Interface (CLI) lets you interact with your computer and tools through text commands — essential for development, deployment, and building AI agent tools.",
-    whyItExists:
-      "Servers don't have GUIs. You deploy, debug, and automate via CLI. Many AI tools (git, docker, kubectl, aws, openai CLI) are command-line first. Agents themselves often execute CLI commands as tools.",
-    analogy:
-      "The CLI is like texting your computer precise instructions instead of pointing and clicking — faster for experts, scriptable, and works over remote connections.",
+      "The CLI lets you control your computer through text commands — essential for servers, deployment, and AI agent tools.",
     technicalExplanation:
-      "Shell (bash/zsh) interprets commands. Structure: command [options] [arguments]. Flags modify behavior (-v verbose, -f force). Pipes chain commands. Scripts (.sh files) automate workflows. For AI: build CLIs with Python argparse/typer/click, use CLIs as agent tools, and manage projects via git/docker/npm/pip commands. Exit codes: 0 = success, non-zero = error.",
-    architecture:
-      "User types command → shell parses → executes binary or script → stdout/stderr output → exit code. Scripts chain commands with && and ||. Environment variables configure behavior.",
+      "Format: command [options] [arguments]. Pipes (|) chain commands. Exit code 0 = success. Build Python CLIs with typer or click.",
+    whyItExists:
+      "Servers have no GUI. Git, Docker, kubectl, and cloud tools are all CLI-first. Agents execute shell commands as tools.",
+    analogy:
+      "CLI is texting your computer precise instructions — faster than clicking, works over remote connections.",
+    analogyDiagram: `flowchart LR
+    A[Type command] --> B[Computer runs it]
+    B --> C[Text output]`,
     diagram: `flowchart TD
-    A[Engineer types command] --> B[Shell parses]
-    B --> C[Executes program]
-    C --> D[stdout output]
-    C --> E[stderr errors]
-    C --> F[exit code 0 or 1]
-    D --> G[Pipe to next command]`,
+    CLI([Command Line Interface])
+
+    subgraph Structure["Command Structure"]
+        S1[command - what to run]
+        S2[flags --verbose - options]
+        S3[arguments - inputs]
+    end
+
+    subgraph Chaining["Chaining and Scripts"]
+        C1[Pipe - cmd1 | cmd2]
+        C2[Redirect - output to file]
+        C3[Bash .sh scripts]
+        C4[chmod +x to make executable]
+    end
+
+    subgraph Output["Output"]
+        O1[stdout - normal output]
+        O2[stderr - error output]
+        O3[Exit code 0 = success]
+        O4[Exit code non-zero = failure]
+    end
+
+    subgraph PythonCLI["Build CLIs in Python"]
+        P1[typer]
+        P2[click]
+        P3[argparse]
+    end
+
+    subgraph Agents["AI Agent Use"]
+        A1[Agents execute shell commands as tools]
+        A2[Always validate inputs - prevent injection]
+        A3[Check exit codes not just stdout]
+    end
+
+    CLI --> Structure
+    CLI --> Chaining
+    CLI --> Output
+    CLI --> PythonCLI
+    CLI --> Agents`,
     example:
-      "You build a CLI tool `rag-cli ingest ./docs` that chunks PDFs, embeds them, and stores in ChromaDB. Your agent later calls this same CLI as a tool to refresh the knowledge base.",
-    code: `# Build a CLI with Python typer
-import typer
-from pathlib import Path
-
-app = typer.Typer()
-
-@app.command()
-def summarize(file: Path, output: Path = None):
-    """Summarize a text file using an LLM."""
-    text = file.read_text()
-    summary = ask_llm(f"Summarize: {text}")
-    out = output or file.with_suffix(".summary.txt")
-    out.write_text(summary)
-    typer.echo(f"Saved to {out}")
-
-@app.command()
-def chat(question: str):
-    """Ask a question against the knowledge base."""
-    answer = rag_pipeline.query(question)
-    typer.echo(answer)
-
-if __name__ == "__main__":
-    app()`,
-    project:
-      "Build a typer CLI with subcommands: `setup` (init project), `ask` (query LLM), `eval` (run evaluation suite). Add --verbose flag and proper exit codes.",
-    interviewQuestions: [
-      iq("Why do AI engineers need CLI skills?", "Servers are headless, deployment is CLI-driven, tools like docker/git/kubectl are CLI-based, and agents execute shell commands as tools in production.", "easy"),
-      iq("How would you expose a CLI command as an agent tool?", "Wrap the CLI in a function that constructs the command, captures stdout/stderr, handles exit codes, and returns structured output to the agent. Validate inputs to prevent injection.", "medium"),
-      iq("What are exit codes and why do they matter?", "0 means success, non-zero means failure. Scripts and CI pipelines check exit codes. Agents should verify exit codes after running shell commands, not just read stdout.", "medium"),
+      "You need a command to ingest new documents into your RAG knowledge base.",
+    exampleSolution:
+      "Build `rag-cli ingest ./docs` — it chunks PDFs, embeds them, and stores in the vector DB. Your agent calls this same CLI as a tool.",
+    commandsToRemember: [
+      "command --help  # show available options for a command",
+      "cmd1 | cmd2  # pipe output of cmd1 into cmd2",
+      "echo $?  # print exit code of the last command",
+      "chmod +x script.sh  # make a script file executable",
+      "./script.sh  # run the script",
     ],
+    interviewQuestions: [],
     revisionNotes: {
-      fiveMin: ["CLI = text-based computer control", "command --flag argument", "Pipe with | chains commands", "Exit code 0 = success"],
-      fifteenMin: ["argparse, typer, click for Python CLIs", "Environment variables configure CLI tools", "Scripts automate with bash", "Agents can call CLI as tools", "Redirect output with > and 2>", "Tab completion improves UX"],
-      oneHour: ["Build a typer CLI for your AI project", "Add subcommands and options", "Handle errors with exit codes", "Write a bash deploy script", "Expose CLI as an agent tool safely", "Add input validation against injection"],
-      cheatSheet: ["typer / click / argparse", "cmd --flag value", "echo $VAR", "cmd1 | cmd2", "exit code: echo $?", "chmod +x script.sh"],
+      fiveMin: [],
+      fifteenMin: [],
+      oneHour: [],
+      cheatSheet: [
+        "Format: command [flags] [arguments]",
+        "Pipe (|) chains commands — output of one feeds the next",
+        "Exit code 0 = success · non-zero = failure",
+        "Build Python CLIs with typer, click, or argparse",
+        "Agents can run shell commands as tools — validate inputs against injection",
+        "Servers have no GUI — git, docker, kubectl are all CLI-first",
+      ],
     },
     glossary: ["Linux", "Git", "Docker"],
     commonMistakes: [
-      "Not validating user input before passing to shell commands (injection risk)",
-      "Ignoring exit codes — assuming success from stdout alone",
-      "Hardcoding paths instead of using relative paths or config",
-      "No --help documentation on custom CLI tools",
+      "Not validating input before shell commands",
+      "Ignoring exit codes",
+      "No --help on custom tools",
     ],
   }),
 
   docker: createLesson({
     concept:
-      "Docker packages your application and all its dependencies into a portable container — ensuring it runs identically on your laptop, staging, and production.",
-    whyItExists:
-      "AI apps have complex dependencies (Python packages, system libraries, model files). 'It works on my machine' is a real problem. Docker solves this by creating reproducible, isolated environments for development and deployment.",
-    analogy:
-      "A shipping container — regardless of what's inside or which ship carries it, the container standard means it loads and unloads the same way everywhere.",
+      "Docker packages your app and dependencies into a portable container — runs identically on your laptop and in production.",
     technicalExplanation:
-      "Docker uses images (blueprints) and containers (running instances). A Dockerfile defines how to build the image: base image (python:3.12-slim), install dependencies, copy code, set entrypoint. Docker Compose orchestrates multiple containers (app + database + vector DB). Volumes persist data. Networks connect containers. Multi-stage builds reduce image size.",
-    architecture:
-      "Dockerfile → docker build → Image → docker run → Container. Compose file defines multi-service stack. Registry (Docker Hub, ECR) stores images. CI builds and pushes images on merge.",
+      "Images are blueprints, containers are running instances. Dockerfile defines the build. Docker Compose runs multiple services together.",
+    whyItExists:
+      "AI apps have complex dependencies. Docker solves 'it works on my machine' with reproducible environments.",
+    analogy:
+      "A shipping container — loads and unloads the same way everywhere, no matter what's inside.",
+    analogyDiagram: `flowchart LR
+    A[Pack goods] --> B[Container]
+    B --> C[Ship anywhere]
+    C --> D[Unload same way]`,
     diagram: `flowchart TD
-    A[Dockerfile] -->|docker build| B[Image]
-    B -->|docker run| C[Container: API]
-    B -->|docker run| D[Container: ChromaDB]
-    E[docker-compose.yml] --> C
-    E --> D
-    C <-->|network| D`,
-    example:
-      "Your FastAPI RAG app runs in one container, ChromaDB in another, connected via Docker Compose. Deploy the same compose file to any cloud VM.",
-    code: `# Dockerfile for a Python AI API
-FROM python:3.12-slim
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-COPY . .
-EXPOSE 8000
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+    DOCK([Docker])
 
-# docker build -t my-rag-app .
-# docker run -p 8000:8000 --env-file .env my-rag-app`,
-    project:
-      "Dockerize your PDF chat application. Create a Dockerfile and docker-compose.yml with your API and ChromaDB. Verify it runs with a single docker-compose up command.",
-    interviewQuestions: [
-      iq("Why use Docker for AI applications?", "Reproducible environments, easy deployment, isolation between services, consistent dev/staging/prod, and simplified CI/CD pipelines.", "easy"),
-      iq("Docker vs virtual machines?", "Containers share the host OS kernel — lighter, faster startup. VMs include full OS — heavier but stronger isolation. Containers are standard for AI app deployment.", "medium"),
-      iq("How do you handle secrets in Docker?", "Never put secrets in Dockerfile or image layers. Use --env-file, Docker secrets, or cloud secret managers. Mount .env at runtime, not build time.", "medium"),
+    subgraph Concepts["Core Concepts"]
+        C1[Dockerfile - build instructions]
+        C2[Image - packaged blueprint]
+        C3[Container - running instance]
+    end
+
+    subgraph Commands["Key Commands"]
+        CMD1[docker build -t name .]
+        CMD2[docker run -p 8000:8000 name]
+        CMD3[docker-compose up -d]
+        CMD4[docker logs / docker exec]
+        CMD5[docker ps - list containers]
+    end
+
+    subgraph Multi["Multi-Service"]
+        M1[docker-compose.yml]
+        M2[API container + DB container]
+        M3[Container networking]
+        M4[Volume mounts - persist data]
+    end
+
+    subgraph Best["Best Practices"]
+        B1[.dockerignore - smaller images]
+        B2[--env-file for secrets at runtime]
+        B3[Never put API keys in Dockerfile]
+        B4[Pin base image versions]
+    end
+
+    DOCK --> Concepts
+    Concepts --> C1 --> C2 --> C3
+    DOCK --> Commands
+    DOCK --> Multi
+    DOCK --> Best`,
+    example:
+      "Your FastAPI app works locally but crashes on the production server due to missing dependencies.",
+    exampleSolution:
+      "Dockerize it — Dockerfile installs exact deps, docker-compose runs API + ChromaDB together. Same result everywhere.",
+    commandsToRemember: [
+      "docker build -t name .  # build an image from Dockerfile",
+      "docker run -p 8000:8000 name  # run container and map port 8000",
+      "docker run --env-file .env name  # pass secrets via env file at runtime",
+      "docker-compose up -d  # start all services in the background",
+      "docker logs container_id  # view logs from a container",
+      "docker ps  # list currently running containers",
     ],
+    interviewQuestions: [],
     revisionNotes: {
-      fiveMin: ["Image = blueprint, Container = running instance", "Dockerfile defines how to build", "docker build + docker run", "Never put secrets in Dockerfile"],
-      fifteenMin: ["Multi-stage builds for smaller images", "docker-compose for multi-service apps", ".dockerignore to exclude unnecessary files", "Volume mounts for persistent data", "Environment variables via --env-file", "Container networking for service communication"],
-      oneHour: ["Write Dockerfile for FastAPI app", "Set up docker-compose with API + DB", "Deploy container to cloud VM", "Debug container with docker logs/exec", "Optimize image size with slim base", "Add health checks to containers"],
-      cheatSheet: ["docker build -t name .", "docker run -p 8000:8000 name", "docker-compose up -d", "docker logs container_id", "docker exec -it container bash", ".dockerignore"],
+      fiveMin: [],
+      fifteenMin: [],
+      oneHour: [],
+      cheatSheet: [
+        "Image = blueprint · Container = running instance",
+        "Dockerfile defines build steps · docker build creates image",
+        "docker run starts a container · docker-compose runs multiple services",
+        "Pass secrets via --env-file at runtime — never in Dockerfile",
+        "Use .dockerignore to keep images small",
+        "docker logs and docker exec for debugging",
+      ],
     },
     glossary: ["CLI", "CI/CD", "REST APIs"],
     commonMistakes: [
-      "Putting API keys in Dockerfile",
-      "Not using .dockerignore (large images)",
+      "API keys in Dockerfile",
+      "No .dockerignore — huge images",
       "Running as root in production",
-      "Not pinning base image versions",
     ],
   }),
 
   sql: createLesson({
     concept:
-      "SQL (Structured Query Language) is the standard language for relational databases — used to store user data, chat history, application state, and metadata in AI applications.",
-    whyItExists:
-      "AI apps need persistent storage: user accounts, conversation history, document metadata, audit logs, and evaluation results. Relational databases provide ACID transactions, structured schemas, and powerful querying with SQL.",
-    analogy:
-      "SQL is like Excel for databases — tables with rows and columns, but with powerful queries that can join, filter, and aggregate millions of rows instantly.",
+      "SQL is the language for relational databases — store users, chat history, and app metadata in structured tables.",
     technicalExplanation:
-      "Relational databases (PostgreSQL, MySQL, SQLite) store data in tables with defined schemas. SQL operations: SELECT (read), INSERT (create), UPDATE (modify), DELETE (remove). JOIN combines tables. Indexes speed lookups. PostgreSQL is the go-to for AI apps — it supports JSON columns, full-text search, and the pgvector extension for embeddings. ORMs like SQLAlchemy map Python objects to tables.",
-    architecture:
-      "Application → ORM (SQLAlchemy) → connection pool → PostgreSQL. Migrations (Alembic) version the schema. Read replicas handle query load. Transactions ensure data consistency.",
+      "Tables have rows and columns. SELECT reads, INSERT creates, UPDATE modifies, DELETE removes. PostgreSQL is the go-to for AI apps.",
+    whyItExists:
+      "AI apps need persistent storage for users, conversations, and metadata. SQL databases provide reliable, queryable storage.",
+    analogy:
+      "SQL is Excel for databases — rows and columns, but queries scale to millions of records instantly.",
+    analogyDiagram: `flowchart LR
+    A[Spreadsheet rows] --> B[Millions of rows]
+    B --> C[Instant queries]`,
     diagram: `flowchart TD
-    A[FastAPI App] --> B[SQLAlchemy ORM]
-    B --> C[Connection Pool]
-    C --> D[(PostgreSQL)]
-    D --> E[users table]
-    D --> F[chats table]
-    D --> G[documents table]`,
+    SQL([SQL])
+
+    subgraph Ops["SQL Operations"]
+        O1[SELECT - read rows]
+        O2[INSERT - add rows]
+        O3[UPDATE - modify rows]
+        O4[DELETE - remove rows]
+    end
+
+    subgraph Structure["Database Structure"]
+        S1[Tables - rows and columns]
+        S2[Schema - column definitions]
+        S3[JOIN - combine related tables]
+        S4[Indexes - speed up queries]
+    end
+
+    subgraph AIUses["AI App Storage"]
+        A1[User accounts]
+        A2[Chat history and messages]
+        A3[Document metadata]
+        A4[Audit logs and billing]
+    end
+
+    subgraph Tools["Tools"]
+        T1[PostgreSQL - default for AI apps]
+        T2[SQLAlchemy - Python ORM]
+        T3[Alembic - schema migrations]
+        T4[pgvector - embeddings in Postgres]
+    end
+
+    SQL --> Ops
+    SQL --> Structure
+    SQL --> AIUses
+    SQL --> Tools
+    App[FastAPI App] --> Query[SQL Query] --> DB[(PostgreSQL)]`,
     example:
-      "Your chat app stores conversations in PostgreSQL. Each message has user_id, role, content, timestamp, and tokens_used. You query the last 10 messages for context window management.",
-    code: `# SQLAlchemy models for an AI chat app
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, create_engine
-from sqlalchemy.orm import declarative_base, Session
-
-Base = declarative_base()
-
-class Chat(Base):
-    __tablename__ = "chats"
-    id = Column(Integer, primary_key=True)
-    user_id = Column(String, nullable=False)
-    title = Column(String)
-
-class Message(Base):
-    __tablename__ = "messages"
-    id = Column(Integer, primary_key=True)
-    chat_id = Column(Integer, ForeignKey("chats.id"))
-    role = Column(String)  # user, assistant, system
-    content = Column(String)
-    tokens_used = Column(Integer)
-
-# Query recent messages
-# SELECT * FROM messages WHERE chat_id = 1 ORDER BY id DESC LIMIT 10`,
-    project:
-      "Add PostgreSQL to your AI app with SQLAlchemy. Store chat history, implement GET /chats and GET /chats/{id}/messages endpoints, and use Alembic for migrations.",
-    interviewQuestions: [
-      iq("When would you use SQL vs a vector database?", "SQL for structured data: users, metadata, chat history, billing. Vector DB for semantic similarity search on embeddings. Most AI apps use both.", "medium"),
-      iq("What is pgvector and why is it useful?", "PostgreSQL extension for storing and querying vector embeddings. Lets you combine relational data and vector search in one database — simpler architecture for small-to-medium apps.", "medium"),
-      iq("Explain database indexes in the context of AI apps.", "Indexes speed up lookups on frequently queried columns (user_id, created_at). Without indexes, finding a user's chat history in millions of rows requires full table scans.", "hard"),
+      "Your chat app needs to remember the last 10 messages for context window management.",
+    exampleSolution:
+      "Store messages in a PostgreSQL table with chat_id, role, and content. Query: SELECT * FROM messages WHERE chat_id = 1 ORDER BY id DESC LIMIT 10.",
+    commandsToRemember: [
+      "SELECT * FROM table WHERE condition;  # read rows matching a condition",
+      "INSERT INTO table (col) VALUES ('val');  # add a new row",
+      "UPDATE table SET col = 'val' WHERE id = 1;  # modify an existing row",
+      "DELETE FROM table WHERE id = 1;  # remove a row",
+      "psql -U user -d dbname  # connect to a PostgreSQL database",
     ],
+    interviewQuestions: [],
     revisionNotes: {
-      fiveMin: ["SQL queries relational databases", "Tables: rows and columns", "SELECT, INSERT, UPDATE, DELETE", "PostgreSQL is the AI app default"],
-      fifteenMin: ["SQLAlchemy ORM maps Python to tables", "JOINs combine related tables", "Indexes speed up queries", "Migrations with Alembic", "pgvector for embeddings in Postgres", "Connection pooling for performance"],
-      oneHour: ["Set up PostgreSQL with Docker", "Define SQLAlchemy models", "Write CRUD queries", "Add Alembic migrations", "Store and retrieve chat history", "Query with filters and pagination"],
-      cheatSheet: ["SELECT * FROM table WHERE...", "INSERT INTO table VALUES...", "SQLAlchemy + Alembic", "PostgreSQL + pgvector", "Index on foreign keys", "Connection pool in FastAPI"],
+      fiveMin: [],
+      fifteenMin: [],
+      oneHour: [],
+      cheatSheet: [
+        "SELECT read · INSERT create · UPDATE modify · DELETE remove",
+        "Data stored in tables — rows and columns with defined schema",
+        "PostgreSQL is the default for AI apps",
+        "JOIN combines related tables · indexes speed up queries",
+        "SQLAlchemy maps Python to tables · Alembic handles migrations",
+        "pgvector adds embedding search inside Postgres",
+      ],
     },
     glossary: ["NoSQL", "REST APIs", "Docker"],
     commonMistakes: [
-      "Storing large text/embeddings in SQL without considering size limits",
-      "No database migrations — schema drift between environments",
-      "SQL injection from raw string queries (use parameterized queries)",
-      "Not indexing columns used in WHERE clauses",
+      "No database migrations — schema drift",
+      "SQL injection from raw string queries",
+      "Not indexing frequently queried columns",
     ],
   }),
 
   nosql: createLesson({
     concept:
-      "NoSQL databases store data in flexible, non-tabular formats — document stores, key-value caches, and vector databases are all critical for AI application architecture.",
-    whyItExists:
-      "AI apps handle diverse data: JSON documents, session caches, real-time metrics, and high-dimensional embedding vectors. NoSQL databases optimize for these patterns where relational models are awkward or too slow.",
-    analogy:
-      "If SQL is a filing cabinet with strict folders, NoSQL is a warehouse with different storage zones — shelves for documents, bins for key-value pairs, and specialized racks for vector embeddings.",
+      "NoSQL databases handle flexible, non-tabular data — caches, documents, and vector stores power AI architectures.",
     technicalExplanation:
-      "NoSQL categories: document stores (MongoDB — flexible JSON documents), key-value (Redis — fast caching, session storage), wide-column (Cassandra — massive scale), and vector databases (Pinecone, ChromaDB, Weaviate — embedding storage and similarity search). AI apps commonly use Redis for caching LLM responses, MongoDB for flexible document storage, and dedicated vector DBs for RAG retrieval.",
-    architecture:
-      "API layer queries multiple stores: PostgreSQL for users/metadata, Redis for cache/sessions, Vector DB for semantic search. Each store optimized for its access pattern.",
+      "Redis for fast caching, MongoDB for flexible documents, vector DBs (Pinecone, ChromaDB) for embedding search. Pick the right store per data type.",
+    whyItExists:
+      "AI apps handle diverse data — JSON docs, session caches, and high-dimensional embeddings. NoSQL optimizes for these patterns.",
+    analogy:
+      "SQL is a strict filing cabinet. NoSQL is a warehouse with different zones — documents, caches, and vector racks.",
+    analogyDiagram: `flowchart LR
+    A[Filing cabinet] --> B[Strict folders]
+    C[Warehouse] --> D[Flexible zones]`,
     diagram: `flowchart TD
-    A[AI Application] --> B[(PostgreSQL metadata)]
-    A --> C[(Redis cache)]
-    A --> D[(Vector DB embeddings)]
-    A --> E[(MongoDB documents)]
-    C -->|cache miss| A
-    D -->|similarity search| A`,
+    NS([NoSQL])
+
+    subgraph Types["Database Types"]
+        T1[Document Store - MongoDB flexible JSON]
+        T2[Key-Value - Redis fast cache]
+        T3[Vector DB - embedding similarity search]
+    end
+
+    subgraph Redis["Redis Uses"]
+        R1[Cache LLM responses]
+        R2[TTL - auto-expire stale data]
+        R3[Session storage]
+        R4[Cache key = hash of prompt]
+    end
+
+    subgraph Vector["Vector Databases"]
+        V1[Pinecone]
+        V2[ChromaDB]
+        V3[Weaviate]
+        V4[RAG retrieval and similarity search]
+    end
+
+    subgraph When["When to Use"]
+        W1[SQL - structured relational data]
+        W2[Redis - speed and caching]
+        W3[MongoDB - flexible documents]
+        W4[Vector DB - semantic search on embeddings]
+    end
+
+    NS --> Types
+    NS --> Redis
+    NS --> Vector
+    NS --> When
+    App[AI Application] --> RedisDB[(Redis)]
+    App --> Mongo[(MongoDB)]
+    App --> VectorDB[(Vector DB)]`,
     example:
-      "Your RAG app caches frequent queries in Redis (1-hour TTL), stores document metadata in PostgreSQL, full document content in MongoDB, and chunk embeddings in Pinecone for retrieval.",
-    code: `# Redis caching for LLM responses
-import redis
-import json
-import hashlib
-
-r = redis.Redis(host="localhost", port=6379)
-
-def cached_llm_call(prompt: str) -> str:
-    key = f"llm:{hashlib.md5(prompt.encode()).hexdigest()}"
-    cached = r.get(key)
-    if cached:
-        return json.loads(cached)
-    response = call_llm(prompt)
-    r.setex(key, 3600, json.dumps(response))  # 1 hour TTL
-    return response`,
-    project:
-      "Add Redis caching to your LLM API. Cache responses by prompt hash with TTL. Add a /cache/stats endpoint showing hit rate. Compare latency with and without cache.",
-    interviewQuestions: [
-      iq("When should you choose NoSQL over SQL?", "When you need flexible schemas (documents), extreme read speed (caching), horizontal scaling (sharding), or specialized search (vector similarity). Use SQL when relationships and transactions matter.", "medium"),
-      iq("How is a vector database different from a regular NoSQL store?", "Vector DBs are optimized for approximate nearest neighbor search on high-dimensional embeddings. They use specialized indexes (HNSW, IVF) for fast similarity queries that general databases can't match at scale.", "medium"),
-      iq("What are trade-offs of using Redis for LLM response caching?", "Pros: massive latency reduction, cost savings on API calls. Cons: stale responses if underlying data changes, memory limits, cache invalidation complexity, and cached wrong answers persist until TTL expires.", "hard"),
+      "Users keep asking the same questions and you're paying for duplicate LLM API calls.",
+    exampleSolution:
+      "Cache responses in Redis with a 1-hour TTL. Cache hit = instant answer, no API cost. Miss = call LLM and store result.",
+    commandsToRemember: [
+      "redis-cli  # open the Redis command-line interface",
+      "redis-cli GET key  # read a cached value by key",
+      "redis-cli SET key value EX 3600  # store a value with 1-hour expiry",
+      "mongosh  # open the MongoDB shell",
     ],
+    interviewQuestions: [],
     revisionNotes: {
-      fiveMin: ["NoSQL = flexible non-tabular storage", "Redis for caching, MongoDB for documents", "Vector DBs for embedding search", "AI apps often use multiple databases"],
-      fifteenMin: ["Document stores: schema-flexible JSON", "Key-value: Redis for speed", "Vector DBs: Pinecone, ChromaDB, Weaviate", "Cache LLM responses with TTL", "Choose the right store per data type", "Eventual consistency in some NoSQL systems"],
-      oneHour: ["Set up Redis with Docker", "Implement LLM response caching", "Store documents in MongoDB", "Compare query patterns across SQL/NoSQL/Vector", "Design multi-database architecture", "Monitor cache hit rates"],
-      cheatSheet: ["Redis: r.setex(key, ttl, value)", "MongoDB: flexible documents", "Vector DB: similarity search", "Cache key = hash of input", "TTL prevents stale data", "Right tool for right data"],
+      fiveMin: [],
+      fifteenMin: [],
+      oneHour: [],
+      cheatSheet: [
+        "Redis — fast key-value cache with TTL for LLM responses",
+        "MongoDB — flexible JSON document storage",
+        "Vector DBs (Pinecone, ChromaDB) — embedding similarity search",
+        "SQL for structured data · NoSQL for flexible / cached / vector data",
+        "Cache key = hash of input · TTL prevents stale answers",
+        "Pick the right database per data type — don't use one for everything",
+      ],
     },
     glossary: ["SQL", "Vector Databases", "Embeddings"],
     commonMistakes: [
-      "Using one database for everything instead of right tool for the job",
-      "No cache invalidation strategy — serving stale answers",
-      "Ignoring memory limits on Redis",
-      "Storing vectors in a regular database without proper indexing",
+      "One database for everything",
+      "No cache invalidation — stale answers",
+      "Ignoring Redis memory limits",
     ],
   }),
 
   testing: createLesson({
     concept:
-      "Testing ensures your AI application works correctly — unit tests for logic, integration tests for APIs, and evaluation suites for LLM output quality.",
-    whyItExists:
-      "AI apps are non-deterministic and complex. Testing catches bugs in retrieval logic, API contracts, data pipelines, and regressions in prompt quality. Without tests, every deploy is a gamble.",
-    analogy:
-      "Testing is a safety net under a trapeze artist — you hope you don't need it, but it catches you when something goes wrong. For AI, you need both structural nets (unit tests) and quality checks (evals).",
+      "Testing catches bugs before users do — unit tests for logic, integration tests for APIs, evals for LLM quality.",
     technicalExplanation:
-      "Testing pyramid: unit tests (fast, isolated — test functions with mocked LLM), integration tests (API endpoints with test database), end-to-end tests (full user flows). For AI specifically: mock LLM responses in tests (don't call real APIs), use pytest fixtures, test retrieval logic independently from generation, and build evaluation datasets for output quality. Snapshot testing captures expected LLM outputs for regression detection.",
-    architecture:
-      "tests/ directory mirrors src/. pytest runs unit and integration tests. CI runs tests on every PR. Eval suite runs separately with real LLM calls on a schedule. Mocks replace external services in unit tests.",
+      "Unit tests are fast and mock the LLM. Integration tests check API endpoints. Evals measure output quality on golden datasets. Never call real LLM APIs in CI unit tests.",
+    whyItExists:
+      "AI apps are complex and non-deterministic. Without tests, every deploy is a gamble.",
+    analogy:
+      "Testing is a safety net — unit tests catch code bugs, evals catch quality drops.",
+    analogyDiagram: `flowchart LR
+    A[Trapeze artist] --> B[Safety net]
+    B --> C[Catches falls]`,
     diagram: `flowchart TD
-    A[Code Change] --> B[Unit Tests mocked LLM]
-    B --> C[Integration Tests test DB]
-    C --> D[CI Pipeline]
-    D -->|pass| E[Deploy]
-    D -->|fail| F[Block merge]
-    G[Eval Suite] -->|scheduled| H[Quality metrics]`,
+    TEST([Testing])
+
+    subgraph Pyramid["Testing Pyramid"]
+        P1[Unit Tests - fast isolated logic]
+        P2[Integration Tests - API + test DB]
+        P3[Evals - LLM output quality]
+    end
+
+    subgraph Unit["Unit Tests"]
+        U1[Mock LLM responses]
+        U2[Test chunking and retrieval logic]
+        U3[Never call real LLM APIs in CI]
+    end
+
+    subgraph Integration["Integration Tests"]
+        I1[Test API endpoints]
+        I2[Mock external services]
+        I3[Check status codes and response shape]
+    end
+
+    subgraph Evals["Evals"]
+        E1[Golden Q&A datasets]
+        E2[Measure accuracy and relevance]
+        E3[Run on schedule not every PR]
+    end
+
+    subgraph Tools["Tools"]
+        TO1[pytest]
+        TO2[unittest.mock.patch]
+        TO3[Fixtures and parametrize]
+        TO4[Coverage reports]
+    end
+
+    TEST --> Pyramid
+    TEST --> Unit
+    TEST --> Integration
+    TEST --> Evals
+    TEST --> Tools
+    Change[Code Change] --> Unit --> Integration --> CI[CI Pipeline] --> Deploy[Deploy]`,
     example:
-      "You write a unit test for your chunking function (deterministic), an integration test for POST /chat (mocked LLM response), and an eval that checks answer accuracy against 50 golden questions.",
-    code: `# Testing an AI application with pytest
-import pytest
-from unittest.mock import patch, MagicMock
-
-def test_chunk_text():
-    text = "Hello world. " * 100
-    chunks = chunk_text(text, chunk_size=50)
-    assert len(chunks) > 1
-    assert all(len(c) <= 60 for c in chunks)
-
-@patch("app.llm_client.chat.completions.create")
-def test_chat_endpoint(mock_llm, client):
-    mock_llm.return_value = MagicMock(
-        choices=[MagicMock(message=MagicMock(content="Paris"))]
-    )
-    response = client.post("/chat", json={"question": "Capital of France?"})
-    assert response.status_code == 200
-    assert "Paris" in response.json()["answer"]`,
-    project:
-      "Add pytest to your AI project. Write 5 unit tests (chunking, parsing, validation), 2 integration tests (API endpoints with mocked LLM), and 1 eval script with 10 golden Q&A pairs.",
-    interviewQuestions: [
-      iq("How do you test code that calls LLM APIs?", "Mock the LLM client in unit/integration tests. Use deterministic fixtures for expected responses. Reserve real LLM calls for evaluation suites run on schedule, not in CI.", "medium"),
-      iq("What is the difference between tests and evals?", "Tests verify deterministic behavior (code logic, API contracts). Evals measure non-deterministic output quality (accuracy, relevance, safety) against golden datasets.", "medium"),
-      iq("How do you prevent flaky AI tests?", "Mock external APIs, don't assert exact LLM output text, use semantic similarity thresholds for evals, pin model versions, and separate fast tests (CI) from slow evals (scheduled).", "hard"),
+      "You changed the chunking logic and need to verify nothing broke before deploying.",
+    exampleSolution:
+      "Run unit tests on chunking (deterministic), integration test on POST /chat (mocked LLM), and check eval scores against golden Q&A pairs.",
+    commandsToRemember: [
+      "pytest  # run all tests in the project",
+      "pytest tests/test_file.py -v  # run one test file with verbose output",
+      "pytest -k \"test_name\"  # run only tests matching a name",
+      "pytest --cov=src  # run tests and show code coverage",
     ],
+    interviewQuestions: [],
     revisionNotes: {
-      fiveMin: ["Unit tests: fast, isolated, mocked", "Integration tests: API + test DB", "Evals: measure LLM output quality", "Never call real LLM APIs in CI unit tests"],
-      fifteenMin: ["pytest fixtures and parametrize", "unittest.mock.patch for LLM mocking", "Test retrieval logic separately from generation", "Golden datasets for evaluation", "Snapshot testing for regression", "Test coverage for critical paths"],
-      oneHour: ["Set up pytest in AI project", "Write unit tests with mocks", "Write API integration tests", "Build eval script with metrics", "Add tests to CI pipeline", "Measure and improve test coverage"],
-      cheatSheet: ["pytest test_file.py", "@patch for mocking", "assert response.status_code == 200", "fixtures for test data", "mock LLM, test logic", "evals != unit tests"],
+      fiveMin: [],
+      fifteenMin: [],
+      oneHour: [],
+      cheatSheet: [
+        "Unit tests — fast, isolated, mock the LLM",
+        "Integration tests — API endpoints with test database",
+        "Evals — measure LLM output quality on golden datasets",
+        "Never call real LLM APIs in CI unit tests",
+        "Test retrieval and chunking logic separately from generation",
+        "pytest + unittest.mock.patch for mocking",
+      ],
     },
     glossary: ["CI/CD", "Evaluation", "Python"],
     commonMistakes: [
-      "Calling real LLM APIs in unit tests — slow, expensive, flaky",
-      "Testing LLM output verbatim instead of structure/semantics",
-      "No tests for retrieval/chunking logic (the deterministic parts)",
-      "Skipping integration tests — only testing in production",
+      "Real LLM APIs in unit tests",
+      "Testing LLM output verbatim",
+      "No tests for retrieval/chunking logic",
     ],
   }),
 
   "ci-cd": createLesson({
     concept:
-      "CI/CD (Continuous Integration / Continuous Deployment) automates testing, building, and deploying your AI application — ensuring every change is validated before reaching production.",
-    whyItExists:
-      "AI projects change frequently — new prompts, model updates, pipeline tweaks. Manual deployment is error-prone. CI/CD runs tests automatically, builds Docker images, and deploys to staging/production with confidence.",
-    analogy:
-      "CI/CD is an assembly line quality checkpoint — every product (code change) is inspected (tested), packaged (built), and shipped (deployed) automatically, with defective items rejected before they reach customers.",
+      "CI/CD automates testing, building, and deploying your app — every code change is validated before reaching production.",
     technicalExplanation:
-      "CI: on every push/PR, run linting, unit tests, integration tests, and build Docker image. CD: on merge to main, deploy to staging, run smoke tests, then promote to production. Tools: GitHub Actions, GitLab CI, CircleCI. Pipeline stages: checkout → install deps → test → build → push image → deploy. For AI: also run eval suites on schedule, version prompts in CI artifacts, and use feature flags for model swaps.",
-    architecture:
-      "Developer pushes code → GitHub Actions triggered → run tests → build Docker image → push to registry → deploy to staging → smoke test → deploy to production. Secrets managed via CI environment variables.",
-    diagram: `flowchart LR
-    A[git push] --> B[CI: lint + test]
-    B --> C[Build Docker image]
-    C --> D[Push to registry]
-    D --> E[Deploy staging]
-    E --> F[Smoke tests]
-    F --> G[Deploy production]`,
+      "CI runs tests on every push/PR. CD deploys on merge to main. GitHub Actions is the most common tool. Secrets go in GitHub Secrets, never in workflow files.",
+    whyItExists:
+      "AI projects change frequently. Manual deployment is error-prone. CI/CD ships with confidence.",
+    analogy:
+      "An assembly line checkpoint — every product is inspected and packaged automatically. Defects never reach customers.",
+    analogyDiagram: `flowchart LR
+    A[Product on line] --> B[Quality check]
+    B -->|pass| C[Ship to customer]
+    B -->|fail| D[Rejected]`,
+    diagram: `flowchart TD
+    CICD([CI/CD])
+
+    subgraph CI["Continuous Integration - on every push/PR"]
+        CI1[Lint code]
+        CI2[Run unit tests - mocked LLM]
+        CI3[Run integration tests]
+        CI4[Build Docker image]
+    end
+
+    subgraph CD["Continuous Deployment - on merge to main"]
+        CD1[Push image to registry]
+        CD2[Deploy to staging]
+        CD3[Run smoke tests]
+        CD4[Deploy to production]
+    end
+
+    subgraph Triggers["Triggers"]
+        TR1[git push]
+        TR2[Pull request opened]
+        TR3[workflow_dispatch - manual run]
+    end
+
+    subgraph Secrets["Secrets Management"]
+        SE1[GitHub Secrets - never in YAML]
+        SE2[Inject as env vars at runtime]
+        SE3[Rotate API keys regularly]
+    end
+
+    subgraph Evals["AI-Specific"]
+        EV1[Run LLM evals on schedule only]
+        EV2[Not on every PR - too slow and costly]
+    end
+
+    CICD --> Triggers
+    Triggers --> CI
+    CI --> CD
+    CICD --> Secrets
+    CICD --> Evals`,
     example:
-      "You push a new RAG retriever to a feature branch. GitHub Actions runs pytest, builds the Docker image, deploys to staging, runs a smoke test asking 'What is our refund policy?', and auto-deploys to production if accuracy passes.",
-    code: `# GitHub Actions CI/CD for AI app
-# .github/workflows/deploy.yml
-name: CI/CD
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - run: pip install -r requirements.txt
-      - run: pytest tests/ -v
-
-  deploy:
-    needs: test
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - run: docker build -t my-rag-app .
-      - run: docker push my-rag-app:latest
-      # deploy to cloud...`,
-    project:
-      "Set up GitHub Actions for your AI project: run pytest on PRs, build Docker image on merge to main, and add a manual workflow_dispatch for running evals.",
-    interviewQuestions: [
-      iq("What should an AI project's CI pipeline include?", "Linting, unit tests (mocked LLM), integration tests, Docker build, and optionally eval suite on schedule. Never run expensive LLM evals on every PR.", "medium"),
-      iq("How do you manage secrets in CI/CD?", "Use CI platform secret stores (GitHub Secrets, GitLab CI variables). Never hardcode in workflow files. Inject as environment variables at runtime. Rotate keys regularly.", "medium"),
-      iq("What is the difference between continuous delivery and continuous deployment?", "Continuous delivery: every change is deployable but requires manual approval for production. Continuous deployment: every passing build auto-deploys to production. AI teams often use delivery with manual approval for model changes.", "hard"),
+      "You push a new RAG retriever to a feature branch and want it tested before production.",
+    exampleSolution:
+      "GitHub Actions runs pytest on the PR, builds the Docker image on merge to main, deploys to staging, runs a smoke test, then promotes to production.",
+    commandsToRemember: [
+      "git push  # trigger the CI pipeline on remote",
+      "gh workflow run deploy.yml  # manually trigger a GitHub Actions workflow",
+      "gh run list  # view recent CI/CD runs",
+      "gh run view <id> --log  # see full logs for a specific run",
     ],
+    interviewQuestions: [],
     revisionNotes: {
-      fiveMin: ["CI runs tests on every push", "CD automates deployment", "GitHub Actions is common", "Never put secrets in workflow files"],
-      fifteenMin: ["Pipeline: test → build → deploy", "Docker image built in CI", "Staging before production", "Smoke tests after deploy", "Eval suites on schedule, not every PR", "Feature flags for safe rollouts"],
-      oneHour: ["Create GitHub Actions workflow", "Run pytest in CI", "Build and push Docker image", "Set up staging deployment", "Add smoke test step", "Configure secrets in GitHub"],
-      cheatSheet: ["on: push / pull_request", "pytest in CI", "Docker build in pipeline", "GitHub Secrets for API keys", "needs: test before deploy", "workflow_dispatch for manual runs"],
+      fiveMin: [],
+      fifteenMin: [],
+      oneHour: [],
+      cheatSheet: [
+        "CI runs on every push/PR — lint, test, build Docker image",
+        "CD deploys on merge to main — staging then production",
+        "GitHub Actions is the most common CI/CD tool",
+        "Never put API keys in workflow YAML — use GitHub Secrets",
+        "Run expensive LLM evals on schedule, not every PR",
+        "Pipeline: test → build → deploy · smoke test before production",
+      ],
     },
     glossary: ["Git", "Docker", "Testing"],
     commonMistakes: [
-      "Committing secrets in workflow YAML files",
-      "Running expensive LLM evals on every PR — slow and costly",
-      "No staging environment — deploying directly to production",
-      "Skipping tests in CI to speed up deploys",
+      "Secrets in workflow YAML",
+      "Expensive LLM evals on every PR",
+      "No staging environment",
     ],
   }),
 };
