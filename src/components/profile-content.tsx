@@ -2,11 +2,50 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useMemo } from "react";
 import { useSession } from "next-auth/react";
-import { CheckCircle2, Circle, LogIn, BookOpen, Clock, Layers } from "lucide-react";
+import { ArrowRight, LogIn, Sparkles, BookOpen } from "lucide-react";
 import { phases } from "@/data/roadmap";
 import { useProgress } from "@/hooks/use-progress";
-import { cn } from "@/lib/utils";
+import { ProfilePhaseGrid } from "@/components/profile-phase-grid";
+import { ProfileCompletedModules } from "@/components/profile-completed-modules";
+import { getFocusPhase, getMotivation, getNextModule } from "@/lib/profile-mermaid";
+
+function ProgressRing({ percent }: { percent: number }) {
+  const r = 42;
+  const c = 2 * Math.PI * r;
+  const offset = c - (percent / 100) * c;
+
+  return (
+    <div className="relative h-28 w-28 shrink-0">
+      <svg className="h-full w-full -rotate-90" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r={r} fill="none" stroke="currentColor" strokeWidth="6" className="text-surface-elevated" />
+        <circle
+          cx="50"
+          cy="50"
+          r={r}
+          fill="none"
+          stroke="url(#ringGrad)"
+          strokeWidth="6"
+          strokeLinecap="round"
+          strokeDasharray={c}
+          strokeDashoffset={offset}
+          className="transition-all duration-700"
+        />
+        <defs>
+          <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#4ade80" />
+            <stop offset="100%" stopColor="#4169e1" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className="text-2xl font-bold tabular-nums">{percent}%</span>
+        <span className="text-[10px] text-text-muted uppercase tracking-wide">done</span>
+      </div>
+    </div>
+  );
+}
 
 export function ProfileContent() {
   const { data: session, status } = useSession();
@@ -21,6 +60,18 @@ export function ProfileContent() {
     isAuthenticated,
   } = useProgress();
 
+  const motivation = useMemo(() => getMotivation(progressPercent), [progressPercent]);
+
+  const focusPhase = useMemo(
+    () => getFocusPhase(phases, getPhaseProgress),
+    [getPhaseProgress]
+  );
+
+  const nextModule = useMemo(
+    () => getNextModule(focusPhase, completed),
+    [focusPhase, completed]
+  );
+
   if (status === "loading") {
     return (
       <div className="mx-auto max-w-4xl px-4 py-16 text-center text-text-muted">
@@ -34,7 +85,7 @@ export function ProfileContent() {
       <div className="mx-auto max-w-md px-4 py-20 text-center">
         <h1 className="text-2xl font-bold mb-2">Your learning profile</h1>
         <p className="text-text-secondary mb-8">
-          Sign in with Google to save progress across devices and view detailed stats.
+          Sign in with Google to save progress across devices.
         </p>
         <Link
           href="/login"
@@ -48,129 +99,103 @@ export function ProfileContent() {
   }
 
   const displayName = session.user.name ?? session.user.email ?? "Learner";
-  const phasesStarted = phases.filter((phase) => getPhaseProgress(phase.slug) > 0).length;
-  const phasesCompleted = phases.filter((phase) => getPhaseProgress(phase.slug) === 100).length;
+  const focusProgress = getPhaseProgress(focusPhase.slug);
+  const focusDone = focusPhase.modules.filter((m) =>
+    completed.has(`${focusPhase.slug}/${m.slug}`)
+  ).length;
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
-      <div className="mb-10 flex flex-col items-center gap-4 text-center sm:flex-row sm:text-left">
-        {session.user.image ? (
-          <Image
-            src={session.user.image}
-            alt={displayName}
-            width={80}
-            height={80}
-            className="rounded-full border-2 border-border"
-          />
-        ) : (
-          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-accent/20 text-2xl font-bold text-accent">
-            {displayName.charAt(0).toUpperCase()}
-          </div>
-        )}
-        <div>
-          <h1 className="text-2xl font-bold">{displayName}</h1>
-          {session.user.email && (
-            <p className="text-sm text-text-muted">{session.user.email}</p>
-          )}
-          {isAuthenticated && (
-            <p className="mt-1 text-xs text-text-muted">
-              {isSyncing ? "Syncing progress with cloud..." : "Progress saved to your account"}
-            </p>
-          )}
-        </div>
-      </div>
-
-      <div className="mb-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {[
-          { label: "Overall progress", value: `${progressPercent}%`, icon: Layers },
-          { label: "Modules completed", value: `${completedCount}/${totalModules}`, icon: BookOpen },
-          { label: "Phases started", value: String(phasesStarted), icon: CheckCircle2 },
-          { label: "Hours remaining", value: `~${remainingHours}h`, icon: Clock },
-        ].map((stat) => (
-          <div
-            key={stat.label}
-            className="rounded-xl border border-border bg-surface p-4"
-          >
-            <stat.icon className="mb-2 h-4 w-4 text-accent" />
-            <p className="text-2xl font-bold tabular-nums">{stat.value}</p>
-            <p className="text-xs text-text-muted">{stat.label}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Progress by phase</h2>
-        <span className="text-sm text-text-muted">{phasesCompleted} phases complete</span>
-      </div>
-
-      <div className="space-y-4">
-        {phases.map((phase) => {
-          const phaseProgress = getPhaseProgress(phase.slug);
-          const completedModules = phase.modules.filter((mod) =>
-            completed.has(`${phase.slug}/${mod.slug}`)
-          );
-
-          if (completedModules.length === 0) return null;
-
-          return (
-            <div
-              key={phase.slug}
-              className="rounded-xl border border-border bg-surface p-5"
-            >
-              <div className="mb-3 flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-xs font-mono text-text-muted">{phase.subtitle}</p>
-                  <h3 className="font-semibold">{phase.title}</h3>
-                </div>
-                <span className="shrink-0 text-sm font-medium text-accent tabular-nums">
-                  {phaseProgress}%
-                </span>
+    <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-10">
+      <div className="mb-8 rounded-2xl border border-border bg-surface p-6 sm:p-8">
+        <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
+          <div className="flex items-center gap-4">
+            {session.user.image ? (
+              <Image
+                src={session.user.image}
+                alt={displayName}
+                width={56}
+                height={56}
+                className="rounded-full border-2 border-border"
+              />
+            ) : (
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-accent/20 text-lg font-bold text-accent">
+                {displayName.charAt(0).toUpperCase()}
               </div>
-
-              <div className="mb-4 h-1.5 overflow-hidden rounded-full bg-surface-elevated">
-                <div
-                  className="h-full rounded-full brand-gradient transition-all"
-                  style={{ width: `${phaseProgress}%` }}
-                />
-              </div>
-
-              <ul className="space-y-1.5">
-                {completedModules.map((mod) => (
-                  <li key={mod.slug}>
-                    <Link
-                      href={`/roadmap/${phase.slug}/${mod.slug}`}
-                      className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-text-secondary transition-colors hover:bg-surface-elevated hover:text-text-primary"
-                    >
-                      <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-success" />
-                      {mod.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-
-              {phaseProgress < 100 && (
-                <p className="mt-3 text-xs text-text-muted">
-                  {phase.modules.length - completedModules.length} modules remaining in this phase
-                </p>
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      {completedCount === 0 && (
-        <div className="rounded-xl border border-dashed border-border bg-surface/50 px-6 py-12 text-center">
-          <Circle className="mx-auto mb-3 h-8 w-8 text-text-muted" />
-          <p className="text-text-secondary mb-4">
-            No modules checked yet. Start learning and mark modules as read on any phase page.
-          </p>
-          <Link
-            href="/roadmap"
-            className={cn(
-              "inline-flex items-center gap-2 text-sm text-accent hover:underline"
             )}
+            <div className="sm:hidden">
+              <h1 className="font-bold">{displayName}</h1>
+              <p className="text-xs text-text-muted">
+                {completedCount}/{totalModules} modules · ~{remainingHours}h left
+              </p>
+            </div>
+          </div>
+
+          <ProgressRing percent={progressPercent} />
+
+          <div className="flex-1 text-center sm:text-left">
+            <h1 className="hidden sm:block text-xl font-bold mb-0.5">{displayName}</h1>
+            <div className="flex items-center justify-center sm:justify-start gap-1.5 mb-2">
+              <Sparkles className="h-4 w-4 text-accent" />
+              <p className="font-semibold text-accent">{motivation.headline}</p>
+            </div>
+            <p className="text-sm text-text-secondary mb-3">{motivation.sub}</p>
+            <p className="text-xs text-text-muted">
+              {completedCount} modules done · ~{remainingHours}h remaining
+              {isAuthenticated && (isSyncing ? " · syncing…" : " · saved to cloud")}
+            </p>
+          </div>
+        </div>
+
+        {nextModule ? (
+          <Link
+            href={`/roadmap/${focusPhase.slug}/${nextModule.slug}`}
+            className="mt-6 flex items-center justify-between gap-4 rounded-xl border border-royal/25 bg-royal/5 px-4 py-3.5 transition-colors hover:bg-royal/10 group"
           >
-            Browse roadmap
+            <div className="min-w-0 text-left">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-royal mb-0.5">
+                Up next · {focusPhase.subtitle}
+              </p>
+              <p className="font-medium truncate">{nextModule.title}</p>
+              <p className="text-xs text-text-muted mt-0.5">
+                {focusPhase.title} — {focusDone}/{focusPhase.modules.length} modules done
+              </p>
+            </div>
+            <ArrowRight className="h-5 w-5 shrink-0 text-royal transition-transform group-hover:translate-x-1" />
+          </Link>
+        ) : completedCount === 0 ? (
+          <Link
+            href="/roadmap/programming-foundations"
+            className="mt-6 flex items-center justify-between gap-4 rounded-xl border border-royal/25 bg-royal/5 px-4 py-3.5 transition-colors hover:bg-royal/10 group"
+          >
+            <div className="min-w-0 text-left">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-royal mb-0.5">
+                Get started
+              </p>
+              <p className="font-medium">Begin with Programming Foundations</p>
+              <p className="text-xs text-text-muted mt-0.5">
+                Check off modules as you read them
+              </p>
+            </div>
+            <ArrowRight className="h-5 w-5 shrink-0 text-royal transition-transform group-hover:translate-x-1" />
+          </Link>
+        ) : null}
+      </div>
+
+      <div className="mb-6 rounded-2xl border border-border bg-surface p-5">
+        <ProfilePhaseGrid completed={completed} />
+      </div>
+
+      {completedCount > 0 ? (
+        <ProfileCompletedModules completed={completed} />
+      ) : (
+        <div className="rounded-2xl border border-dashed border-border bg-surface/50 px-6 py-10 text-center">
+          <BookOpen className="mx-auto mb-3 h-8 w-8 text-text-muted" />
+          <p className="text-sm text-text-secondary mb-1">No modules checked yet</p>
+          <p className="text-xs text-text-muted mb-4">
+            Open any lesson and tap the book icon to mark it as read
+          </p>
+          <Link href="/roadmap" className="text-sm text-royal hover:underline">
+            Browse roadmap →
           </Link>
         </div>
       )}

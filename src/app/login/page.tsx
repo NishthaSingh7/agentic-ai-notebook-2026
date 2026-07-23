@@ -5,6 +5,13 @@ import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { LogIn } from "lucide-react";
 
+const ERROR_MESSAGES: Record<string, string> = {
+  Configuration: "Sign-in is temporarily unavailable. Please try again later.",
+  OAuthCallback: "We couldn't complete sign-in. Please try again.",
+  AccessDenied: "Access was denied. Please use an approved Google account.",
+  Default: "Sign-in failed. Please try again.",
+};
+
 function LoginContent() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") ?? "/";
@@ -18,8 +25,8 @@ function LoginContent() {
       </p>
 
       {error && (
-        <p className="mb-4 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-2 text-sm text-red-300">
-          Sign-in failed. Please try again.
+        <p className="mb-6 w-full rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+          {ERROR_MESSAGES[error] ?? ERROR_MESSAGES.Default}
         </p>
       )}
 

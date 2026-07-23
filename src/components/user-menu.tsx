@@ -34,7 +34,7 @@ export function UserMenu() {
     return (
       <button
         type="button"
-        onClick={() => signIn("google")}
+        onClick={() => signIn("google", { callbackUrl: "/" })}
         className="flex h-9 items-center gap-1.5 rounded-lg border border-border bg-surface px-2.5 text-sm text-text-secondary transition-colors hover:border-accent/40 hover:text-text-primary sm:px-3"
         title="Sign in with Google"
       >
