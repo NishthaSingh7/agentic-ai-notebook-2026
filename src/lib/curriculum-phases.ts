@@ -1,5 +1,5 @@
-/** Phase slugs using the Phase 0-style curriculum layout (phases 1–10). */
-export const CURRICULUM_PHASE_SLUGS = new Set([
+/** Phase slugs with code walkthroughs (phases 1–21). */
+export const CODE_WALKTHROUGH_PHASE_SLUGS = new Set([
   "genai-foundations",
   "transformer-foundations",
   "llm-engineering",
@@ -10,12 +10,35 @@ export const CURRICULUM_PHASE_SLUGS = new Set([
   "mcp",
   "agent-frameworks",
   "agent-design-patterns",
+  "multi-agent-systems",
+  "agent-evaluation",
+  "security-guardrails",
+  "production-agents",
+  "browser-agents",
+  "multimodal-agents",
+  "advanced-ai",
+  "enterprise-ai",
+  "coding-agents",
+  "capstone-projects",
+  "interview-system-design",
 ]);
 
+/** @deprecated Use isCodeWalkthroughPhase */
+export const CURRICULUM_PHASE_SLUGS = CODE_WALKTHROUGH_PHASE_SLUGS;
+
+export function isCodeWalkthroughPhase(phaseSlug: string): boolean {
+  return CODE_WALKTHROUGH_PHASE_SLUGS.has(phaseSlug);
+}
+
 export function isCurriculumPhase(phaseSlug: string): boolean {
-  return CURRICULUM_PHASE_SLUGS.has(phaseSlug);
+  return isCodeWalkthroughPhase(phaseSlug);
 }
 
 export function isFoundationPhase(phaseSlug: string): boolean {
   return phaseSlug === "programming-foundations";
+}
+
+/** All roadmap phases use the unified curriculum lesson layout. */
+export function usesCurriculumLayout(_phaseSlug: string): boolean {
+  return true;
 }

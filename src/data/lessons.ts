@@ -46,7 +46,8 @@ for (const phase of phases) {
       enrichLesson(raw, mod.slug, mod.title, phase.slug, phase.title),
       phase.slug,
       mod.slug,
-      mod.title
+      mod.title,
+      phase.title
     );
   }
 }

@@ -8,6 +8,8 @@ export interface LessonContent {
   diagram?: string;
   example: string;
   exampleSolution?: string;
+  practiceTask?: string;
+  learnElsewhere?: string[];
   code?: string;
   codeLanguage?: string;
   commandsToRemember?: string[];

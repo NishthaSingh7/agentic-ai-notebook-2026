@@ -2,11 +2,119 @@ import type { LessonContent } from "../lesson-types";
 import { createLesson } from "./builder";
 
 export const phase0Lessons: Record<string, LessonContent> = {
+  "start-here": createLesson({
+    concept:
+      "Phase 0 is the engineering foundation every AI builder needs before touching LLMs, RAG, or agents — it teaches the tools and concepts behind every production AI system.",
+    technicalExplanation:
+      "You will not master every topic here on day one. The goal is familiarity: know what each tool does, when to use it, and where to look when something breaks. Each module follows the same format — concept bullets, why it matters, analogy, visual diagram, example, practice task, commands, and cheat sheet. Study in order when you are new; skip modules you already know and return to the cheat sheets when needed.",
+    whyItExists:
+      "Most AI courses jump straight to prompting and agents. Production AI engineering requires Python, Git, Linux, HTTP, databases, Docker, and CI/CD. Phase 0 fills that gap so Phase 1+ makes sense instead of feeling like magic.",
+    analogy:
+      "Phase 0 is learning to drive before entering a highway — you need steering, brakes, and mirrors before merging into fast AI traffic.",
+    analogyDiagram: `flowchart LR
+    A[Phase 0 - foundations] --> B[Phase 1 - GenAI]
+    B --> C[Phase 4 - RAG]
+    C --> D[Phase 5+ - Agents]
+    A --> E[You can debug when things break]`,
+    diagram: `flowchart TD
+    P0([Phase 0 - Programming Foundations])
+
+    subgraph Why["Why Each Module Exists"]
+        W1[Python - write AI apps and call APIs]
+        W2[Git - version control prompts and code]
+        W3[Linux - debug servers and read logs]
+        W4[Networking - understand connections and timeouts]
+        W5[HTTP - every LLM API speaks HTTP]
+        W6[REST APIs - design and consume backends]
+        W7[JSON - data format for all AI systems]
+        W8[CLI - run tools on servers and in agents]
+        W9[Docker - ship reproducible environments]
+        W10[SQL - store users and chat history]
+        W11[NoSQL - cache and vector search]
+        W12[Testing - catch bugs before users do]
+        W13[CI/CD - automate deploy with confidence]
+    end
+
+    subgraph Study["How to Study Each Module"]
+        S1[1. Read Concept bullets - what and how]
+        S2[2. Read Why It Exists - motivation]
+        S3[3. Skim Analogy - mental model]
+        S4[4. Study Visual Diagram - full topic map]
+        S5[5. Read Example - real scenario]
+        S6[6. Complete Practice Task - hands-on]
+        S7[7. Run Commands in terminal]
+        S8[8. Review Cheat Sheet - quick recap]
+    end
+
+    subgraph Done["You Are Ready to Move On When"]
+        D1[You can explain the topic in one sentence]
+        D2[You recognize it when you see it in a project]
+        D3[You know which commands to look up]
+        D4[You do not need to memorize everything]
+    end
+
+    subgraph Path["Recommended Study Path"]
+        P1[Week 1 - Python Git Linux CLI]
+        P2[Week 2 - Networking HTTP REST JSON]
+        P3[Week 3 - Docker SQL NoSQL]
+        P4[Week 4 - Testing CI/CD plus mini project]
+    end
+
+    P0 --> Why
+    P0 --> Study
+    P0 --> Done
+    P0 --> Path`,
+    example:
+      "You are new to programming and want to build an AI chatbot eventually.",
+    exampleSolution:
+      "Start with Python and Git, then HTTP and JSON (because every LLM API uses them), then Docker and SQL when you deploy. Skip deep mastery of Linux networking until you hit a real bug — but read the cheat sheets so you know where to look.",
+    practiceTask:
+      "Open the Python module next. Skim its diagram and cheat sheet, then come back here after finishing all 14 modules to confirm you can explain why each one exists in one sentence.",
+    commandsToRemember: [
+      "Open one module per study session  # do not rush through all 14 at once",
+      "Run every command in Commands to Remember  # typing beats reading",
+      "Bookmark cheat sheets  # revisit when building real projects",
+      "git checkout -b phase-0-practice  # practice in a safe branch",
+      "python -m venv .venv && source .venv/bin/activate  # set up practice environment",
+    ],
+    interviewQuestions: [],
+    revisionNotes: {
+      fiveMin: [],
+      fifteenMin: [],
+      oneHour: [],
+      cheatSheet: [
+        "Phase 0 = engineering base before AI — not optional for production work",
+        "Goal is familiarity, not mastery — revisit cheat sheets when building",
+        "Study order: Python → Git → Linux → CLI → Networking → HTTP → REST → JSON → Docker → SQL → NoSQL → Testing → CI/CD",
+        "Per module: bullets → why → diagram → example → practice task → commands → cheat sheet",
+        "Skip modules you know; never skip HTTP, JSON, and Git",
+        "Phase 1 (GenAI) assumes you understand HTTP requests and JSON responses",
+        "Build the Phase 0 projects (REST API, Docker, Git workflow) to connect everything",
+        "~3 hours per module if new · ~30 min skim if experienced",
+      ],
+    },
+    glossary: ["Python", "Git", "HTTP", "Docker", "CI/CD"],
+    commonMistakes: [
+      "Skipping Phase 0 and jumping to agents — then not understanding API errors or deployment",
+      "Trying to memorize every command instead of knowing where to look",
+      "Reading without running commands in the terminal",
+      "Expecting Phase 0 to teach Python from zero — use external practice for deep coding skill",
+    ],
+  }),
+
   python: createLesson({
     concept:
       "Python is the main programming language for AI engineering — used to call LLM APIs, process data, build agents, and deploy backends.",
     technicalExplanation:
-      "It has readable syntax, a huge AI library ecosystem (OpenAI SDK, FastAPI, Pydantic), and tools like venv for managing dependencies.",
+      "Variables store data (name = \"Alice\"). if/else and for/while loops control program flow. def defines reusable functions. Lists and dicts hold collections — the same structures JSON uses in every API response. try/except catches errors so your agent does not crash on a bad API call. Python has readable syntax, a huge AI library ecosystem (OpenAI SDK, FastAPI, Pydantic), and tools like venv for managing dependencies. Use async/await when calling multiple LLM APIs concurrently.",
+    learnElsewhere: [
+      "Variables, strings, numbers, and booleans",
+      "if/else conditions and for/while loops",
+      "Functions with def, parameters, and return",
+      "Lists, dicts, and reading files with open()",
+      "try/except error handling",
+      "Recommended: python.org tutorial, Automate the Boring Stuff, or CS50 Python",
+    ],
     whyItExists:
       "Nearly every AI tool, tutorial, and job listing expects Python. Learning it unlocks the full AI engineering stack.",
     analogy:
@@ -57,6 +165,8 @@ export const phase0Lessons: Record<string, LessonContent> = {
       "You need to summarize 50 customer support tickets overnight.",
     exampleSolution:
       "Write a Python script that reads each file, calls the OpenAI API, and saves summaries — done in under 30 lines.",
+    practiceTask:
+      "Run: python -m venv .venv && source .venv/bin/activate. Create script.py that reads notes.txt and prints the number of lines. Run it with python script.py. If you are new to Python, complete the learn-elsewhere checklist first, then retry this task.",
     commandsToRemember: [
       "python -m venv .venv  # create virtual environment",
       "source .venv/bin/activate  # activate venv on Mac/Linux",
@@ -136,6 +246,8 @@ export const phase0Lessons: Record<string, LessonContent> = {
       "You want to test a new RAG chunking strategy without breaking the working version.",
     exampleSolution:
       "Create branch experiment/chunking, test it, compare results, then merge the winner into main via pull request.",
+    practiceTask:
+      "Run git init in an empty folder. Create README.md, commit it, create branch feature/test, make a second commit, switch back to main, and merge the branch. Run git log --oneline to see your history.",
     commandsToRemember: [
       "git status  # see which files changed",
       "git add .  # stage all changes for commit",
@@ -216,6 +328,8 @@ export const phase0Lessons: Record<string, LessonContent> = {
       "Your RAG API crashes in production and users see a 500 error.",
     exampleSolution:
       "SSH into the server, run docker logs to find the ERROR, check disk space with df -h, and restart the service.",
+    practiceTask:
+      "In your terminal: run pwd, ls, and cd into a project folder. Create a test.log file with a few lines, then grep a word in it. Run ps to list running processes.",
     commandsToRemember: [
       "ls -la  # list files with permissions and hidden files",
       "cd /path && pwd  # navigate to a folder and show current path",
@@ -298,6 +412,8 @@ export const phase0Lessons: Record<string, LessonContent> = {
       "Your agent can't connect to the vector database — connection times out every time.",
     exampleSolution:
       "The DB is in a private subnet. Add a security group rule allowing port 5432 from the API subnet only.",
+    practiceTask:
+      "Run ping google.com and nslookup google.com. Then run curl -v https://api.openai.com/v1/models (you will get 401 — that is expected; study the status code and headers in the output).",
     commandsToRemember: [
       "ping hostname  # test if a host is reachable",
       "nslookup hostname  # resolve domain name to IP address",
@@ -389,6 +505,8 @@ export const phase0Lessons: Record<string, LessonContent> = {
       "Your chat app returns 401 Unauthorized when a user sends a message.",
     exampleSolution:
       "The Authorization header with the Bearer token was missing. Adding it returns 200 with the LLM response.",
+    practiceTask:
+      "Send a GET request with curl -v https://httpbin.org/get. Then send a POST with curl -X POST -H \"Content-Type: application/json\" -d '{\"name\":\"test\"}' https://httpbin.org/post. Write down the status code and response body for each.",
     commandsToRemember: [
       "curl -X GET https://api.example.com/data  # send a GET request to read data",
       "curl -X POST -H \"Content-Type: application/json\" -d '{\"key\":\"val\"}' URL  # send POST with JSON body",
@@ -421,7 +539,7 @@ export const phase0Lessons: Record<string, LessonContent> = {
     concept:
       "REST is a design pattern for web APIs — resources at URLs, standard HTTP methods, and JSON payloads.",
     technicalExplanation:
-      "Resources are nouns (/documents, /chats). Methods are verbs (GET read, POST create). Each request is stateless with auth in headers.",
+      "Resources are nouns (/documents, /chats). Methods are verbs (GET read, POST create). Each request is stateless with auth in headers. This builds directly on the HTTP module — same methods, headers, status codes, and JSON bodies.",
     whyItExists:
       "REST is predictable and universal. Every LLM provider, vector DB, and backend you build follows these conventions.",
     analogy:
@@ -469,6 +587,8 @@ export const phase0Lessons: Record<string, LessonContent> = {
       "You need an API where users upload documents and ask questions about them.",
     exampleSolution:
       "POST /documents uploads a file, GET /documents/{id} returns metadata, POST /chat returns an answer with source citations.",
+    practiceTask:
+      "On paper or in a note, design 4 REST endpoints for a simple notes app: list notes, get one note, create a note, delete a note. For each, write the HTTP method, URL path, and what JSON it sends or returns.",
     commandsToRemember: [
       "curl http://localhost:8000/docs  # open auto-generated API documentation",
       "curl http://localhost:8000/documents/1  # GET a resource by ID",
@@ -549,6 +669,8 @@ export const phase0Lessons: Record<string, LessonContent> = {
       "You need the LLM to call a weather function with a city name.",
     exampleSolution:
       "Define the tool schema in JSON, send it with the chat request, and the LLM returns JSON with the function name and arguments.",
+    practiceTask:
+      "Run: python -c \"import json; d={'role':'user','content':'hi'}; print(json.dumps(d))\" then parse it back with json.loads. Confirm the output uses double quotes on keys.",
     commandsToRemember: [
       "python -c \"import json; print(json.dumps({'a':1}))\"  # convert Python dict to JSON string",
       "python -c \"import json; print(json.loads('{\\\"a\\\":1}'))\"  # parse JSON string to Python dict",
@@ -631,6 +753,8 @@ export const phase0Lessons: Record<string, LessonContent> = {
       "You need a command to ingest new documents into your RAG knowledge base.",
     exampleSolution:
       "Build `rag-cli ingest ./docs` — it chunks PDFs, embeds them, and stores in the vector DB. Your agent calls this same CLI as a tool.",
+    practiceTask:
+      "Run echo \"hello world\" | wc -w to pipe output between commands. Then run ls | head -3 to list only the first 3 files. Check the exit code with echo $?.",
     commandsToRemember: [
       "command --help  # show available options for a command",
       "cmd1 | cmd2  # pipe output of cmd1 into cmd2",
@@ -713,6 +837,8 @@ export const phase0Lessons: Record<string, LessonContent> = {
       "Your FastAPI app works locally but crashes on the production server due to missing dependencies.",
     exampleSolution:
       "Dockerize it — Dockerfile installs exact deps, docker-compose runs API + ChromaDB together. Same result everywhere.",
+    practiceTask:
+      "Run docker run hello-world. Then run docker ps -a to see the container. If Docker is not installed, read the Docker diagram and write down the 4 key commands you will use later.",
     commandsToRemember: [
       "docker build -t name .  # build an image from Dockerfile",
       "docker run -p 8000:8000 name  # run container and map port 8000",
@@ -795,6 +921,8 @@ export const phase0Lessons: Record<string, LessonContent> = {
       "Your chat app needs to remember the last 10 messages for context window management.",
     exampleSolution:
       "Store messages in a PostgreSQL table with chat_id, role, and content. Query: SELECT * FROM messages WHERE chat_id = 1 ORDER BY id DESC LIMIT 10.",
+    practiceTask:
+      "Open sqlite3 (or any SQL client) and run: CREATE TABLE notes (id INTEGER, text TEXT); INSERT INTO notes VALUES (1, 'hello'); SELECT * FROM notes; UPDATE notes SET text='world' WHERE id=1; DELETE FROM notes WHERE id=1;",
     commandsToRemember: [
       "SELECT * FROM table WHERE condition;  # read rows matching a condition",
       "INSERT INTO table (col) VALUES ('val');  # add a new row",
@@ -877,6 +1005,8 @@ export const phase0Lessons: Record<string, LessonContent> = {
       "Users keep asking the same questions and you're paying for duplicate LLM API calls.",
     exampleSolution:
       "Cache responses in Redis with a 1-hour TTL. Cache hit = instant answer, no API cost. Miss = call LLM and store result.",
+    practiceTask:
+      "If Redis is installed: run redis-cli SET greeting \"hello\" then redis-cli GET greeting. If not, write down which database you would use for: user accounts, LLM response cache, and embedding search.",
     commandsToRemember: [
       "redis-cli  # open the Redis command-line interface",
       "redis-cli GET key  # read a cached value by key",
@@ -961,6 +1091,8 @@ export const phase0Lessons: Record<string, LessonContent> = {
       "You changed the chunking logic and need to verify nothing broke before deploying.",
     exampleSolution:
       "Run unit tests on chunking (deterministic), integration test on POST /chat (mocked LLM), and check eval scores against golden Q&A pairs.",
+    practiceTask:
+      "Create test_math.py with a function add(a, b) and a pytest test_add() that asserts add(2, 3) == 5. Run pytest -v. Then add a test that mocks an API call using unittest.mock.patch.",
     commandsToRemember: [
       "pytest  # run all tests in the project",
       "pytest tests/test_file.py -v  # run one test file with verbose output",
@@ -1045,6 +1177,8 @@ export const phase0Lessons: Record<string, LessonContent> = {
       "You push a new RAG retriever to a feature branch and want it tested before production.",
     exampleSolution:
       "GitHub Actions runs pytest on the PR, builds the Docker image on merge to main, deploys to staging, runs a smoke test, then promotes to production.",
+    practiceTask:
+      "Create .github/workflows/ci.yml that runs on push and executes pytest (or echo \"CI would run here\" if you have no tests yet). Push to GitHub and check the Actions tab for the run result.",
     commandsToRemember: [
       "git push  # trigger the CI pipeline on remote",
       "gh workflow run deploy.yml  # manually trigger a GitHub Actions workflow",

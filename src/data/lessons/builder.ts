@@ -10,6 +10,8 @@ export interface LessonInput {
   diagram?: string;
   example: string;
   exampleSolution?: string;
+  practiceTask?: string;
+  learnElsewhere?: string[];
   code?: string;
   codeLanguage?: string;
   commandsToRemember?: string[];
@@ -32,6 +34,8 @@ export function createLesson(input: LessonInput): LessonContent {
     diagram: input.diagram,
     example: input.example,
     exampleSolution: input.exampleSolution,
+    practiceTask: input.practiceTask,
+    learnElsewhere: input.learnElsewhere,
     code: input.code,
     codeLanguage: input.codeLanguage,
     commandsToRemember: input.commandsToRemember,

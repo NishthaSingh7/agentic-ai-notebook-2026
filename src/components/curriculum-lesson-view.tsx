@@ -10,6 +10,8 @@ import {
   AlertTriangle,
   Terminal,
   Code,
+  PenLine,
+  ListChecks,
 } from "lucide-react";
 import type { Phase, Module } from "@/data/roadmap";
 import { LessonNav, LessonSection, RevisionCard, CommandsCard } from "@/components/lesson";
@@ -26,15 +28,21 @@ interface CurriculumLessonViewProps {
   nextMod: Module | null;
   slug: string;
   includeCode?: boolean;
+  /** Show example + practice sections (all curriculum phases). */
+  showOrientationExtras?: boolean;
 }
 
-function buildSections(includeCode: boolean) {
+function buildSections(includeCode: boolean, content: LessonContent, showOrientationExtras: boolean) {
   const sections = [
     { id: "concept", title: "Concept & How It Works" },
     { id: "why", title: "Why It Exists" },
     { id: "analogy", title: "Real-World Analogy" },
     { id: "diagram", title: "Visual Diagram" },
   ];
+  if (showOrientationExtras) {
+    if (content.example) sections.push({ id: "example", title: "Example" });
+    if (content.practiceTask) sections.push({ id: "practice", title: "Practice Task" });
+  }
   if (includeCode) sections.push({ id: "code", title: "Code Walkthrough" });
   sections.push(
     { id: "commands", title: "Commands to Remember" },
@@ -53,14 +61,17 @@ export function CurriculumLessonView({
   nextMod,
   slug,
   includeCode = false,
+  showOrientationExtras = false,
 }: CurriculumLessonViewProps) {
   const conceptBullets = buildConceptBullets(content.concept, content.technicalExplanation);
 
   const cheatSheet = content.revisionNotes.cheatSheet.slice(0, 8);
-  const sectionDefs = buildSections(includeCode);
+  const sectionDefs = buildSections(includeCode, content, showOrientationExtras);
 
   const activeSections = sectionDefs.filter((s) => {
     if (s.id === "diagram") return !!content.diagram;
+    if (s.id === "example") return showOrientationExtras && !!content.example;
+    if (s.id === "practice") return showOrientationExtras && !!content.practiceTask;
     if (s.id === "code") return includeCode && !!content.code;
     if (s.id === "commands") return !!content.commandsToRemember?.length;
     if (s.id === "mistakes") return !!content.commonMistakes;
@@ -98,6 +109,22 @@ export function CurriculumLessonView({
                 <li key={i}>{point}</li>
               ))}
             </ul>
+            {!includeCode && content.learnElsewhere && content.learnElsewhere.length > 0 && (
+              <div className="mt-6 not-prose rounded-lg border border-amber-500/20 bg-amber-500/5 p-4">
+                <p className="flex items-center gap-2 text-sm font-semibold text-amber-400/90 mb-2">
+                  <ListChecks className="h-4 w-4" />
+                  Learn these elsewhere (not covered in depth here)
+                </p>
+                <ul className="space-y-1 text-sm text-text-secondary">
+                  {content.learnElsewhere.map((item, i) => (
+                    <li key={i} className="flex gap-2">
+                      <span className="text-amber-400/70">→</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </LessonSection>
 
           <LessonSection id="why" title="Why Does It Exist?" icon={<HelpCircle className="h-5 w-5 text-accent" />}>
@@ -114,6 +141,28 @@ export function CurriculumLessonView({
           {content.diagram && (
             <LessonSection id="diagram" title="Visual Diagram" icon={<Layers className="h-5 w-5 text-accent" />}>
               <MermaidDiagram chart={content.diagram} title={`What is ${mod.title}?`} sketch />
+            </LessonSection>
+          )}
+
+          {showOrientationExtras && content.example && (
+            <LessonSection id="example" title="Example" icon={<BookOpen className="h-5 w-5 text-accent" />}>
+              <p className="font-medium text-text-primary mb-2">Scenario</p>
+              <p className="mb-4">{content.example}</p>
+              {content.exampleSolution && (
+                <>
+                  <p className="font-medium text-text-primary mb-2">Solution</p>
+                  <p>{content.exampleSolution}</p>
+                </>
+              )}
+            </LessonSection>
+          )}
+
+          {showOrientationExtras && content.practiceTask && (
+            <LessonSection id="practice" title="Practice Task" icon={<PenLine className="h-5 w-5 text-accent" />}>
+              <p className="text-sm text-text-muted mb-3 not-prose">
+                Do this before moving to the next module — reading alone is not enough.
+              </p>
+              <p>{content.practiceTask}</p>
             </LessonSection>
           )}
 

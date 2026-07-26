@@ -424,6 +424,61 @@ const PHASE_DIAGRAM_BUILDERS: Record<string, (title: string) => string> = {
     ["Implementation", ["Prompt structure", "State tracking", "Termination condition", "Error recovery"]],
     ["Comparison", ["vs ReAct", "vs Plan-Execute", "Latency tradeoff", "Reliability"]],
   ]),
+  "multi-agent-systems": (title) => buildTopicDiagram(title, [
+    ["Roles", ["Supervisor agent", "Worker agents", "Planner / critic", "Communication protocol"]],
+    ["Coordination", ["Task delegation", "Shared memory", "Parallel execution", "Conflict resolution"]],
+    ["Production", ["A2A protocol", "Observability", "Failure recovery", "Cost control"]],
+  ]),
+  "agent-evaluation": (title) => buildTopicDiagram(title, [
+    ["Observability", ["Traces and spans", "LangSmith / Phoenix", "OpenTelemetry", "Dashboards"]],
+    ["Evaluation Types", ["LLM output quality", "Agent trajectory", "Tool call accuracy", "Regression tests"]],
+    ["Workflow", ["Golden datasets", "Hallucination detection", "CI integration", "Alert on drift"]],
+  ]),
+  "security-guardrails": (title) => buildTopicDiagram(title, [
+    ["Threats", ["Prompt injection", "Jailbreaks", "PII leakage", "Unsafe tool use"]],
+    ["Defenses", ["Input scanning", "Output filtering", "Tool restrictions", "Policy engine"]],
+    ["Operations", ["Human approval", "Audit logs", "Rate limits", "Incident response"]],
+  ]),
+  "production-agents": (title) => buildTopicDiagram(title, [
+    ["Serving", ["FastAPI endpoints", "Async workers", "Queues", "Streaming responses"]],
+    ["Infrastructure", ["Docker / Kubernetes", "GPU / vLLM", "Scaling", "Deployments"]],
+    ["Reliability", ["Monitoring", "Tracing", "Rate limits", "Cost optimization"]],
+  ]),
+  "browser-agents": (title) => buildTopicDiagram(title, [
+    ["Automation", ["Playwright browser", "DOM interaction", "Screenshots", "Form filling"]],
+    ["Agent Loop", ["Observe page", "Plan action", "Click / type", "Verify result"]],
+    ["Safety", ["URL allowlists", "Action validation", "Timeouts", "Human checkpoints"]],
+  ]),
+  "multimodal-agents": (title) => buildTopicDiagram(title, [
+    ["Modalities", ["Speech-to-text", "Text-to-speech", "Images", "Video / PDF / screen"]],
+    ["Pipeline", ["Ingest media", "Preprocess", "LLM reasoning", "Generate response"]],
+    ["Production", ["Realtime voice", "Latency budgets", "Cost per modality", "Fallback paths"]],
+  ]),
+  "advanced-ai": (title) => buildTopicDiagram(title, [
+    ["Training", ["Fine-tuning", "LoRA / QLoRA", "PEFT adapters", "Dataset prep"]],
+    ["Inference", ["Optimization", "Distillation", "Quantization", "Serving tradeoffs"]],
+    ["Research", ["Read papers", "Reproduce results", "Evaluate benchmarks", "Know when to fine-tune"]],
+  ]),
+  "enterprise-ai": (title) => buildTopicDiagram(title, [
+    ["Knowledge", ["Enterprise RAG", "Knowledge bases", "Access control", "Grounding"]],
+    ["Governance", ["RBAC", "Compliance", "Identity", "Audit logs"]],
+    ["Operations", ["Human approval", "SLA monitoring", "Data residency", "Vendor review"]],
+  ]),
+  "coding-agents": (title) => buildTopicDiagram(title, [
+    ["Capabilities", ["Read codebase", "Write patches", "Run tests", "Open PRs"]],
+    ["Workflows", ["Bug fix loop", "PR review", "Documentation", "CI/CD integration"]],
+    ["Safety", ["Sandbox execution", "Diff review", "Test before merge", "Scope limits"]],
+  ]),
+  "capstone-projects": (title) => buildTopicDiagram(title, [
+    ["Architecture", ["Requirements", "Component design", "Data flow", "API boundaries"]],
+    ["Build", ["RAG / agents / tools", "Frontend or API", "Database", "Deployment"]],
+    ["Ship", ["Testing and evals", "Monitoring", "Demo ready", "Portfolio write-up"]],
+  ]),
+  "interview-system-design": (title) => buildTopicDiagram(title, [
+    ["Design", ["Requirements gathering", "Architecture diagram", "Component tradeoffs", "Scale estimates"]],
+    ["Deep Dives", ["LangGraph design", "MCP integration", "Memory design", "Multi-agent patterns"]],
+    ["Interview", ["Clarify constraints", "Start simple", "Discuss failures", "Estimate cost and latency"]],
+  ]),
 };
 
 function buildTopicDiagram(
@@ -441,6 +496,42 @@ function buildTopicDiagram(
     lines.push(`    TOP --> ${id}`);
   });
   return lines.join("\n");
+}
+
+/** Build a Phase 0-style subgraph diagram from cheat sheet + mistakes. */
+function buildDiagramFromCheatSheet(
+  title: string,
+  cheatSheet: string[],
+  mistakes?: string[]
+): string {
+  const safe = title.replace(/"/g, "'");
+  const sections: [string, string[]][] = [];
+
+  if (cheatSheet.length >= 6) {
+    sections.push(["Key Concepts", cheatSheet.slice(0, 3)]);
+    sections.push(["How It Works", cheatSheet.slice(3, 6)]);
+    if (cheatSheet.length > 6) {
+      sections.push(["Quick Reference", cheatSheet.slice(6, 8)]);
+    }
+  } else if (cheatSheet.length >= 3) {
+    sections.push(["Key Concepts", cheatSheet.slice(0, Math.ceil(cheatSheet.length / 2))]);
+    sections.push(["Quick Reference", cheatSheet.slice(Math.ceil(cheatSheet.length / 2))]);
+  } else if (cheatSheet.length > 0) {
+    sections.push(["Key Points", cheatSheet]);
+  }
+
+  if (mistakes && mistakes.length > 0) {
+    sections.push(["Common Pitfalls", mistakes.slice(0, 4)]);
+  }
+
+  if (sections.length === 0) {
+    return buildTopicDiagram(safe, [
+      ["Concept", ["What it is", "Why it matters", "Key terms", "Mental model"]],
+      ["Practice", ["When to use", "Configuration", "Pitfalls", "Evaluation"]],
+    ]);
+  }
+
+  return buildTopicDiagram(safe, sections);
 }
 
 /** Phase-specific default commands when module has none. */
@@ -495,6 +586,52 @@ const PHASE_DEFAULT_COMMANDS: Record<string, string[]> = {
     'python react_agent.py  # run a ReAct-style agent loop',
     "pip install tenacity  # retry logic for agent steps",
   ],
+  "multi-agent-systems": [
+    "pip install langgraph langchain-openai  # multi-agent orchestration",
+    "pip install crewai  # role-based multi-agent crews",
+  ],
+  "agent-evaluation": [
+    "pip install langsmith  # trace and evaluate LLM runs",
+    "pip install arize-phoenix  # open-source LLM observability",
+    "pip install opentelemetry-api opentelemetry-sdk  # distributed tracing",
+  ],
+  "security-guardrails": [
+    "pip install guardrails-ai  # input/output validation",
+    "pip install presidio-analyzer  # PII detection",
+  ],
+  "production-agents": [
+    "pip install fastapi uvicorn  # serve agent APIs",
+    "docker build -t agent-api .  # containerize for production",
+    "kubectl apply -f deployment.yaml  # deploy to Kubernetes",
+  ],
+  "browser-agents": [
+    "pip install playwright  # browser automation",
+    "playwright install  # install browser binaries",
+  ],
+  "multimodal-agents": [
+    "pip install openai  # vision, audio, and TTS APIs",
+    "pip install pypdf  # PDF ingestion for document agents",
+  ],
+  "advanced-ai": [
+    "pip install peft transformers  # LoRA / QLoRA fine-tuning",
+    "pip install bitsandbytes  # quantized training",
+  ],
+  "enterprise-ai": [
+    "pip install langchain chromadb  # enterprise RAG stack",
+    "pip install python-jose  # JWT identity tokens",
+  ],
+  "coding-agents": [
+    "pip install openai  # code generation and review",
+    "gh pr create  # open a pull request from agent output",
+  ],
+  "capstone-projects": [
+    "git checkout -b capstone/project-name  # isolate capstone work",
+    "docker-compose up -d  # run full stack locally",
+  ],
+  "interview-system-design": [
+    "Draw architecture on paper first  # clarify before coding",
+    "pip install langgraph  # implement design in interview prep",
+  ],
 };
 
 const MODULE_COMMANDS: Record<string, string[]> = {
@@ -544,11 +681,19 @@ const MODULE_COMMANDS: Record<string, string[]> = {
 export function getCurriculumDiagram(
   moduleSlug: string,
   moduleTitle: string,
-  phaseSlug: string
+  phaseSlug: string,
+  cheatSheet: string[] = [],
+  mistakes?: string[]
 ): string {
   if (MODULE_DIAGRAMS[moduleSlug]) return MODULE_DIAGRAMS[moduleSlug];
+
+  if (cheatSheet.length >= 3) {
+    return buildDiagramFromCheatSheet(moduleTitle, cheatSheet, mistakes);
+  }
+
   const builder = PHASE_DIAGRAM_BUILDERS[phaseSlug];
   if (builder) return builder(moduleTitle);
+
   return buildTopicDiagram(moduleTitle, [
     ["Concept", ["What it is", "Why it matters", "Key terms", "Mental model"]],
     ["How It Works", ["Input", "Processing", "Output", "Data flow"]],
