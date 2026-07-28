@@ -30,7 +30,7 @@ function highlightString(token: string, key: string): ReactNode {
 
 function highlightComment(text: string, key: string): ReactNode {
   return (
-    <span key={key} className="text-emerald-400/80 italic">
+    <span key={key} className="text-accent/80 italic">
       {text}
     </span>
   );
@@ -38,7 +38,7 @@ function highlightComment(text: string, key: string): ReactNode {
 
 function highlightKeyword(token: string, key: string): ReactNode {
   return (
-    <span key={key} className="text-sky-300 font-medium">
+    <span key={key} className="text-royal font-medium">
       {token}
     </span>
   );

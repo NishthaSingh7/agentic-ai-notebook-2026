@@ -176,8 +176,8 @@ export function getProjectBySlug(slug: string): Project | undefined {
 }
 
 export const difficultyColors: Record<ProjectDifficulty, string> = {
-  beginner: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-  intermediate: "bg-blue-600/10 text-blue-400 border-blue-600/20",
-  advanced: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-  production: "bg-rose-500/10 text-rose-400 border-rose-500/20",
+  beginner: "bg-accent/10 text-accent border-accent/20",
+  intermediate: "bg-royal/10 text-royal border-royal/20",
+  advanced: "bg-amber-500/10 text-amber-700 border-amber-500/20",
+  production: "bg-rose-500/10 text-rose-700 border-rose-500/20",
 };

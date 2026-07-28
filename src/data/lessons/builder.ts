@@ -1,4 +1,4 @@
-import type { LessonContent } from "../lesson-types";
+import type { LessonContent, WorkflowDiagram } from "../lesson-types";
 
 export interface LessonInput {
   concept: string;
@@ -8,6 +8,8 @@ export interface LessonInput {
   technicalExplanation?: string;
   architecture?: string;
   diagram?: string;
+  workflowDiagrams?: WorkflowDiagram[];
+  visualFirst?: boolean;
   example: string;
   exampleSolution?: string;
   practiceTask?: string;
@@ -32,6 +34,8 @@ export function createLesson(input: LessonInput): LessonContent {
     technicalExplanation: input.technicalExplanation ?? "",
     architecture: input.architecture,
     diagram: input.diagram,
+    workflowDiagrams: input.workflowDiagrams,
+    visualFirst: input.visualFirst,
     example: input.example,
     exampleSolution: input.exampleSolution,
     practiceTask: input.practiceTask,

@@ -33,7 +33,7 @@ function LoginContent() {
       <button
         type="button"
         onClick={() => signIn("google", { callbackUrl })}
-        className="inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-medium text-background transition-colors hover:bg-accent/90"
+        className="inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-medium text-on-accent transition-colors hover:bg-accent/90"
       >
         <LogIn className="h-4 w-4" />
         Continue with Google

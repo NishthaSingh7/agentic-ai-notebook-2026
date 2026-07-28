@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { roadmapFlow } from "@/data/roadmap";
 import { ChevronDown, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 function FlowStep({ step, index }: { step: string; index: number }) {
   return (
@@ -14,10 +15,10 @@ function FlowStep({ step, index }: { step: string; index: number }) {
       className="relative flex flex-1 items-center justify-center rounded-lg border border-border bg-surface-elevated px-3 py-2 text-xs font-medium hover:border-success/30 transition-colors text-center min-h-[36px] min-w-0"
     >
       <span
-        className="absolute -left-1 top-1/2 -translate-y-1/2 h-2 w-2 rounded-full"
-        style={{
-          background: index % 2 === 0 ? "#4ade80" : "#4169e1",
-        }}
+        className={cn(
+          "absolute -left-1 top-1/2 -translate-y-1/2 h-2 w-2 rounded-full",
+          index % 2 === 0 ? "bg-accent" : "bg-royal"
+        )}
       />
       {step}
     </motion.div>

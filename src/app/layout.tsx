@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { AuthSessionProvider } from "@/components/session-provider";
 import { AppProgressProvider } from "@/components/progress-provider";
+import { ThemeProvider } from "@/components/theme-provider";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
 
@@ -36,15 +38,22 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <Script id="theme-init" strategy="beforeInteractive">
+          {`(function(){try{var t=localStorage.getItem('theme');if(t==='dark')document.documentElement.classList.add('dark');}catch(e){}})();`}
+        </Script>
+      </head>
       <body className={`${inter.variable} ${jetbrainsMono.variable} antialiased flex flex-col min-h-screen`}>
-        <AuthSessionProvider>
-          <AppProgressProvider>
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </AppProgressProvider>
-        </AuthSessionProvider>
+        <ThemeProvider>
+          <AuthSessionProvider>
+            <AppProgressProvider>
+              <Header />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </AppProgressProvider>
+          </AuthSessionProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

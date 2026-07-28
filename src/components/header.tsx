@@ -22,6 +22,8 @@ import {
 import { cn } from "@/lib/utils";
 import { SearchDialog } from "./search-dialog";
 import { UserMenu } from "./user-menu";
+import { ThemeToggle } from "./theme-toggle";
+import { NavProgress } from "./nav-progress";
 
 const navigation = [
   { name: "Home", href: "/", icon: BookOpen },
@@ -85,6 +87,8 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-1.5 sm:gap-2">
+            <NavProgress />
+
             <button
               onClick={() => setSearchOpen(true)}
               className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-surface text-text-muted transition-colors hover:text-text-secondary sm:w-auto sm:px-3 sm:gap-2"
@@ -96,6 +100,8 @@ export function Header() {
                 ⌘K
               </kbd>
             </button>
+
+            <ThemeToggle />
 
             <UserMenu />
 

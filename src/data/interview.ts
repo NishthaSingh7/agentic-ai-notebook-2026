@@ -103,8 +103,8 @@ export const categoryLabels: Record<InterviewTopic["category"], string> = {
 };
 
 export const categoryColors: Record<InterviewTopic["category"], string> = {
-  theory: "bg-green-500/10 text-green-400",
-  coding: "bg-blue-600/10 text-blue-400",
-  "system-design": "bg-emerald-500/10 text-emerald-400",
-  architecture: "bg-blue-500/10 text-blue-300",
+  theory: "bg-accent/10 text-accent",
+  coding: "bg-royal/10 text-royal",
+  "system-design": "bg-accent/10 text-accent-dim",
+  architecture: "bg-royal/10 text-royal-dim",
 };

@@ -55,9 +55,9 @@ interface RevisionCardProps {
 
 const revisionVariants: Record<RevisionVariant, string> = {
   fiveMin:
-    "border-emerald-500/30 bg-emerald-500/5 shadow-[inset_0_1px_0_0_rgba(52,211,153,0.15)]",
+    "border-accent/30 bg-accent/5 shadow-[inset_0_1px_0_0_rgba(194,65,12,0.12)]",
   fifteenMin:
-    "border-sky-500/30 bg-sky-500/5 shadow-[inset_0_1px_0_0_rgba(56,189,248,0.15)]",
+    "border-royal/30 bg-royal/5 shadow-[inset_0_1px_0_0_rgba(124,58,237,0.12)]",
   oneHour:
     "border-violet-500/30 bg-violet-500/5 shadow-[inset_0_1px_0_0_rgba(167,139,250,0.15)]",
   cheatSheet:
@@ -65,10 +65,10 @@ const revisionVariants: Record<RevisionVariant, string> = {
 };
 
 const revisionBadgeVariants: Record<RevisionVariant, string> = {
-  fiveMin: "bg-emerald-500/15 text-emerald-400",
-  fifteenMin: "bg-sky-500/15 text-sky-400",
-  oneHour: "bg-violet-500/15 text-violet-400",
-  cheatSheet: "bg-amber-500/15 text-amber-400",
+  fiveMin: "bg-accent/15 text-accent",
+  fifteenMin: "bg-royal/15 text-royal",
+  oneHour: "bg-violet-500/15 text-violet-700",
+  cheatSheet: "bg-amber-500/15 text-amber-700",
 };
 
 export function RevisionCard({ title, duration, items, variant }: RevisionCardProps) {
@@ -129,7 +129,7 @@ export function CommandsCard({ commands }: CommandsCardProps) {
               <code className="block text-sm font-mono bg-surface-elevated border border-border rounded-lg px-3 py-2 leading-relaxed">
                 <span className="text-text-primary">{command}</span>
                 {comment ? (
-                  <span className="text-emerald-400/90 ml-2"># {comment}</span>
+                  <span className="text-accent/90 ml-2"># {comment}</span>
                 ) : null}
               </code>
             </li>
@@ -147,9 +147,9 @@ interface InterviewQProps {
 }
 
 const difficultyColors = {
-  easy: "bg-emerald-500/10 text-emerald-400",
-  medium: "bg-amber-500/10 text-amber-400",
-  hard: "bg-rose-500/10 text-rose-400",
+  easy: "bg-accent/10 text-accent",
+  medium: "bg-amber-500/10 text-amber-700",
+  hard: "bg-rose-500/10 text-rose-700",
 };
 
 export function InterviewQ({ question, answer, difficulty }: InterviewQProps) {

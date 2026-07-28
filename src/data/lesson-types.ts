@@ -1,3 +1,9 @@
+export interface WorkflowDiagram {
+  title: string;
+  chart: string;
+  caption?: string;
+}
+
 export interface LessonContent {
   concept: string;
   whyItExists: string;
@@ -6,6 +12,9 @@ export interface LessonContent {
   technicalExplanation: string;
   architecture?: string;
   diagram?: string;
+  workflowDiagrams?: WorkflowDiagram[];
+  /** Visual-first layout: diagrams up top, minimal text */
+  visualFirst?: boolean;
   example: string;
   exampleSolution?: string;
   practiceTask?: string;

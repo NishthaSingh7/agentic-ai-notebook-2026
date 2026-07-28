@@ -136,7 +136,7 @@ export default function HomePage() {
           </p>
           <Link
             href="/roadmap/programming-foundations"
-            className="inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-medium text-background hover:bg-accent/90 transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-medium text-on-accent hover:bg-accent/90 transition-colors"
           >
             Begin Phase 0 <ArrowRight className="h-4 w-4" />
           </Link>

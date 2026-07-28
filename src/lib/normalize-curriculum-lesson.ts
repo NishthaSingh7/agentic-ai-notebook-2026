@@ -14,6 +14,7 @@ import {
   generateExampleSolution,
   generatePracticeTask,
 } from "@/lib/curriculum-practice";
+import { autoPastelChart } from "@/lib/mermaid-pastel";
 
 /** Capstone lessons with hand-crafted diagrams — preserve when present. */
 const HAND_CRAFTED_DIAGRAM_SLUGS = new Set([
@@ -91,10 +92,26 @@ export function normalizeCurriculumLesson(
     generateExampleSolution(moduleTitle, example, phaseTitle);
 
   const practiceTask =
-    lesson.practiceTask?.trim() ||
-    generatePracticeTask(moduleTitle, moduleSlug, phaseTitle, example, includeCode);
+    lesson.practiceTask === ""
+      ? undefined
+      : lesson.practiceTask?.trim() ||
+        generatePracticeTask(moduleTitle, moduleSlug, phaseTitle, example, includeCode);
 
-  return {
+  const withPhase0Visuals = (content: LessonContent): LessonContent => {
+    if (!isPhase0) return content;
+    return {
+      ...content,
+      visualFirst: content.visualFirst ?? true,
+      diagram: autoPastelChart(content.diagram),
+      analogyDiagram: autoPastelChart(content.analogyDiagram),
+      workflowDiagrams: content.workflowDiagrams?.map((wf) => ({
+        ...wf,
+        chart: autoPastelChart(wf.chart) ?? wf.chart,
+      })),
+    };
+  };
+
+  return withPhase0Visuals({
     ...lesson,
     example,
     exampleSolution,
@@ -111,5 +128,5 @@ export function normalizeCurriculumLesson(
       oneHour: [],
       cheatSheet,
     },
-  };
+  });
 }

@@ -36,7 +36,7 @@ export function ModuleList({ phaseSlug, modules }: ModuleListProps) {
               type="button"
               onClick={(e) => {
                 e.preventDefault();
-                toggleModule(phaseSlug, mod.slug);
+                toggleModule(phaseSlug, mod.slug, mod.title);
               }}
               className="shrink-0 rounded-md p-0.5 transition-colors"
               aria-label={done ? `Mark ${mod.title} as not read` : `Mark ${mod.title} as read`}

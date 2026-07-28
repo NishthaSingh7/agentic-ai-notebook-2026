@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import { phases, getPhaseBySlug, getModule } from "@/data/roadmap";
 import { getLessonContent, getLessonReadTime } from "@/data/lessons";
 import { CurriculumLessonView } from "@/components/curriculum-lesson-view";
-import { isCodeWalkthroughPhase } from "@/lib/curriculum-phases";
+import { Phase0LessonView } from "@/components/phase0-lesson-view";
+import { isCodeWalkthroughPhase, isFoundationPhase } from "@/lib/curriculum-phases";
 
 interface Props {
   params: Promise<{ slug: string; module: string }>;
@@ -38,6 +39,19 @@ export default async function ModulePage({ params }: Props) {
   const moduleIndex = phase.modules.findIndex((m) => m.slug === moduleSlug);
   const prevMod = moduleIndex > 0 ? phase.modules[moduleIndex - 1] : null;
   const nextMod = moduleIndex < phase.modules.length - 1 ? phase.modules[moduleIndex + 1] : null;
+
+  if (isFoundationPhase(slug)) {
+    return (
+      <Phase0LessonView
+        phase={phase}
+        mod={mod}
+        content={content}
+        prevMod={prevMod}
+        nextMod={nextMod}
+        slug={slug}
+      />
+    );
+  }
 
   return (
     <CurriculumLessonView

@@ -61,7 +61,7 @@ export const phases: Phase[] = [
     description:
       "What GenAI is, how LLMs work, tokens, embeddings, prompt engineering, and core concepts — without repeating RAG or tool-calling deep dives.",
     estimatedHours: 35,
-    color: "from-green-500 to-emerald-700",
+    color: "from-orange-500 to-orange-700",
     modules: [
       mod("what-is-ai", "What is AI"),
       mod("ml-vs-dl-vs-genai", "ML vs DL vs GenAI"),
@@ -88,7 +88,7 @@ export const phases: Phase[] = [
     description:
       "Neural networks, attention, encoders/decoders, BERT, GPT, KV cache, RoPE, MoE, and quantization — interview-depth ML intuition.",
     estimatedHours: 50,
-    color: "from-blue-600 to-blue-900",
+    color: "from-violet-600 to-violet-900",
     modules: [
       mod("neural-networks", "Neural Networks"),
       mod("gradient-descent", "Gradient Descent"),
@@ -121,7 +121,7 @@ export const phases: Phase[] = [
     description:
       "Hands-on with OpenAI, Claude, Gemini, Ollama, open-source models, streaming, and multimodal APIs.",
     estimatedHours: 40,
-    color: "from-green-400 to-green-700",
+    color: "from-amber-500 to-amber-700",
     modules: [
       mod("openai-apis", "OpenAI APIs"),
       mod("gemini", "Gemini"),
@@ -146,7 +146,7 @@ export const phases: Phase[] = [
     description:
       "Document loaders, chunking, vector DBs, hybrid search, re-ranking, LangChain, ChromaDB, and Streamlit demos.",
     estimatedHours: 35,
-    color: "from-emerald-500 to-green-700",
+    color: "from-rose-500 to-rose-700",
     modules: [
       mod("document-loaders", "Document Loaders"),
       mod("chunking", "Chunking"),
@@ -177,7 +177,7 @@ export const phases: Phase[] = [
     description:
       "What agents are, how they work, planning, reasoning, reflection, and building your first agent without frameworks.",
     estimatedHours: 35,
-    color: "from-blue-600 to-blue-900",
+    color: "from-violet-600 to-violet-900",
     modules: [
       mod("what-is-an-ai-agent", "What is an AI Agent?"),
       mod("why-llms-need-agents", "Why LLMs Need Agents"),
@@ -205,7 +205,7 @@ export const phases: Phase[] = [
     description:
       "Working, short-term, long-term, semantic, and episodic memory — one of the biggest interview topics for production agents.",
     estimatedHours: 20,
-    color: "from-green-400 to-green-700",
+    color: "from-amber-500 to-amber-700",
     modules: [
       mod("memory-fundamentals", "Memory Fundamentals"),
       mod("working-memory", "Working Memory"),
@@ -233,7 +233,7 @@ export const phases: Phase[] = [
     description:
       "Function calling, JSON mode, structured outputs, tool registries, permissions, and building a tool-using assistant.",
     estimatedHours: 22,
-    color: "from-blue-500 to-blue-800",
+    color: "from-fuchsia-500 to-fuchsia-800",
     modules: [
       mod("tool-calling", "Tool Calling"),
       mod("function-calling", "Function Calling"),
@@ -261,7 +261,7 @@ export const phases: Phase[] = [
     description:
       "MCP architecture, clients, servers, resources, tools, prompts, transport, and integrating MCP with agents.",
     estimatedHours: 18,
-    color: "from-emerald-500 to-green-700",
+    color: "from-rose-500 to-rose-700",
     modules: [
       mod("why-mcp", "Why MCP"),
       mod("mcp-architecture", "MCP Architecture"),
@@ -287,7 +287,7 @@ export const phases: Phase[] = [
     description:
       "LangGraph, OpenAI Agents SDK, Google ADK, CrewAI, AutoGen, PydanticAI, and the emerging framework landscape.",
     estimatedHours: 50,
-    color: "from-blue-600 to-blue-900",
+    color: "from-violet-600 to-violet-900",
     modules: [
       mod("langgraph", "LangGraph"),
       mod("langgraph-nodes-edges", "Nodes & Edges"),
@@ -321,7 +321,7 @@ export const phases: Phase[] = [
     description:
       "ReAct, Plan & Execute, Reflexion, Tree of Thoughts — learned after building agents, not before.",
     estimatedHours: 18,
-    color: "from-emerald-500 to-blue-800",
+    color: "from-purple-500 to-purple-800",
     modules: [
       mod("react", "ReAct"),
       mod("plan-execute", "Plan & Execute"),
@@ -343,7 +343,7 @@ export const phases: Phase[] = [
     description:
       "A2A protocol, supervisor/worker patterns, swarm intelligence, coordination, and multi-agent projects.",
     estimatedHours: 25,
-    color: "from-green-500 to-emerald-700",
+    color: "from-orange-500 to-orange-700",
     modules: [
       mod("a2a-protocol", "A2A Protocol"),
       mod("supervisor-agent", "Supervisor Agent"),
@@ -368,7 +368,7 @@ export const phases: Phase[] = [
     description:
       "LangSmith, Phoenix, OpenTelemetry, trajectory evaluation, hallucination detection, and regression testing.",
     estimatedHours: 20,
-    color: "from-blue-500 to-blue-800",
+    color: "from-fuchsia-500 to-fuchsia-800",
     modules: [
       mod("observability", "Observability"),
       mod("langsmith", "LangSmith"),
@@ -391,7 +391,7 @@ export const phases: Phase[] = [
     description:
       "Prompt injection, jailbreaks, PII detection, content safety, tool restrictions, and human approval flows.",
     estimatedHours: 15,
-    color: "from-green-400 to-green-700",
+    color: "from-amber-500 to-amber-700",
     modules: [
       mod("guardrails", "Guardrails"),
       mod("prompt-injection", "Prompt Injection"),
@@ -411,7 +411,7 @@ export const phases: Phase[] = [
     description:
       "FastAPI, Docker, Kubernetes, async agents, queues, streaming, scaling, monitoring, and cost optimization.",
     estimatedHours: 35,
-    color: "from-blue-600 to-blue-900",
+    color: "from-violet-600 to-violet-900",
     modules: [
       mod("fastapi", "FastAPI"),
       mod("kubernetes", "Kubernetes"),
@@ -439,7 +439,7 @@ export const phases: Phase[] = [
     description:
       "Playwright, browser automation, computer use, form filling, and web navigation agents.",
     estimatedHours: 15,
-    color: "from-green-500 to-emerald-700",
+    color: "from-orange-500 to-orange-700",
     modules: [
       mod("playwright", "Playwright"),
       mod("browser-automation", "Browser Automation"),
@@ -457,7 +457,7 @@ export const phases: Phase[] = [
     description:
       "STT, TTS, realtime voice, and agents that understand images, audio, video, PDFs, and screens.",
     estimatedHours: 18,
-    color: "from-blue-500 to-blue-800",
+    color: "from-fuchsia-500 to-fuchsia-800",
     modules: [
       mod("stt", "STT"),
       mod("tts", "TTS"),
@@ -477,7 +477,7 @@ export const phases: Phase[] = [
     description:
       "Fine-tuning, LoRA, QLoRA, PEFT, inference optimization, distillation, and reading research papers.",
     estimatedHours: 35,
-    color: "from-emerald-500 to-blue-800",
+    color: "from-purple-500 to-purple-800",
     modules: [
       mod("fine-tuning", "Fine Tuning"),
       mod("lora", "LoRA"),
@@ -498,7 +498,7 @@ export const phases: Phase[] = [
     description:
       "Enterprise RAG, knowledge bases, RBAC, compliance, identity, audit logs, and human approval at scale.",
     estimatedHours: 20,
-    color: "from-green-400 to-green-700",
+    color: "from-amber-500 to-amber-700",
     modules: [
       mod("enterprise-rag", "Enterprise RAG"),
       mod("knowledge-bases", "Knowledge Bases"),
@@ -518,7 +518,7 @@ export const phases: Phase[] = [
     description:
       "GitHub agents, PR review, bug fix, documentation, CI/CD, and terminal agents.",
     estimatedHours: 22,
-    color: "from-blue-600 to-blue-900",
+    color: "from-violet-600 to-violet-900",
     modules: [
       mod("github-agent", "GitHub Agent"),
       mod("pr-review-agent", "PR Review Agent"),
@@ -537,7 +537,7 @@ export const phases: Phase[] = [
     description:
       "Production-ready portfolio projects — AI software engineer, research assistant, customer support, and more.",
     estimatedHours: 80,
-    color: "from-emerald-500 to-green-700",
+    color: "from-rose-500 to-rose-700",
     modules: [
       mod("ai-software-engineer", "AI Software Engineer"),
       mod("ai-research-assistant", "AI Research Assistant"),
@@ -558,7 +558,7 @@ export const phases: Phase[] = [
     description:
       "Agent system design, LangGraph coding, MCP design, multi-agent design, memory design, and mock interviews.",
     estimatedHours: 25,
-    color: "from-blue-500 to-blue-800",
+    color: "from-fuchsia-500 to-fuchsia-800",
     modules: [
       mod("agent-system-design", "Agent System Design"),
       mod("langgraph-coding", "LangGraph Coding"),

@@ -93,7 +93,7 @@ export default function AboutPage() {
           </p>
           <Link
             href="/roadmap"
-            className="inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-background hover:bg-accent/90 transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-on-accent hover:bg-accent/90 transition-colors"
           >
             View the Roadmap <ArrowRight className="h-4 w-4" />
           </Link>

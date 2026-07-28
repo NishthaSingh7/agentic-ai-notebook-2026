@@ -1,5 +1,6 @@
 import type { LessonContent } from "../lesson-types";
 import { createLesson } from "./builder";
+import { pastelChart } from "@/lib/mermaid-pastel";
 
 export const phase0Lessons: Record<string, LessonContent> = {
   "start-here": createLesson({
@@ -103,10 +104,11 @@ export const phase0Lessons: Record<string, LessonContent> = {
   }),
 
   python: createLesson({
+    visualFirst: true,
     concept:
-      "Python is the main programming language for AI engineering — used to call LLM APIs, process data, build agents, and deploy backends.",
+      "Python orchestrates every AI app — user input → LLM → tools → response.",
     technicalExplanation:
-      "Variables store data (name = \"Alice\"). if/else and for/while loops control program flow. def defines reusable functions. Lists and dicts hold collections — the same structures JSON uses in every API response. try/except catches errors so your agent does not crash on a bad API call. Python has readable syntax, a huge AI library ecosystem (OpenAI SDK, FastAPI, Pydantic), and tools like venv for managing dependencies. Use async/await when calling multiple LLM APIs concurrently.",
+      "Roles: data handling, model APIs, orchestration, tool calling, memory, evaluation. Libraries: OpenAI, FastAPI, Pydantic, LangChain, ChromaDB, tiktoken.",
     learnElsewhere: [
       "Variables, strings, numbers, and booleans",
       "if/else conditions and for/while loops",
@@ -116,57 +118,103 @@ export const phase0Lessons: Record<string, LessonContent> = {
       "Recommended: python.org tutorial, Automate the Boring Stuff, or CS50 Python",
     ],
     whyItExists:
-      "Nearly every AI tool, tutorial, and job listing expects Python. Learning it unlocks the full AI engineering stack.",
+      "Nearly every AI tool, tutorial, and job listing expects Python. It is simple to read, fast to prototype, integrates every API, and scales from notebook to production.",
     analogy:
-      "Python is the English of AI engineering — not the only language, but the one everyone speaks to collaborate.",
-    analogyDiagram: `flowchart LR
-    A[Java dev] --> E[Python]
-    B[Go dev] --> E
-    C[JS dev] --> E
-    E --> D[Everyone builds AI together]`,
-    diagram: `flowchart TD
-    PY([Python])
+      "Python is the conductor of an orchestra — it does not play every instrument (LLM, database, API) but coordinates them into one performance.",
+    analogyDiagram: pastelChart(
+      `flowchart LR
+    User["User - Input / Prompt"] --> Py["Python Application - orchestrates everything"]
+    Py --> LLM["AI / LLM - Brain"]
+    LLM --> Tools["Tools / APIs - Action"]
+    Tools --> Resp["Response to User"]
+    Resp -.->|next request| User`,
+      `class User grp1
+    class Py grp2
+    class LLM grp3
+    class Tools grp4
+    class Resp grp5`
+    ),
+    diagram: pastelChart(
+      `flowchart TD
+    PY([Python in the AI Stack])
 
-    subgraph Syntax["Core Language"]
-        S1[Variables and data types]
-        S2[Functions and classes]
-        S3[Type hints]
-        S4[List and dict operations]
+    subgraph Roles["Python's Role"]
+        R1[Data Handling - pandas, numpy]
+        R2[Model Interaction - LLM, embeddings, vision]
+        R3[Orchestration - chain steps and logic]
+        R4[Tool Calling - APIs, DB, search, browser]
+        R5[Memory and State - sessions, cache]
+        R6[Evaluation - test, score, improve]
     end
 
-    subgraph Libs["AI Libraries"]
-        L1[OpenAI SDK]
-        L2[FastAPI]
-        L3[Pydantic]
-        L4[LangChain / Hugging Face]
-        L5[pytest]
+    subgraph Libs["Common AI Libraries"]
+        L1[NumPy - arrays]
+        L2[Pandas - DataFrames]
+        L3[Requests / httpx - API calls]
+        L4[Pydantic - validation]
+        L5[LangChain / LangGraph - workflows]
+        L6[CrewAI / AutoGen - agents]
+        L7[Chroma / FAISS - vector DB]
+        L8[OpenAI / Anthropic / Gemini APIs]
+        L9[Tiktoken - tokens]
+        L10[python-dotenv - configs]
+        L11[FastAPI - backend API]
     end
 
-    subgraph Setup["Project Setup"]
-        P1[venv - isolate dependencies]
-        P2[pip + requirements.txt]
-        P3[.env for API keys]
-        P4[src/ tests/ Dockerfile]
+    PY --> Roles
+    PY --> Libs`,
+      `class PY hub
+    class R1,R2,R3,R4,R5,R6 grp1
+    class L1,L2,L3,L4,L5,L6,L7,L8,L9,L10,L11 grp2
+    style Roles fill:#fff7ed,stroke:#fdba74,color:#9a3412
+    style Libs fill:#f5f3ff,stroke:#c4b5fd,color:#5b21b6`
+    ),
+    workflowDiagrams: [
+      {
+        title: "Why Python for AI?",
+        caption: "Seven reasons Python is the default language for AI engineering.",
+        chart: pastelChart(
+          `flowchart TD
+    WP([Why Python for AI?])
+
+    subgraph Reasons["Key Advantages"]
+        W1[Simple and readable syntax]
+        W2[Huge ecosystem and libraries]
+        W3[Great for prototyping]
+        W4[Strong community support]
+        W5[Easy integration with APIs]
+        W6[Ideal for automation and agents]
+        W7[Scalable from prototype to production]
     end
 
-    subgraph Uses["AI Engineering Uses"]
-        U1[Call LLM APIs]
-        U2[Build RAG pipelines]
-        U3[Create agents]
-        U4[Serve FastAPI backends]
-        U5[async/await for concurrent calls]
-    end
-
-    PY --> Syntax
-    PY --> Libs
-    PY --> Setup
-    PY --> Uses`,
+    WP --> Reasons`,
+          `class WP hub
+    class W1,W2,W3,W4,W5,W6,W7 grp1
+    style Reasons fill:#f0fdf4,stroke:#86efac,color:#166534`
+        ),
+      },
+      {
+        title: "End-to-End AI Application Flow",
+        caption: "How Python sits in the middle of every real AI product.",
+        chart: pastelChart(
+          `flowchart LR
+    U[User gives input] --> P[Python Application]
+    P --> B[LLM processes input]
+    B --> T[Python calls tools and APIs]
+    T --> O[Final response to user]
+    O -.-> U`,
+          `class U grp1
+    class P,T grp2
+    class B grp3
+    class O grp4`
+        ),
+      },
+    ],
     example:
       "You need to summarize 50 customer support tickets overnight.",
     exampleSolution:
       "Write a Python script that reads each file, calls the OpenAI API, and saves summaries — done in under 30 lines.",
-    practiceTask:
-      "Run: python -m venv .venv && source .venv/bin/activate. Create script.py that reads notes.txt and prints the number of lines. Run it with python script.py. If you are new to Python, complete the learn-elsewhere checklist first, then retry this task.",
+    practiceTask: "",
     commandsToRemember: [
       "python -m venv .venv  # create virtual environment",
       "source .venv/bin/activate  # activate venv on Mac/Linux",
@@ -180,12 +228,14 @@ export const phase0Lessons: Record<string, LessonContent> = {
       fifteenMin: [],
       oneHour: [],
       cheatSheet: [
-        "Default language for AI — readable syntax, huge ecosystem",
-        "Key libraries: openai, fastapi, pydantic, pytest",
+        "Python orchestrates: User → Python → LLM → Tools → Response",
+        "Roles: data, models, orchestration, tools, memory, evaluation",
+        "Libraries: openai, fastapi, pydantic, langchain, chromadb, tiktoken",
+        "Simple syntax · huge ecosystem · fast prototyping",
         "Always use venv + requirements.txt for dependencies",
         "Store API keys in .env — never hardcode in source",
         "async/await for concurrent LLM API calls",
-        "FastAPI for production backends, Pydantic for validation",
+        "Scales from notebook prototype to production API",
       ],
     },
     glossary: ["CLI", "REST APIs", "JSON"],
@@ -197,51 +247,146 @@ export const phase0Lessons: Record<string, LessonContent> = {
   }),
 
   git: createLesson({
+    visualFirst: true,
     concept:
-      "Git tracks every change in your code — commits, branches, and history let you experiment safely and collaborate with teams.",
+      "Git tracks code from your laptop to GitHub — branches, PRs, merges, and releases.",
     technicalExplanation:
-      "You save snapshots with commits, branch off for experiments, and sync with GitHub via push/pull. Pull requests add review before merging.",
+      "Flow: Working Directory → git add → Staging → git commit → Local Repo → git push → GitHub. Feature branches isolate work. git pull = fetch + merge.",
     whyItExists:
-      "AI projects change constantly — new prompts, models, pipelines. Git keeps you organized and lets you roll back mistakes.",
+      "AI projects change constantly — new prompts, models, pipelines. Git keeps you organized, enables team collaboration, and lets you roll back mistakes.",
     analogy:
-      "Git is Google Docs version history for code — see every change and revert to any previous version.",
-    analogyDiagram: `flowchart LR
-    A[v1] --> B[v2]
-    B --> C[v3]
-    C --> D[Restore any version]`,
-    diagram: `flowchart TD
-    GIT([Git])
+      "Git is a time machine for code — save snapshots, branch into parallel timelines, and merge the best timeline back to main.",
+    analogyDiagram: pastelChart(
+      `flowchart LR
+    A[Working Directory] -->|git add| B[Staging Area]
+    B -->|git commit| C[Local Repo]
+    C -->|git push| D[GitHub origin]`,
+      `class A,B,C grp1
+    class D grp2`
+    ),
+    diagram: pastelChart(
+      `flowchart TD
+    GIT([Git and GitHub - Full Map])
 
-    subgraph Local["Local Workflow"]
-        W1[Working Directory - edit files]
-        W2[Staging Area - git add]
-        W3[Local Repo - git commit]
+    subgraph Core["Core Concepts"]
+        C1[HEAD - points to current branch and commit]
+        C2[main - long-lived production branch]
+        C3[Every developer has their own HEAD]
+        C4[Feature branches - short-lived isolation]
     end
 
-    subgraph Remote["Remote Sync"]
-        R1[git push - upload to GitHub]
-        R2[git pull - download changes]
+    subgraph Local["Git Internals - Local"]
+        L1[Working Directory - edit files]
+        L2[git add - stage changes]
+        L3[Staging Area - temp holding zone]
+        L4[git commit - save snapshot]
+        L5[Local Repo .git - branches and history]
     end
 
-    subgraph Branch["Branching"]
-        B1[main - production code]
-        B2[feature/* - experiments]
-        B3[Pull Request - code review]
-        B4[Merge - combine branches]
+    subgraph Remote["Remote Repository"]
+        R1[git push - upload commits]
+        R2[GitHub origin - remote repo]
+        R3[origin/feature branches]
+        R4[git fetch - download without merge]
+        R5[git pull = fetch + merge]
+        R6[origin/hotfix - urgent fixes]
     end
 
-    subgraph Safety["Safety Rules"]
-        S1[.gitignore - exclude .env and secrets]
-        S2[Never commit API keys]
-        S3[git log - view history]
-        S4[git diff - see changes]
+    subgraph Collab["Collaboration"]
+        CO1[Pull Request - code review]
+        CO2[Merge conflict - manual resolve]
+        CO3[Merge / Squash / Rebase strategies]
+        CO4[Cherry-pick - copy specific commits]
     end
 
+    GIT --> Core
     GIT --> Local
-    Local --> W1 --> W2 --> W3
-    W3 --> Remote
-    GIT --> Branch
-    GIT --> Safety`,
+    Local --> L1 --> L2 --> L3 --> L4 --> L5
+    L5 --> Remote
+    GIT --> Collab`,
+      `class GIT hub
+    class C1,C2,C3,C4 grp1
+    class L1,L2,L3,L4,L5 grp2
+    class R1,R2,R3,R4,R5,R6 grp3
+    class CO1,CO2,CO3,CO4 grp4
+    style Core fill:#f5f3ff,stroke:#c4b5fd,color:#5b21b6
+    style Local fill:#ecfdf5,stroke:#6ee7b7,color:#065f46
+    style Remote fill:#eff6ff,stroke:#93c5fd,color:#1e40af
+    style Collab fill:#fdf2f8,stroke:#f9a8d4,color:#9d174d`
+    ),
+    workflowDiagrams: [
+      {
+        title: "Branching and Feature Development",
+        caption: "How feature branches stay isolated from main until ready to merge.",
+        chart: pastelChart(
+          `flowchart TD
+    MAIN[origin/main - long-lived branch]
+    HEAD[HEAD - your current branch pointer]
+
+    subgraph Features["Local Feature Branches"]
+        F1[feature/login]
+        F2[feature/payment]
+        F3[feature/profile]
+    end
+
+    F1 -->|git push| RF1[origin/feature-login]
+    F2 -->|git push| RF2[origin/feature-payment]
+    RF1 -->|Pull Request| MAIN
+    HEAD --> Features
+    MAIN -->|git pull| Features`,
+          `class MAIN grp1
+    class HEAD hub
+    class F1,F2,F3 grp2
+    class RF1,RF2 grp3
+    style Features fill:#f5f3ff,stroke:#c4b5fd,color:#5b21b6`
+        ),
+      },
+      {
+        title: "Pull Request and Merge Strategies",
+        caption: "From PR to merged code — including conflict resolution.",
+        chart: pastelChart(
+          `flowchart TD
+    PR[Pull Request opened]
+    PR --> Conflict{Merge conflict?}
+    Conflict -->|Yes| Resolve[Resolve conflict manually]
+    Resolve --> Merge
+    Conflict -->|No| Merge[Merge into target branch]
+    Merge --> MC[Merge Commit]
+    Merge --> SM[Squash and Merge]
+    Merge --> RM[Rebase and Merge]
+    CP[Cherry-pick] -.->|copy commit| MAIN[main branch]`,
+          `class PR,Conflict,Resolve,Merge,MC,SM,RM,CP grp1
+    class MAIN grp2`
+        ),
+      },
+      {
+        title: "Release Workflow",
+        caption: "How tested code moves from development to live users.",
+        chart: pastelChart(
+          `flowchart TD
+    DEV[Development] --> TEST[Testing Branch]
+    TEST --> QA[QA Testing]
+    QA --> DEPLOY[Deploy to Production]
+    DEPLOY --> INT[Internal Testers - v1]
+    INT --> BETA[Internal Beta]
+    BETA --> LIVE[Live Users - v2.0 tagged release]`,
+          `class DEV,TEST,QA,DEPLOY,INT,BETA,LIVE grp1`
+        ),
+      },
+      {
+        title: "Open Source — Fork and Clone",
+        caption: "Contributing to or copying someone else's repository.",
+        chart: pastelChart(
+          `flowchart LR
+    UP[Random Person GitHub] -->|Fork| YOUR[Your GitHub copy]
+    UP -->|Clone| THEIR[Their local system]
+    YOUR -->|Clone| YOU[Your local laptop]
+    YOU -->|git push| YOUR`,
+          `class UP,YOUR grp1
+    class THEIR,YOU grp2`
+        ),
+      },
+    ],
     example:
       "You want to test a new RAG chunking strategy without breaking the working version.",
     exampleSolution:
@@ -249,13 +394,21 @@ export const phase0Lessons: Record<string, LessonContent> = {
     practiceTask:
       "Run git init in an empty folder. Create README.md, commit it, create branch feature/test, make a second commit, switch back to main, and merge the branch. Run git log --oneline to see your history.",
     commandsToRemember: [
-      "git status  # see which files changed",
-      "git add .  # stage all changes for commit",
-      "git commit -m \"message\"  # save a snapshot locally",
-      "git push  # upload commits to GitHub",
-      "git pull  # download remote changes",
-      "git checkout -b branch-name  # create and switch to a new branch",
-      "git log --oneline  # view compact commit history",
+      "git init  # initialize Git in a new project",
+      "git clone <url>  # copy a remote repository locally",
+      "git status  # show current repository state",
+      "git checkout -b <branch>  # create and switch to a new branch",
+      "git add .  # stage all modified files",
+      "git commit -m \"message\"  # save staged changes as a commit",
+      "git push origin <branch>  # upload local branch to GitHub",
+      "git fetch  # download remote changes without merging",
+      "git pull  # fetch and merge latest remote changes",
+      "git merge <branch>  # merge another branch into current",
+      "git rebase <branch>  # replay commits on top of another branch",
+      "git cherry-pick <commit>  # copy a specific commit",
+      "git log --oneline  # view concise commit history",
+      "git stash  # temporarily save uncommitted changes",
+      "git stash pop  # restore latest stashed changes",
     ],
     interviewQuestions: [],
     revisionNotes: {
@@ -263,12 +416,14 @@ export const phase0Lessons: Record<string, LessonContent> = {
       fifteenMin: [],
       oneHour: [],
       cheatSheet: [
-        "Workflow: git add → git commit → git push",
-        "Use branches for experiments — don't work directly on main",
-        "Pull requests add code review before merging",
-        ".gitignore excludes .env, secrets, and cache files",
-        "git pull before push to avoid merge conflicts",
-        "Version-control prompts and configs alongside code",
+        "HEAD → current branch → latest commit",
+        "Flow: Working Dir → git add → Staging → git commit → Local Repo",
+        "git push uploads · git fetch downloads · git pull = fetch + merge",
+        "Feature branches isolate work · PR before merging to main",
+        "Merge strategies: merge commit · squash · rebase",
+        "Cherry-pick copies a specific commit to another branch",
+        "Fork = your copy of someone's repo · Clone = download locally",
+        "Release: dev → QA → internal beta → production tag v2.0",
       ],
     },
     glossary: ["CLI", "CI/CD"],
@@ -276,6 +431,7 @@ export const phase0Lessons: Record<string, LessonContent> = {
       "Committing API keys or .env files",
       "Working directly on main branch",
       "Not pulling before pushing",
+      "Ignoring merge conflicts instead of resolving them",
     ],
   }),
 

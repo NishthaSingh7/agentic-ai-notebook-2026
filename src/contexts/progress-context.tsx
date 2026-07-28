@@ -10,12 +10,17 @@ import {
 } from "react";
 import { useSession } from "next-auth/react";
 import { phases, totalModules } from "@/data/roadmap";
+import { getRandomCompletionQuote } from "@/data/completion-quotes";
+import {
+  CompletionCelebration,
+  type CelebrationState,
+} from "@/components/completion-celebration";
 
 const STORAGE_KEY = "agentic-ai-progress";
 
 type ProgressContextValue = {
   completed: Set<string>;
-  toggleModule: (phaseSlug: string, moduleSlug: string) => void;
+  toggleModule: (phaseSlug: string, moduleSlug: string, moduleTitle?: string) => void;
   isCompleted: (phaseSlug: string, moduleSlug: string) => boolean;
   progressPercent: number;
   getPhaseProgress: (phaseSlug: string) => number;
@@ -57,11 +62,16 @@ async function saveRemoteProgress(completed: string[]) {
   });
 }
 
+function formatModuleTitle(moduleSlug: string, moduleTitle?: string) {
+  return moduleTitle ?? moduleSlug.replace(/-/g, " ");
+}
+
 export function ProgressProvider({ children }: { children: React.ReactNode }) {
   const { status } = useSession();
   const [completed, setCompleted] = useState<Set<string>>(new Set());
   const [synced, setSynced] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
+  const [celebration, setCelebration] = useState<CelebrationState | null>(null);
 
   useEffect(() => {
     setCompleted(readLocalProgress());
@@ -106,13 +116,21 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     }
   }, [status]);
 
+  const dismissCelebration = useCallback(() => setCelebration(null), []);
+
   const toggleModule = useCallback(
-    (phaseSlug: string, moduleSlug: string) => {
+    (phaseSlug: string, moduleSlug: string, moduleTitle?: string) => {
       const key = `${phaseSlug}/${moduleSlug}`;
+      let shouldCelebrate = false;
+
       setCompleted((prev) => {
         const next = new Set(prev);
-        if (next.has(key)) next.delete(key);
-        else next.add(key);
+        if (next.has(key)) {
+          next.delete(key);
+        } else {
+          next.add(key);
+          shouldCelebrate = true;
+        }
 
         writeLocalProgress(next);
 
@@ -122,6 +140,13 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
 
         return next;
       });
+
+      if (shouldCelebrate) {
+        setCelebration({
+          quote: getRandomCompletionQuote(),
+          moduleTitle: formatModuleTitle(moduleSlug, moduleTitle),
+        });
+      }
     },
     [status]
   );
@@ -180,7 +205,12 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     ]
   );
 
-  return <ProgressContext.Provider value={value}>{children}</ProgressContext.Provider>;
+  return (
+    <ProgressContext.Provider value={value}>
+      {children}
+      <CompletionCelebration celebration={celebration} onDismiss={dismissCelebration} />
+    </ProgressContext.Provider>
+  );
 }
 
 export function useProgress() {

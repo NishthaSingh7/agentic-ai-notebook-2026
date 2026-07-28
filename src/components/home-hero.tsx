@@ -15,7 +15,7 @@ const includes = [
 export function HomeHero() {
   return (
     <section className="relative overflow-hidden border-b border-border">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(74,222,128,0.12),transparent)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(194,65,12,0.08),transparent)]" />
       <div className="absolute inset-0 grid-bg opacity-40" />
 
       <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28">
@@ -54,7 +54,7 @@ export function HomeHero() {
             <div className="flex flex-wrap items-center gap-3">
               <Link
                 href="/roadmap"
-                className="inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-medium text-background hover:bg-accent/90 transition-colors"
+                className="inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-medium text-on-accent hover:bg-accent/90 transition-colors"
               >
                 Start the roadmap
                 <ArrowRight className="h-4 w-4" />

@@ -34,8 +34,8 @@ function ProgressRing({ percent }: { percent: number }) {
         />
         <defs>
           <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#4ade80" />
-            <stop offset="100%" stopColor="#4169e1" />
+            <stop offset="0%" stopColor="#c2410c" />
+            <stop offset="100%" stopColor="#7c3aed" />
           </linearGradient>
         </defs>
       </svg>
@@ -89,7 +89,7 @@ export function ProfileContent() {
         </p>
         <Link
           href="/login"
-          className="inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-medium text-background hover:bg-accent/90"
+          className="inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-medium text-on-accent hover:bg-accent/90"
         >
           <LogIn className="h-4 w-4" />
           Sign in with Google

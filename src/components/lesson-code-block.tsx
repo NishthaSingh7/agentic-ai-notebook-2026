@@ -22,7 +22,7 @@ export function LessonCodeBlock({
         <div className="flex items-center gap-2 px-4 py-2 bg-surface-elevated border-b border-border">
           <span className="h-2.5 w-2.5 rounded-full bg-rose-400/80" />
           <span className="h-2.5 w-2.5 rounded-full bg-amber-400/80" />
-          <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/80" />
+          <span className="h-2.5 w-2.5 rounded-full bg-accent/80" />
           <span className="ml-2 text-xs text-text-muted font-mono">{title}</span>
         </div>
       )}
