@@ -481,16 +481,29 @@ const PHASE_DIAGRAM_BUILDERS: Record<string, (title: string) => string> = {
   ]),
 };
 
+function sanitizeMermaidLabel(text: string): string {
+  return text
+    .replace(/"/g, "'")
+    .replace(/\[/g, "(")
+    .replace(/\]/g, ")")
+    .replace(/\|/g, "/")
+    .replace(/`/g, "'")
+    .replace(/#/g, "")
+    .trim();
+}
+
 function buildTopicDiagram(
   title: string,
   sections: [string, string[]][]
 ): string {
-  const lines = [`flowchart TD`, `    TOP([${title.replace(/"/g, "'")}])`, ""];
+  const safeTitle = sanitizeMermaidLabel(title);
+  const lines = [`flowchart TD`, `    TOP(["${safeTitle}"])`, ""];
   sections.forEach(([name, items], i) => {
     const id = `S${i}`;
-    lines.push(`    subgraph ${id}["${name}"]`);
+    const safeName = sanitizeMermaidLabel(name);
+    lines.push(`    subgraph ${id}["${safeName}"]`);
     items.forEach((item, j) => {
-      lines.push(`        ${id}${j}[${item}]`);
+      lines.push(`        ${id}${j}["${sanitizeMermaidLabel(item)}"]`);
     });
     lines.push(`    end`, "");
     lines.push(`    TOP --> ${id}`);
@@ -719,9 +732,9 @@ export function getCurriculumCommands(
 }
 
 export function getCurriculumAnalogyDiagram(moduleTitle: string): string {
-  const safe = moduleTitle.replace(/"/g, "'");
+  const safe = sanitizeMermaidLabel(moduleTitle);
   return `flowchart LR
-    A[Without ${safe}] --> B[Problem]
-    B --> C[With ${safe}]
+    A["Without ${safe}"] --> B[Problem]
+    B --> C["With ${safe}"]
     C --> D[Better outcome]`;
 }

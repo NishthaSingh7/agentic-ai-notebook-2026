@@ -26,18 +26,18 @@ export function LessonCodeBlock({
           <span className="ml-2 text-xs text-text-muted font-mono">{title}</span>
         </div>
       )}
-      <pre className="lesson-code overflow-x-auto p-4 text-sm leading-relaxed font-mono bg-[#0d1117] text-slate-300">
+      <pre className="lesson-code overflow-x-auto p-4 text-sm leading-relaxed font-mono">
         <code>
           {lines.map((line, i) => (
             <span
               key={i}
               className={
                 showFocusHighlights && line.focused
-                  ? "block bg-amber-500/15 border-l-2 border-amber-400/80 -mx-4 px-4"
+                  ? "block bg-amber-500/20 border-l-2 border-amber-400 -mx-4 px-4"
                   : "block"
               }
             >
-              <span className="inline-block w-8 mr-3 text-right text-slate-600 select-none text-xs">
+              <span className="code-lineno inline-block w-8 mr-3 text-right select-none text-xs">
                 {i + 1}
               </span>
               {line.tokens.length > 0 ? line.tokens : "\n"}

@@ -14,6 +14,8 @@ export interface Phase {
   projects?: string[];
   estimatedHours: number;
   color: string;
+  /** Optional branch — excluded from overall progress % */
+  optional?: boolean;
 }
 
 function mod(slug: string, title: string): Module {
@@ -81,12 +83,13 @@ export const phases: Phase[] = [
     ],
   },
   {
-    id: 2,
+    id: 1.1,
     slug: "transformer-foundations",
     title: "Transformer & ML Foundations",
-    subtitle: "Phase 2",
+    subtitle: "Phase 1.1 · Optional",
+    optional: true,
     description:
-      "Neural networks, attention, encoders/decoders, BERT, GPT, KV cache, RoPE, MoE, and quantization — interview-depth ML intuition.",
+      "Neural networks, attention, encoders/decoders, BERT, GPT, KV cache, RoPE, MoE, and quantization — interview-depth ML intuition. Skip if you are focused on building agents, not training models.",
     estimatedHours: 50,
     color: "from-violet-600 to-violet-900",
     modules: [
@@ -114,10 +117,10 @@ export const phases: Phase[] = [
     ],
   },
   {
-    id: 3,
+    id: 2,
     slug: "llm-engineering",
     title: "LLM Engineering & APIs",
-    subtitle: "Phase 3",
+    subtitle: "Phase 2",
     description:
       "Hands-on with OpenAI, Claude, Gemini, Ollama, open-source models, streaming, and multimodal APIs.",
     estimatedHours: 40,
@@ -139,10 +142,10 @@ export const phases: Phase[] = [
     projects: ["AI Resume Reviewer", "PDF Chat", "AI Email Assistant"],
   },
   {
-    id: 4,
+    id: 3,
     slug: "rag-engineering",
     title: "RAG Engineering",
-    subtitle: "Phase 4",
+    subtitle: "Phase 3",
     description:
       "Document loaders, chunking, vector DBs, hybrid search, re-ranking, LangChain, ChromaDB, and Streamlit demos.",
     estimatedHours: 35,
@@ -170,10 +173,10 @@ export const phases: Phase[] = [
     projects: ["Enterprise Chatbot", "RAG Chat App", "Legal Assistant"],
   },
   {
-    id: 5,
+    id: 4,
     slug: "agent-foundations",
     title: "Agent Foundations",
-    subtitle: "Phase 5",
+    subtitle: "Phase 4",
     description:
       "What agents are, how they work, planning, reasoning, reflection, and building your first agent without frameworks.",
     estimatedHours: 35,
@@ -198,10 +201,10 @@ export const phases: Phase[] = [
     projects: ["No-Framework Agent (Python + LLM API)"],
   },
   {
-    id: 6,
+    id: 5,
     slug: "agent-memory",
     title: "Agent Memory",
-    subtitle: "Phase 6",
+    subtitle: "Phase 5",
     description:
       "Working, short-term, long-term, semantic, and episodic memory — one of the biggest interview topics for production agents.",
     estimatedHours: 20,
@@ -226,10 +229,10 @@ export const phases: Phase[] = [
     projects: ["Persistent AI Assistant"],
   },
   {
-    id: 7,
+    id: 6,
     slug: "tool-calling",
     title: "Tool Calling & Function Calling",
-    subtitle: "Phase 7",
+    subtitle: "Phase 6",
     description:
       "Function calling, JSON mode, structured outputs, tool registries, permissions, and building a tool-using assistant.",
     estimatedHours: 22,
@@ -254,10 +257,10 @@ export const phases: Phase[] = [
     projects: ["AI Tool-Using Assistant"],
   },
   {
-    id: 8,
+    id: 7,
     slug: "mcp",
     title: "Model Context Protocol",
-    subtitle: "Phase 8",
+    subtitle: "Phase 7",
     description:
       "MCP architecture, clients, servers, resources, tools, prompts, transport, and integrating MCP with agents.",
     estimatedHours: 18,
@@ -280,10 +283,10 @@ export const phases: Phase[] = [
     projects: ["Custom MCP Server", "Agent + MCP Integration"],
   },
   {
-    id: 9,
+    id: 8,
     slug: "agent-frameworks",
     title: "Agent Frameworks",
-    subtitle: "Phase 9",
+    subtitle: "Phase 8",
     description:
       "LangGraph, OpenAI Agents SDK, Google ADK, CrewAI, AutoGen, PydanticAI, and the emerging framework landscape.",
     estimatedHours: 50,
@@ -314,10 +317,10 @@ export const phases: Phase[] = [
     ],
   },
   {
-    id: 10,
+    id: 9,
     slug: "agent-design-patterns",
     title: "Agent Design Patterns",
-    subtitle: "Phase 10",
+    subtitle: "Phase 9",
     description:
       "ReAct, Plan & Execute, Reflexion, Tree of Thoughts — learned after building agents, not before.",
     estimatedHours: 18,
@@ -336,10 +339,10 @@ export const phases: Phase[] = [
     ],
   },
   {
-    id: 11,
+    id: 10,
     slug: "multi-agent-systems",
     title: "Multi-Agent Systems",
-    subtitle: "Phase 11",
+    subtitle: "Phase 10",
     description:
       "A2A protocol, supervisor/worker patterns, swarm intelligence, coordination, and multi-agent projects.",
     estimatedHours: 25,
@@ -361,10 +364,10 @@ export const phases: Phase[] = [
     projects: ["Multi-Agent Research System"],
   },
   {
-    id: 12,
+    id: 11,
     slug: "agent-evaluation",
     title: "Agent Evaluation & Observability",
-    subtitle: "Phase 12",
+    subtitle: "Phase 11",
     description:
       "LangSmith, Phoenix, OpenTelemetry, trajectory evaluation, hallucination detection, and regression testing.",
     estimatedHours: 20,
@@ -384,10 +387,10 @@ export const phases: Phase[] = [
     ],
   },
   {
-    id: 13,
+    id: 12,
     slug: "security-guardrails",
     title: "Security & Guardrails",
-    subtitle: "Phase 13",
+    subtitle: "Phase 12",
     description:
       "Prompt injection, jailbreaks, PII detection, content safety, tool restrictions, and human approval flows.",
     estimatedHours: 15,
@@ -404,10 +407,10 @@ export const phases: Phase[] = [
     ],
   },
   {
-    id: 14,
+    id: 13,
     slug: "production-agents",
     title: "Production Agent Engineering",
-    subtitle: "Phase 14",
+    subtitle: "Phase 13",
     description:
       "FastAPI, Docker, Kubernetes, async agents, queues, streaming, scaling, monitoring, and cost optimization.",
     estimatedHours: 35,
@@ -432,10 +435,10 @@ export const phases: Phase[] = [
     projects: ["Production AI Platform", "AI Gateway"],
   },
   {
-    id: 15,
+    id: 14,
     slug: "browser-agents",
     title: "Browser & Computer Use Agents",
-    subtitle: "Phase 15",
+    subtitle: "Phase 14",
     description:
       "Playwright, browser automation, computer use, form filling, and web navigation agents.",
     estimatedHours: 15,
@@ -450,10 +453,10 @@ export const phases: Phase[] = [
     projects: ["Autonomous Browser Agent"],
   },
   {
-    id: 16,
+    id: 15,
     slug: "multimodal-agents",
     title: "Voice & Multimodal Agents",
-    subtitle: "Phase 16",
+    subtitle: "Phase 15",
     description:
       "STT, TTS, realtime voice, and agents that understand images, audio, video, PDFs, and screens.",
     estimatedHours: 18,
@@ -470,10 +473,10 @@ export const phases: Phase[] = [
     ],
   },
   {
-    id: 17,
+    id: 16,
     slug: "advanced-ai",
     title: "Advanced AI",
-    subtitle: "Phase 17",
+    subtitle: "Phase 16",
     description:
       "Fine-tuning, LoRA, QLoRA, PEFT, inference optimization, distillation, and reading research papers.",
     estimatedHours: 35,
@@ -491,10 +494,10 @@ export const phases: Phase[] = [
     ],
   },
   {
-    id: 18,
+    id: 17,
     slug: "enterprise-ai",
     title: "Enterprise AI",
-    subtitle: "Phase 18",
+    subtitle: "Phase 17",
     description:
       "Enterprise RAG, knowledge bases, RBAC, compliance, identity, audit logs, and human approval at scale.",
     estimatedHours: 20,
@@ -511,10 +514,10 @@ export const phases: Phase[] = [
     projects: ["Enterprise Knowledge Assistant"],
   },
   {
-    id: 19,
+    id: 18,
     slug: "coding-agents",
     title: "Coding Agents",
-    subtitle: "Phase 19",
+    subtitle: "Phase 18",
     description:
       "GitHub agents, PR review, bug fix, documentation, CI/CD, and terminal agents.",
     estimatedHours: 22,
@@ -530,10 +533,10 @@ export const phases: Phase[] = [
     projects: ["Multi-Agent Coding Assistant"],
   },
   {
-    id: 20,
+    id: 19,
     slug: "capstone-projects",
     title: "Capstone Projects",
-    subtitle: "Phase 20",
+    subtitle: "Phase 19",
     description:
       "Production-ready portfolio projects — AI software engineer, research assistant, customer support, and more.",
     estimatedHours: 80,
@@ -551,10 +554,10 @@ export const phases: Phase[] = [
     ],
   },
   {
-    id: 21,
+    id: 20,
     slug: "interview-system-design",
     title: "Interview & System Design",
-    subtitle: "Phase 21",
+    subtitle: "Phase 20",
     description:
       "Agent system design, LangGraph coding, MCP design, multi-agent design, memory design, and mock interviews.",
     estimatedHours: 25,
@@ -581,13 +584,44 @@ export function getModule(phaseSlug: string, moduleSlug: string) {
   return phase?.modules.find((m) => m.slug === moduleSlug);
 }
 
-export const totalModules = phases.reduce((acc, p) => acc + p.modules.length, 0);
+export function getPhaseIndex(slug: string): number {
+  return phases.findIndex((p) => p.slug === slug);
+}
+
+export function getAdjacentPhase(
+  slug: string,
+  direction: "prev" | "next"
+): Phase | undefined {
+  const index = getPhaseIndex(slug);
+  if (index === -1) return undefined;
+  const nextIndex = direction === "prev" ? index - 1 : index + 1;
+  return phases[nextIndex];
+}
+
+export function isOptionalModuleKey(key: string): boolean {
+  const phaseSlug = key.split("/")[0];
+  const phase = getPhaseBySlug(phaseSlug);
+  return phase?.optional === true;
+}
+
+export function countProgressModules(): number {
+  return phases
+    .filter((p) => !p.optional)
+    .reduce((acc, p) => acc + p.modules.length, 0);
+}
+
+export function countProgressPhases(): number {
+  return phases.filter((p) => !p.optional).length;
+}
+
+export const totalModules = countProgressModules();
+export const totalPhases = countProgressPhases();
 export const totalHours = phases.reduce((acc, p) => acc + p.estimatedHours, 0);
 
 export const roadmapFlow = [
   "Code",
   "GenAI",
-  "Transformers",
+  "ML (optional)",
   "LLM APIs",
   "RAG",
   "Agents",

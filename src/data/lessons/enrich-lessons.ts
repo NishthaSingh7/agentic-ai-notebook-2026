@@ -104,99 +104,99 @@ const slugDiagrams: Record<string, string> = {
 
 const phaseDiagrams: Record<string, (title: string) => string> = {
   "programming-foundations": (t) => `flowchart LR
-    A[Developer] --> B[${t}]
+    A[Developer] --> B["${t}"]
     B --> C[AI Application]
     C --> D[Production Deploy]`,
   "genai-foundations": (t) => `flowchart TD
-    A[User Prompt] --> B[${t}]
+    A[User Prompt] --> B["${t}"]
     B --> C[LLM Processing]
     C --> D[Generated Response]`,
   "transformer-foundations": (t) => `flowchart TD
-    A[Input Tokens] --> B[${t}]
+    A[Input Tokens] --> B["${t}"]
     B --> C[Neural Layers]
     C --> D[Output / Logits]`,
   "llm-engineering": (t) => `flowchart LR
-    A[App Code] --> B[${t}]
+    A[App Code] --> B["${t}"]
     B --> C[Model API]
     C --> D[Parsed Response]`,
   "rag-engineering": (t) => `flowchart TD
-    A[Documents] --> B[${t}]
+    A[Documents] --> B["${t}"]
     B --> C[Retrieval]
     C --> D[Augmented Prompt]
     D --> E[LLM Answer]`,
   "agent-foundations": (t) => `flowchart TD
-    A[User Goal] --> B[${t}]
+    A[User Goal] --> B["${t}"]
     B --> C[Agent Core]
     C --> D[Tools / LLM]
     D --> E[Result]`,
   "agent-memory": (t) => `flowchart TD
-    A[Interaction] --> B[${t}]
+    A[Interaction] --> B["${t}"]
     B --> C[Memory Store]
     C --> D[Context Assembly]
     D --> E[LLM]`,
   "tool-calling": (t) => `flowchart TD
-    A[LLM] -->|selects| B[${t}]
+    A[LLM] -->|selects| B["${t}"]
     B --> C[External System]
     C --> D[Structured Result]
     D --> A`,
   mcp: (t) => `flowchart LR
     A[Agent] --> B[MCP Client]
-    B --> C[${t}]
+    B --> C["${t}"]
     C --> D[External Resource]`,
   "agent-frameworks": (t) => `flowchart TD
-    A[User Input] --> B[${t}]
+    A[User Input] --> B["${t}"]
     B --> C[Graph / Workflow]
     C --> D[Tools + LLM]
     D --> E[Output]`,
   "agent-design-patterns": (t) => `flowchart TD
-    A[Task] --> B[${t} Pattern]
+    A[Task] --> B["${t} Pattern"]
     B --> C[Reasoning Loop]
     C --> D[Validated Output]`,
   "multi-agent-systems": (t) => `flowchart TD
-    A[Supervisor] --> B[${t}]
+    A[Supervisor] --> B["${t}"]
     B --> C[Worker Agent]
     C --> D[Shared Result]
     D --> A`,
   "agent-evaluation": (t) => `flowchart LR
-    A[Agent Run] --> B[${t}]
+    A[Agent Run] --> B["${t}"]
     B --> C[Metrics / Traces]
     C --> D[Pass / Fail]`,
   "security-guardrails": (t) => `flowchart TD
-    A[User Input] --> B[${t}]
+    A[User Input] --> B["${t}"]
     B -->|safe| C[Agent]
     B -->|blocked| D[Reject / Escalate]`,
   "production-agents": (t) => `flowchart LR
-    A[Traffic] --> B[${t}]
+    A[Traffic] --> B["${t}"]
     B --> C[Agent Service]
     C --> D[Monitor + Scale]`,
   "browser-agents": (t) => `flowchart TD
-    A[Task] --> B[${t}]
+    A[Task] --> B["${t}"]
     B --> C[Browser]
     C --> D[DOM / Screenshot]
     D --> E[Action]`,
   "multimodal-agents": (t) => `flowchart LR
-    A[Audio/Image/PDF] --> B[${t}]
+    A[Audio/Image/PDF] --> B["${t}"]
     B --> C[Multimodal LLM]
     C --> D[Response]`,
   "advanced-ai": (t) => `flowchart TD
-    A[Base Model] --> B[${t}]
+    A[Base Model] --> B["${t}"]
     B --> C[Specialized Model]
     C --> D[Inference]`,
   "enterprise-ai": (t) => `flowchart TD
-    A[Employee] --> B[${t}]
+    A[Employee] --> B["${t}"]
     B --> C[RBAC Check]
     C --> D[Knowledge Base]
     D --> E[Grounded Answer]`,
   "coding-agents": (t) => `flowchart LR
-    A[Repo Event] --> B[${t}]
+    A[Repo Event] --> B["${t}"]
     B --> C[Code Analysis]
     C --> D[PR / Fix / Docs]`,
   "capstone-projects": (t) => `flowchart TD
-    A[Requirements] --> B[${t}]
+    A[Requirements] --> B["${t}"]
     B --> C[Multi-Component Build]
     C --> D[Deploy + Demo]`,
   "interview-system-design": (t) => `flowchart TD
-    A[Requirements] --> B[${t}]
+    A[Requirements] --> B["${t}"]
     B --> C[Architecture Design]
     C --> D[Tradeoffs + Scale]`,
 };
@@ -229,11 +229,12 @@ function buildDiagram(
   moduleTitle: string,
   phaseSlug: string
 ): string {
+  const safeTitle = moduleTitle.replace(/"/g, "'");
   if (slugDiagrams[moduleSlug]) return slugDiagrams[moduleSlug];
   const phaseFn = phaseDiagrams[phaseSlug];
-  if (phaseFn) return phaseFn(moduleTitle);
+  if (phaseFn) return phaseFn(safeTitle);
   return `flowchart TD
-    A[Input] --> B[${moduleTitle}]
+    A[Input] --> B["${safeTitle}"]
     B --> C[Processing]
     C --> D[Output]
     D --> E[User]`;

@@ -2,6 +2,7 @@ import type { LessonContent } from "@/data/lesson-types";
 import {
   isCodeWalkthroughPhase,
   isFoundationPhase,
+  isVisualFirstPhase,
   usesCurriculumLayout,
 } from "@/lib/curriculum-phases";
 import { enhanceLessonCode, generateFallbackCode } from "@/lib/enhance-lesson-code";
@@ -57,6 +58,7 @@ export function normalizeCurriculumLesson(
 
   const cheatSheet = buildCheatSheet(lesson);
   const isPhase0 = isFoundationPhase(phaseSlug);
+  const visualFirst = isVisualFirstPhase(phaseSlug);
   const includeCode = isCodeWalkthroughPhase(phaseSlug);
 
   let code = lesson.code;
@@ -65,7 +67,8 @@ export function normalizeCurriculumLesson(
   }
 
   const keepHandDiagram =
-    (isPhase0 || HAND_CRAFTED_DIAGRAM_SLUGS.has(moduleSlug)) && !!lesson.diagram;
+    !!lesson.diagram &&
+    (visualFirst || isPhase0 || HAND_CRAFTED_DIAGRAM_SLUGS.has(moduleSlug));
 
   const diagram = keepHandDiagram
     ? lesson.diagram
@@ -77,13 +80,13 @@ export function normalizeCurriculumLesson(
         lesson.commonMistakes
       );
 
-  const commandsToRemember = isPhase0
+  const commandsToRemember = visualFirst
     ? lesson.commandsToRemember
     : getCurriculumCommands(moduleSlug, phaseSlug, cheatSheet, lesson.commandsToRemember);
 
   const analogyDiagram =
     lesson.analogyDiagram ??
-    (isPhase0 ? undefined : getCurriculumAnalogyDiagram(moduleTitle));
+    (visualFirst ? undefined : getCurriculumAnalogyDiagram(moduleTitle));
 
   const example = lesson.example?.trim() || `A production team uses ${moduleTitle} in a real ${phaseTitle} workflow.`;
 
@@ -97,8 +100,8 @@ export function normalizeCurriculumLesson(
       : lesson.practiceTask?.trim() ||
         generatePracticeTask(moduleTitle, moduleSlug, phaseTitle, example, includeCode);
 
-  const withPhase0Visuals = (content: LessonContent): LessonContent => {
-    if (!isPhase0) return content;
+  const withVisualFirstEnhancements = (content: LessonContent): LessonContent => {
+    if (!visualFirst) return content;
     return {
       ...content,
       visualFirst: content.visualFirst ?? true,
@@ -111,7 +114,7 @@ export function normalizeCurriculumLesson(
     };
   };
 
-  return withPhase0Visuals({
+  return withVisualFirstEnhancements({
     ...lesson,
     example,
     exampleSolution,

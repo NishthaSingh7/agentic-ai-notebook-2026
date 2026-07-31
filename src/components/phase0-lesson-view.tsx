@@ -5,6 +5,7 @@ import {
   ArrowLeft,
   ArrowRight,
   BookOpen,
+  Code,
   Layers,
   Lightbulb,
   ListChecks,
@@ -15,6 +16,7 @@ import {
 } from "lucide-react";
 import type { Phase, Module } from "@/data/roadmap";
 import { LessonNav, RevisionCard, CommandsCard } from "@/components/lesson";
+import { LessonCodeBlock } from "@/components/lesson-code-block";
 import { buildConceptBullets } from "@/lib/lesson-concept-bullets";
 import { buildLessonSections, VisualWorkflows } from "@/components/lesson-visual-blocks";
 import { ModuleCompleteButton } from "@/components/module-complete-button";
@@ -27,6 +29,7 @@ interface Phase0LessonViewProps {
   prevMod: Module | null;
   nextMod: Module | null;
   slug: string;
+  includeCode?: boolean;
 }
 
 function Phase0ModuleStrip({
@@ -101,11 +104,12 @@ export function Phase0LessonView({
   prevMod,
   nextMod,
   slug,
+  includeCode = false,
 }: Phase0LessonViewProps) {
   const moduleIndex = phase.modules.findIndex((m) => m.slug === mod.slug);
   const conceptBullets = buildConceptBullets(content.concept, content.technicalExplanation).slice(0, 5);
   const cheatSheet = content.revisionNotes.cheatSheet.slice(0, 8);
-  const sectionDefs = buildLessonSections(false, content, true, true);
+  const sectionDefs = buildLessonSections(includeCode, content, true, true);
 
   const activeSections = sectionDefs.filter((s) => {
     if (s.id === "diagram") {
@@ -115,6 +119,7 @@ export function Phase0LessonView({
       const idx = Number(s.id.replace("workflow-", ""));
       return !!content.workflowDiagrams?.[idx];
     }
+    if (s.id === "code") return includeCode && !!content.code;
     if (s.id === "practice") return !!content.practiceTask;
     if (s.id === "commands") return !!content.commandsToRemember?.length;
     if (s.id === "mistakes") return !!content.commonMistakes?.length;
@@ -149,6 +154,11 @@ export function Phase0LessonView({
                   <span className="text-xs font-mono font-medium text-accent bg-accent/10 px-2 py-0.5 rounded-full">
                     {phase.subtitle}
                   </span>
+                  {phase.optional && (
+                    <span className="text-xs font-medium text-text-muted bg-surface-elevated border border-border px-2 py-0.5 rounded-full">
+                      Optional
+                    </span>
+                  )}
                   <span className="text-xs text-text-muted">
                     Module {moduleIndex + 1} of {phase.modules.length}
                   </span>
@@ -249,6 +259,26 @@ export function Phase0LessonView({
               </SectionCard>
             )}
 
+            {includeCode && content.code && (
+              <SectionCard
+                id="code"
+                title="Code Walkthrough"
+                icon={<Code className="h-5 w-5 text-accent shrink-0" />}
+              >
+                <p className="text-sm text-text-muted mb-4 not-prose">
+                  Highlighted lines show where{" "}
+                  <strong className="text-amber-600 dark:text-amber-400/90">{mod.title}</strong>{" "}
+                  happens in the code.
+                </p>
+                <LessonCodeBlock
+                  code={content.code}
+                  language={content.codeLanguage}
+                  title={mod.title}
+                  showFocusHighlights
+                />
+              </SectionCard>
+            )}
+
             <div className="grid lg:grid-cols-2 gap-6">
               {content.commandsToRemember && content.commandsToRemember.length > 0 && (
                 <SectionCard
@@ -332,7 +362,7 @@ export function Phase0LessonView({
           <aside className="hidden xl:block space-y-6 sticky top-36">
             <div className="rounded-2xl border border-border bg-surface p-4">
               <p className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">
-                Phase 0 modules
+                {phase.subtitle} modules
               </p>
               <nav className="space-y-0.5 max-h-[40vh] overflow-y-auto">
                 {phase.modules.map((m, i) => (

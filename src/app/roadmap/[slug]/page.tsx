@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, BookOpen, FolderKanban } from "lucide-react";
-import { getPhaseBySlug, phases } from "@/data/roadmap";
+import { getPhaseBySlug, getAdjacentPhase, phases } from "@/data/roadmap";
 import { getLessonReadTime } from "@/data/lessons";
 import { ModuleList } from "@/components/module-list";
 
@@ -29,8 +29,8 @@ export default async function PhasePage({ params }: Props) {
   const phase = getPhaseBySlug(slug);
   if (!phase) notFound();
 
-  const prevPhase = phases.find((p) => p.id === phase.id - 1);
-  const nextPhase = phases.find((p) => p.id === phase.id + 1);
+  const prevPhase = getAdjacentPhase(slug, "prev");
+  const nextPhase = getAdjacentPhase(slug, "next");
 
   const modules = phase.modules.map((mod) => ({
     slug: mod.slug,
@@ -48,7 +48,14 @@ export default async function PhasePage({ params }: Props) {
       </Link>
 
       <div className="mb-8">
-        <span className="text-xs font-mono text-accent">{phase.subtitle}</span>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs font-mono text-accent">{phase.subtitle}</span>
+          {phase.optional && (
+            <span className="text-xs font-medium text-text-muted bg-surface-elevated border border-border px-2 py-0.5 rounded-full">
+              Optional — not counted in progress
+            </span>
+          )}
+        </div>
         <h1 className="text-3xl font-bold mt-1 mb-3">{phase.title}</h1>
         <p className="text-text-secondary max-w-2xl leading-relaxed">{phase.description}</p>
 

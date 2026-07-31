@@ -26,8 +26,8 @@ This website is built for **engineers, by engineers** — whether you are alread
 
 | | |
 |---|---|
-| **22 phases** | Programming → GenAI → RAG → Agents → Frameworks → Production → Capstones |
-| **267 modules** | Concept, diagram, code example, project tie-in, and revision notes |
+| **21 phases** | Programming → GenAI → RAG → Agents → Frameworks → Production → Capstones (+ optional Phase 1.1 ML) |
+| **247 modules** | Concept, diagram, code example, project tie-in, and revision notes |
 | **8 projects** | Beginner to production portfolio ideas |
 | **69 glossary terms** | Definitions, analogies, and interview tips |
 

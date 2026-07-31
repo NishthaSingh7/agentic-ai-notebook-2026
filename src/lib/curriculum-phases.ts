@@ -1,4 +1,4 @@
-/** Phase slugs with code walkthroughs (phases 1–21). */
+/** Phase slugs with code walkthroughs (phases 1–20). */
 export const CODE_WALKTHROUGH_PHASE_SLUGS = new Set([
   "genai-foundations",
   "transformer-foundations",
@@ -36,6 +36,19 @@ export function isCurriculumPhase(phaseSlug: string): boolean {
 
 export function isFoundationPhase(phaseSlug: string): boolean {
   return phaseSlug === "programming-foundations";
+}
+
+/** Visual-first layout: diagrams primary, minimal reading (Phases 0–3 + optional 1.1). */
+export const VISUAL_FIRST_PHASE_SLUGS = new Set([
+  "programming-foundations",
+  "genai-foundations",
+  "transformer-foundations",
+  "llm-engineering",
+  "rag-engineering",
+]);
+
+export function isVisualFirstPhase(phaseSlug: string): boolean {
+  return VISUAL_FIRST_PHASE_SLUGS.has(phaseSlug);
 }
 
 /** All roadmap phases use the unified curriculum lesson layout. */

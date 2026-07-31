@@ -4,7 +4,10 @@ import { phases, getPhaseBySlug, getModule } from "@/data/roadmap";
 import { getLessonContent, getLessonReadTime } from "@/data/lessons";
 import { CurriculumLessonView } from "@/components/curriculum-lesson-view";
 import { Phase0LessonView } from "@/components/phase0-lesson-view";
-import { isCodeWalkthroughPhase, isFoundationPhase } from "@/lib/curriculum-phases";
+import {
+  isCodeWalkthroughPhase,
+  isVisualFirstPhase,
+} from "@/lib/curriculum-phases";
 
 interface Props {
   params: Promise<{ slug: string; module: string }>;
@@ -40,7 +43,7 @@ export default async function ModulePage({ params }: Props) {
   const prevMod = moduleIndex > 0 ? phase.modules[moduleIndex - 1] : null;
   const nextMod = moduleIndex < phase.modules.length - 1 ? phase.modules[moduleIndex + 1] : null;
 
-  if (isFoundationPhase(slug)) {
+  if (isVisualFirstPhase(slug)) {
     return (
       <Phase0LessonView
         phase={phase}
@@ -49,6 +52,7 @@ export default async function ModulePage({ params }: Props) {
         prevMod={prevMod}
         nextMod={nextMod}
         slug={slug}
+        includeCode={isCodeWalkthroughPhase(slug)}
       />
     );
   }

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { phases } from "@/data/roadmap";
+import { siteStats } from "@/data/site-stats";
 import { cn } from "@/lib/utils";
 
 type PhaseStatus = "done" | "active" | "todo";
@@ -28,7 +29,11 @@ export function ProfilePhaseGrid({ completed }: ProfilePhaseGridProps) {
     <div>
       <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-xs font-semibold uppercase tracking-wider text-text-muted">
-          Roadmap at a glance — all {phases.length} phases
+          Roadmap at a glance — {siteStats.phases} core phases
+          <span className="font-normal normal-case text-text-muted/80">
+            {" "}
+            (+ optional ML)
+          </span>
         </p>
         <div className="flex flex-wrap items-center gap-3 text-[10px] text-text-muted">
           <span className="flex items-center gap-1.5">

@@ -94,7 +94,7 @@ body {
   background: var(--text-muted);
 }
 
-pre {
+pre:not(.lesson-code) {
   background: var(--surface-elevated) !important;
   border: 1px solid var(--border);
   border-radius: 0.75rem;
@@ -103,6 +103,41 @@ pre {
   font-family: var(--font-mono);
   font-size: 0.875rem;
   line-height: 1.6;
+}
+
+/* Lesson code blocks — always dark canvas for readable syntax highlighting */
+pre.lesson-code {
+  background: #0d1117 !important;
+  color: #e6edf3 !important;
+  border: 1px solid #30363d !important;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+pre.lesson-code .code-default {
+  color: #e6edf3;
+}
+
+pre.lesson-code .code-keyword {
+  color: #79c0ff;
+  font-weight: 500;
+}
+
+pre.lesson-code .code-string {
+  color: #fbbf24;
+}
+
+pre.lesson-code .code-comment {
+  color: #8b949e;
+  font-style: italic;
+}
+
+pre.lesson-code .code-lineno {
+  color: #6e7681;
 }
 
 code {

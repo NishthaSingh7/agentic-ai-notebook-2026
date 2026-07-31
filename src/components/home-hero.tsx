@@ -9,8 +9,8 @@ const includes = [
   { icon: BookOpen, label: "Structured lessons" },
   { icon: Code, label: "Code & projects" },
   { icon: MessageSquare, label: "Interview prep" },
-  { icon: Layers, label: "22-phase hybrid roadmap" },
-];
+  { icon: Layers, label: `${siteStats.phases}-phase hybrid roadmap` },
+] as const;
 
 export function HomeHero() {
   return (

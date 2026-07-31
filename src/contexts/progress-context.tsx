@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 import { useSession } from "next-auth/react";
-import { phases, totalModules } from "@/data/roadmap";
+import { phases, totalModules, isOptionalModuleKey } from "@/data/roadmap";
 import { getRandomCompletionQuote } from "@/data/completion-quotes";
 import {
   CompletionCelebration,
@@ -169,15 +169,22 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
   const remainingHours = useMemo(
     () =>
       Math.round(
-        phases.reduce((acc, phase) => {
-          const done = phase.modules.filter((m) =>
-            completed.has(`${phase.slug}/${m.slug}`)
-          ).length;
-          const remaining = phase.modules.length - done;
-          const hoursPerModule = phase.estimatedHours / phase.modules.length;
-          return acc + remaining * hoursPerModule;
-        }, 0)
+        phases
+          .filter((p) => !p.optional)
+          .reduce((acc, phase) => {
+            const done = phase.modules.filter((m) =>
+              completed.has(`${phase.slug}/${m.slug}`)
+            ).length;
+            const remaining = phase.modules.length - done;
+            const hoursPerModule = phase.estimatedHours / phase.modules.length;
+            return acc + remaining * hoursPerModule;
+          }, 0)
       ),
+    [completed]
+  );
+
+  const countedCompleted = useMemo(
+    () => [...completed].filter((key) => !isOptionalModuleKey(key)).length,
     [completed]
   );
 
@@ -186,9 +193,9 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       completed,
       toggleModule,
       isCompleted,
-      progressPercent: Math.round((completed.size / totalModules) * 100),
+      progressPercent: Math.round((countedCompleted / totalModules) * 100),
       getPhaseProgress,
-      completedCount: completed.size,
+      completedCount: countedCompleted,
       totalModules,
       remainingHours,
       isAuthenticated: status === "authenticated",
@@ -199,6 +206,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       toggleModule,
       isCompleted,
       getPhaseProgress,
+      countedCompleted,
       remainingHours,
       status,
       isSyncing,

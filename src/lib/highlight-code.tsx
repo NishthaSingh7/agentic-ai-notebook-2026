@@ -22,7 +22,7 @@ function detectLanguage(code: string): string {
 
 function highlightString(token: string, key: string): ReactNode {
   return (
-    <span key={key} className="text-amber-300">
+    <span key={key} className="code-string">
       {token}
     </span>
   );
@@ -30,7 +30,7 @@ function highlightString(token: string, key: string): ReactNode {
 
 function highlightComment(text: string, key: string): ReactNode {
   return (
-    <span key={key} className="text-accent/80 italic">
+    <span key={key} className="code-comment">
       {text}
     </span>
   );
@@ -38,7 +38,7 @@ function highlightComment(text: string, key: string): ReactNode {
 
 function highlightKeyword(token: string, key: string): ReactNode {
   return (
-    <span key={key} className="text-royal font-medium">
+    <span key={key} className="code-keyword">
       {token}
     </span>
   );
@@ -74,14 +74,14 @@ function tokenizeLine(line: string, lang: string): ReactNode[] {
       if (keywords.has(word) || keywords.has(word.toUpperCase())) {
         parts.push(highlightKeyword(word, `k${key++}`));
       } else {
-        parts.push(<span key={`w${key++}`}>{word}</span>);
+        parts.push(<span key={`w${key++}`} className="code-default">{word}</span>);
       }
       i += word.length;
       continue;
     }
 
     // Other characters
-    parts.push(<span key={`o${key++}`}>{rest[0]}</span>);
+    parts.push(<span key={`o${key++}`} className="code-default">{rest[0]}</span>);
     i += 1;
   }
 

@@ -34,6 +34,11 @@ export function PhaseCard({ phase, index }: PhaseCardProps) {
               <h3 className="text-lg font-semibold group-hover:text-accent transition-colors">
                 {phase.title}
               </h3>
+              {phase.optional && (
+                <span className="text-[10px] font-medium uppercase tracking-wide text-text-muted bg-surface-elevated border border-border px-1.5 py-0.5 rounded">
+                  Optional
+                </span>
+              )}
             </div>
           </div>
           <div

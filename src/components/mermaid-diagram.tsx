@@ -92,25 +92,50 @@ export function MermaidDiagram({
   useEffect(() => {
     let cancelled = false;
 
+    async function tryRender(useSketch: boolean) {
+      const mermaid = (await import("mermaid")).default;
+      mermaid.initialize({
+        startOnLoad: false,
+        ...(useSketch ? SKETCH_THEME : DEFAULT_THEME),
+      });
+      const id = `mermaid-${Math.random().toString(36).slice(2)}`;
+      const { svg: rendered } = await mermaid.render(id, chart);
+      if (!cancelled) {
+        setSvg(rendered);
+        setError(false);
+      }
+    }
+
     async function render() {
-      try {
-        if (sketch && typeof document !== "undefined") {
-          await document.fonts.load("14px Excalifont");
+      if (sketch && typeof document !== "undefined") {
+        try {
+          await Promise.race([
+            document.fonts.load("14px Excalifont"),
+            new Promise((resolve) => setTimeout(resolve, 1500)),
+          ]);
+        } catch {
+          // Font load is optional — never block diagram rendering
         }
-        const mermaid = (await import("mermaid")).default;
-        mermaid.initialize({
-          startOnLoad: false,
-          ...(sketch ? SKETCH_THEME : DEFAULT_THEME),
-        });
-        const id = `mermaid-${Math.random().toString(36).slice(2)}`;
-        const { svg: rendered } = await mermaid.render(id, chart);
-        if (!cancelled) setSvg(rendered);
+      }
+
+      try {
+        await tryRender(!!sketch);
       } catch {
+        if (sketch) {
+          try {
+            await tryRender(false);
+            return;
+          } catch {
+            // fall through to error state
+          }
+        }
         if (!cancelled) setError(true);
       }
     }
 
-    render();
+    setSvg("");
+    setError(false);
+    void render();
     return () => {
       cancelled = true;
     };
@@ -142,7 +167,9 @@ export function MermaidDiagram({
         {title && !compact && (
           <p className="text-xs font-semibold text-stone-600 mb-2 uppercase">{title}</p>
         )}
-        <pre className="text-xs text-stone-600 font-mono whitespace-pre p-4">{chart}</pre>
+        <p className="text-sm text-amber-700 dark:text-amber-400/90 px-4 py-3 not-prose">
+          Diagram could not be rendered. Refresh the page or report this module if it persists.
+        </p>
       </div>
     );
   }
