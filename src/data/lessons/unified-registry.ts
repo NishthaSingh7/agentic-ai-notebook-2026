@@ -6,6 +6,7 @@ import { phase3Lessons } from "./phase-3";
 import { phase4Lessons } from "./phase-4";
 import { phase5Lessons } from "./phase-5";
 import { phase6Lessons } from "./phase-6";
+import { agentFoundationsLessons } from "./agent-foundations";
 import { capstoneProjectsLessons } from "./capstone-projects";
 import { generatedLessonMaps } from "./v2-generated";
 
@@ -52,23 +53,7 @@ const v1ByPhase: Record<string, Record<string, LessonContent>> = {
     retrievers: phase1Lessons.retrievers,
     evaluation: phase4Lessons.evaluation,
   },
-  "agent-foundations": {
-    "what-is-an-ai-agent": phase5Lessons["what-are-agents"],
-    "why-llms-need-agents": phase5Lessons.reasoning,
-    "anatomy-of-an-agent": phase5Lessons["agent-loop"],
-    "agent-lifecycle": phase5Lessons["agent-loop"],
-    "core-concepts": phase5Lessons["what-are-agents"],
-    "agent-capabilities": phase5Lessons["tool-calling"],
-    "types-of-agents": phase5Lessons.autonomy,
-    "agent-architectures": phase5Lessons.reasoning,
-    "agent-terminology": phase5Lessons["what-are-agents"],
-    "current-agent-landscape": phase5Lessons.autonomy,
-    planning: phase5Lessons.planning,
-    reflection: phase5Lessons.reflection,
-    "multi-tool": phase5Lessons["multi-tool"],
-    "self-correction": phase5Lessons["self-correction"],
-    "build-first-ai-agent": phase5Lessons["agent-loop"],
-  },
+  "agent-foundations": agentFoundationsLessons,
   "agent-frameworks": {
     ...phase6Lessons,
     autogen: phase6Lessons.autogen,

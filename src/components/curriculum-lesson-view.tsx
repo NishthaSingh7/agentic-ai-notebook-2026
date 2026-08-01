@@ -71,7 +71,8 @@ export function CurriculumLessonView({
       <LessonSection id="diagram" title="Visual Workflows" icon={<Layers className="h-5 w-5 text-accent" />}>
         {visualFirst && (
           <p className="text-sm text-text-muted mb-4 not-prose">
-            Study the diagrams first — zoom with <strong>+</strong> / <strong>−</strong> inside each frame.
+            Study the diagrams first — <strong>scroll</strong> inside each frame to pan, then zoom with{" "}
+            <strong>+</strong> / <strong>−</strong> (up to 200%).
           </p>
         )}
         <VisualWorkflows content={content} mod={mod} visualFirst={visualFirst} />
@@ -89,10 +90,23 @@ export function CurriculumLessonView({
           {content.analogy}
         </p>
       )}
-      <ul className={visualFirst ? "text-sm space-y-1" : undefined}>
-        {conceptBullets.map((point, i) => (
-          <li key={i}>{point}</li>
-        ))}
+      <ul
+        className={
+          visualFirst
+            ? "not-prose text-sm space-y-2 text-text-secondary list-none pl-0"
+            : "not-prose text-sm space-y-2 text-text-secondary list-disc pl-5"
+        }
+      >
+        {conceptBullets.length > 0 ? (
+          conceptBullets.map((point, i) => (
+            <li key={i} className={visualFirst ? "flex gap-2" : undefined}>
+              {visualFirst && <span className="text-accent font-bold shrink-0">{i + 1}.</span>}
+              <span>{point}</span>
+            </li>
+          ))
+        ) : (
+          <li className="text-text-muted italic">Key points are in the visual diagram above.</li>
+        )}
       </ul>
       {!visualFirst && content.learnElsewhere && content.learnElsewhere.length > 0 && (
         <div className="mt-6 not-prose rounded-lg border border-amber-500/20 bg-amber-500/5 p-4">

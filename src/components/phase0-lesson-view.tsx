@@ -187,8 +187,8 @@ export function Phase0LessonView({
                 icon={<Layers className="h-5 w-5 text-accent shrink-0" />}
               >
                 <p className="text-sm text-text-muted mb-5 not-prose">
-                  Start here — study each diagram, then use <strong>+</strong> / <strong>−</strong> to
-                  zoom if needed.
+                  Start here — <strong>scroll</strong> inside each diagram frame to explore, then use{" "}
+                  <strong>+</strong> / <strong>−</strong> to zoom up to 200% if needed.
                 </p>
                 <VisualWorkflows content={content} mod={mod} visualFirst />
               </SectionCard>

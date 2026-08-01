@@ -38,13 +38,14 @@ export function isFoundationPhase(phaseSlug: string): boolean {
   return phaseSlug === "programming-foundations";
 }
 
-/** Visual-first layout: diagrams primary, minimal reading (Phases 0–3 + optional 1.1). */
+/** Visual-first layout: diagrams primary, minimal reading (Phases 0–4 + optional 1.1). */
 export const VISUAL_FIRST_PHASE_SLUGS = new Set([
   "programming-foundations",
   "genai-foundations",
   "transformer-foundations",
   "llm-engineering",
   "rag-engineering",
+  "agent-foundations",
 ]);
 
 export function isVisualFirstPhase(phaseSlug: string): boolean {

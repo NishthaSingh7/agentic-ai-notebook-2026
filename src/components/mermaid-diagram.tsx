@@ -72,8 +72,8 @@ const DEFAULT_THEME = {
   },
 };
 
-const MIN_ZOOM = 0.35;
-const MAX_ZOOM = 1.25;
+const MIN_ZOOM = 0.5;
+const MAX_ZOOM = 2;
 const ZOOM_STEP = 0.1;
 
 export function MermaidDiagram({
@@ -85,9 +85,53 @@ export function MermaidDiagram({
   defaultZoom = 1,
 }: MermaidDiagramProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [svg, setSvg] = useState<string>("");
   const [error, setError] = useState(false);
   const [zoom, setZoom] = useState(defaultZoom);
+  const [naturalSize, setNaturalSize] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    if (!svg || !ref.current) return;
+
+    const measure = () => {
+      const svgEl = ref.current?.querySelector("svg");
+      if (!svgEl) return;
+
+      const attrW = parseFloat(svgEl.getAttribute("width") || "");
+      const attrH = parseFloat(svgEl.getAttribute("height") || "");
+      if (attrW > 0 && attrH > 0) {
+        setNaturalSize({ width: attrW, height: attrH });
+        return;
+      }
+
+      try {
+        const box = svgEl.getBBox();
+        if (box.width > 0 && box.height > 0) {
+          setNaturalSize({ width: box.width, height: box.height });
+          return;
+        }
+      } catch {
+        // getBBox can throw before SVG is painted
+      }
+
+      const rect = svgEl.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        setNaturalSize({ width: rect.width, height: rect.height });
+      }
+    };
+
+    const raf = requestAnimationFrame(measure);
+    const svgEl = ref.current.querySelector("svg");
+    if (!svgEl) return () => cancelAnimationFrame(raf);
+
+    const observer = new ResizeObserver(() => measure());
+    observer.observe(svgEl);
+    return () => {
+      cancelAnimationFrame(raf);
+      observer.disconnect();
+    };
+  }, [svg]);
 
   useEffect(() => {
     let cancelled = false;
@@ -197,6 +241,9 @@ export function MermaidDiagram({
   );
 
   if (zoomable) {
+    const scaledWidth = naturalSize.width > 0 ? naturalSize.width * zoom : undefined;
+    const scaledHeight = naturalSize.height > 0 ? naturalSize.height * zoom : undefined;
+
     return (
       <div className={containerClass}>
         <div className="flex items-center justify-between gap-2 px-3 py-2 border-b border-stone-300/60 bg-white/60">
@@ -211,18 +258,20 @@ export function MermaidDiagram({
             <button
               type="button"
               onClick={zoomOut}
-              className="p-1.5 rounded-md hover:bg-stone-200/80 text-stone-700 transition-colors"
+              disabled={zoom <= MIN_ZOOM}
+              className="p-1.5 rounded-md hover:bg-stone-200/80 text-stone-700 transition-colors disabled:opacity-40 disabled:pointer-events-none"
               aria-label="Zoom out"
             >
               <Minus className="h-3.5 w-3.5" />
             </button>
-            <span className="text-xs font-mono text-stone-600 w-10 text-center">
+            <span className="text-xs font-mono text-stone-600 w-12 text-center tabular-nums">
               {Math.round(zoom * 100)}%
             </span>
             <button
               type="button"
               onClick={zoomIn}
-              className="p-1.5 rounded-md hover:bg-stone-200/80 text-stone-700 transition-colors"
+              disabled={zoom >= MAX_ZOOM}
+              className="p-1.5 rounded-md hover:bg-stone-200/80 text-stone-700 transition-colors disabled:opacity-40 disabled:pointer-events-none"
               aria-label="Zoom in"
             >
               <Plus className="h-3.5 w-3.5" />
@@ -245,19 +294,31 @@ export function MermaidDiagram({
             </button>
           </div>
         </div>
-        <div className="overflow-auto max-h-[min(52vh,420px)] p-3 bg-[#faf8f5]">
+        <div
+          ref={scrollRef}
+          className="overflow-auto overscroll-contain p-3 bg-[#faf8f5] min-h-[min(50vh,360px)] max-h-[min(80vh,720px)]"
+        >
           <div
-            className="mx-auto origin-top transition-transform duration-150"
+            className="inline-block"
             style={{
-              transform: `scale(${zoom})`,
-              width: `${100 / zoom}%`,
+              width: scaledWidth,
+              height: scaledHeight,
             }}
           >
-            <div className="flex justify-center">{diagramContent}</div>
+            <div
+              className="origin-top-left"
+              style={{
+                transform: `scale(${zoom})`,
+                width: naturalSize.width > 0 ? naturalSize.width : undefined,
+                height: naturalSize.height > 0 ? naturalSize.height : undefined,
+              }}
+            >
+              <div className="flex justify-start">{diagramContent}</div>
+            </div>
           </div>
         </div>
         <p className="text-[10px] text-stone-500 px-3 py-1.5 border-t border-stone-300/40 text-center">
-          Scroll inside the frame · use + / − to zoom
+          Scroll inside the frame to explore · use + / − to zoom up to 200%
         </p>
       </div>
     );
