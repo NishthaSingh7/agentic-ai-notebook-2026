@@ -76,6 +76,102 @@ const MIN_ZOOM = 0.5;
 const MAX_ZOOM = 2;
 const ZOOM_STEP = 0.1;
 
+const MERMAID_FLOWCHART = {
+  htmlLabels: true,
+  useMaxWidth: false,
+  wrappingWidth: 280,
+} as const;
+
+function parseSvgLength(value: string | null): number {
+  if (!value || value.includes("%")) return 0;
+  const n = parseFloat(value);
+  return Number.isFinite(n) && n > 0 ? n : 0;
+}
+
+function measureSvgElement(svgEl: SVGSVGElement): { width: number; height: number } {
+  const viewBox = svgEl.getAttribute("viewBox");
+  if (viewBox) {
+    const parts = viewBox.split(/[\s,]+/).map(Number);
+    if (parts.length === 4 && parts[2] > 0 && parts[3] > 0) {
+      return { width: parts[2], height: parts[3] };
+    }
+  }
+
+  const attrW = parseSvgLength(svgEl.getAttribute("width"));
+  const attrH = parseSvgLength(svgEl.getAttribute("height"));
+  if (attrW > 0 && attrH > 0) {
+    return { width: attrW, height: attrH };
+  }
+
+  try {
+    const box = svgEl.getBBox();
+    if (box.width > 0 && box.height > 0) {
+      return { width: box.width, height: box.height };
+    }
+  } catch {
+    // getBBox can throw before SVG is painted
+  }
+
+  const rect = svgEl.getBoundingClientRect();
+  if (rect.width > 0 && rect.height > 0) {
+    return { width: rect.width, height: rect.height };
+  }
+
+  return { width: 0, height: 0 };
+}
+
+/** Prevent Mermaid foreignObject labels from clipping long node text */
+function patchSvgLabels(root: HTMLElement) {
+  root.querySelectorAll("foreignObject").forEach((fo) => {
+    fo.setAttribute("overflow", "visible");
+    const html = fo.querySelector("div, span, p");
+    if (!(html instanceof HTMLElement)) return;
+
+    html.style.overflow = "visible";
+    html.style.whiteSpace = "normal";
+    html.style.wordBreak = "break-word";
+    html.style.overflowWrap = "anywhere";
+    html.style.textOverflow = "clip";
+    html.style.maxWidth = "none";
+    html.style.width = "max-content";
+    html.style.display = "inline-block";
+
+    const pad = 12;
+    const contentWidth = Math.ceil(html.scrollWidth + pad);
+    const contentHeight = Math.ceil(html.scrollHeight + pad);
+    const foW = parseSvgLength(fo.getAttribute("width"));
+    const foH = parseSvgLength(fo.getAttribute("height"));
+
+    if (contentWidth > foW) {
+      fo.setAttribute("width", String(contentWidth));
+    }
+    if (contentHeight > foH) {
+      fo.setAttribute("height", String(contentHeight));
+    }
+
+    const nodeGroup = fo.closest(".node");
+    const rect = nodeGroup?.querySelector("rect");
+    if (rect instanceof SVGRectElement) {
+      const rectW = rect.width.baseVal.value;
+      const rectH = rect.height.baseVal.value;
+      if (contentWidth > rectW) {
+        rect.setAttribute("width", String(contentWidth));
+      }
+      if (contentHeight > rectH) {
+        rect.setAttribute("height", String(contentHeight));
+      }
+    }
+  });
+
+  root.querySelectorAll(".nodeLabel, .edgeLabel").forEach((el) => {
+    if (el instanceof HTMLElement) {
+      el.style.overflow = "visible";
+      el.style.whiteSpace = "normal";
+      el.style.wordBreak = "break-word";
+    }
+  });
+}
+
 export function MermaidDiagram({
   chart,
   title,
@@ -97,31 +193,15 @@ export function MermaidDiagram({
     const measure = () => {
       const svgEl = ref.current?.querySelector("svg");
       if (!svgEl) return;
-
-      const attrW = parseFloat(svgEl.getAttribute("width") || "");
-      const attrH = parseFloat(svgEl.getAttribute("height") || "");
-      if (attrW > 0 && attrH > 0) {
-        setNaturalSize({ width: attrW, height: attrH });
-        return;
-      }
-
-      try {
-        const box = svgEl.getBBox();
-        if (box.width > 0 && box.height > 0) {
-          setNaturalSize({ width: box.width, height: box.height });
-          return;
-        }
-      } catch {
-        // getBBox can throw before SVG is painted
-      }
-
-      const rect = svgEl.getBoundingClientRect();
-      if (rect.width > 0 && rect.height > 0) {
-        setNaturalSize({ width: rect.width, height: rect.height });
-      }
+      patchSvgLabels(ref.current!);
+      setNaturalSize(measureSvgElement(svgEl));
     };
 
-    const raf = requestAnimationFrame(measure);
+    const raf = requestAnimationFrame(() => {
+      measure();
+      // Re-measure after label expansion and font paint
+      requestAnimationFrame(measure);
+    });
     const svgEl = ref.current.querySelector("svg");
     if (!svgEl) return () => cancelAnimationFrame(raf);
 
@@ -140,6 +220,7 @@ export function MermaidDiagram({
       const mermaid = (await import("mermaid")).default;
       mermaid.initialize({
         startOnLoad: false,
+        flowchart: MERMAID_FLOWCHART,
         ...(useSketch ? SKETCH_THEME : DEFAULT_THEME),
       });
       const id = `mermaid-${Math.random().toString(36).slice(2)}`;
@@ -155,7 +236,7 @@ export function MermaidDiagram({
         try {
           await Promise.race([
             document.fonts.load("14px Excalifont"),
-            new Promise((resolve) => setTimeout(resolve, 1500)),
+            new Promise((resolve) => setTimeout(resolve, 2500)),
           ]);
         } catch {
           // Font load is optional — never block diagram rendering
@@ -223,7 +304,7 @@ export function MermaidDiagram({
       ref={ref}
       dangerouslySetInnerHTML={{ __html: svg }}
       className={cn(
-        "inline-block min-w-full [&_svg]:max-w-none [&_svg]:h-auto",
+        "inline-block [&_svg]:max-w-none [&_svg]:h-auto [&_svg]:overflow-visible",
         sketch && "mermaid-sketch",
         !zoomable && compact && "scale-[0.92] origin-center"
       )}
@@ -241,8 +322,9 @@ export function MermaidDiagram({
   );
 
   if (zoomable) {
-    const scaledWidth = naturalSize.width > 0 ? naturalSize.width * zoom : undefined;
-    const scaledHeight = naturalSize.height > 0 ? naturalSize.height * zoom : undefined;
+    const hasMeasuredSize = naturalSize.width > 0 && naturalSize.height > 0;
+    const scaledWidth = hasMeasuredSize ? naturalSize.width * zoom : undefined;
+    const scaledHeight = hasMeasuredSize ? naturalSize.height * zoom : undefined;
 
     return (
       <div className={containerClass}>
@@ -298,24 +380,30 @@ export function MermaidDiagram({
           ref={scrollRef}
           className="overflow-auto overscroll-contain p-3 bg-[#faf8f5] min-h-[min(50vh,360px)] max-h-[min(80vh,720px)]"
         >
-          <div
-            className="inline-block"
-            style={{
-              width: scaledWidth,
-              height: scaledHeight,
-            }}
-          >
+          {hasMeasuredSize ? (
             <div
-              className="origin-top-left"
-              style={{
-                transform: `scale(${zoom})`,
-                width: naturalSize.width > 0 ? naturalSize.width : undefined,
-                height: naturalSize.height > 0 ? naturalSize.height : undefined,
-              }}
+              className="inline-block overflow-visible"
+              style={{ width: scaledWidth, height: scaledHeight }}
             >
-              <div className="flex justify-start">{diagramContent}</div>
+              <div
+                className="origin-top-left overflow-visible"
+                style={{
+                  transform: `scale(${zoom})`,
+                  width: naturalSize.width,
+                  height: naturalSize.height,
+                }}
+              >
+                <div className="flex justify-start overflow-visible">{diagramContent}</div>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div
+              className="inline-block origin-top-left overflow-visible"
+              style={{ transform: `scale(${zoom})` }}
+            >
+              {diagramContent}
+            </div>
+          )}
         </div>
         <p className="text-[10px] text-stone-500 px-3 py-1.5 border-t border-stone-300/40 text-center">
           Scroll inside the frame to explore · use + / − to zoom up to 200%
