@@ -40,6 +40,7 @@ export function Footer() {
           <div>
             <h3 className="text-sm font-semibold mb-3">Prepare</h3>
             <ul className="space-y-2 text-sm text-text-muted">
+              <li><Link href="/get-api-keys" className="hover:text-text-secondary transition-colors">Get API Keys</Link></li>
               <li><Link href="/glossary" className="hover:text-text-secondary transition-colors">Glossary</Link></li>
               <li><Link href="/resources" className="hover:text-text-secondary transition-colors">Resources</Link></li>
             </ul>

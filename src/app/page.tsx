@@ -6,10 +6,12 @@ import { PhaseCard } from "@/components/phase-card";
 import { RoadmapVisualization } from "@/components/roadmap-visualization";
 import { ProgressBar } from "@/components/progress-bar";
 import { HomeHero } from "@/components/home-hero";
+import { ApiKeysWelcomePopup } from "@/components/api-keys-welcome-popup";
 
 export default function HomePage() {
   return (
     <>
+      <ApiKeysWelcomePopup />
       <HomeHero />
 
       {/* Progress */}

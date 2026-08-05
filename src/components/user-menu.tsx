@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { ChevronDown, Loader2, LogIn, LogOut, User } from "lucide-react";
+import { Loader2, LogIn, LogOut, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function UserMenu() {
@@ -35,11 +35,11 @@ export function UserMenu() {
       <button
         type="button"
         onClick={() => signIn("google", { callbackUrl: "/" })}
-        className="flex h-9 items-center gap-1.5 rounded-lg border border-border bg-surface px-2.5 text-sm text-text-secondary transition-colors hover:border-accent/40 hover:text-text-primary sm:px-3"
+        className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-surface text-text-muted transition-colors hover:border-accent/40 hover:text-text-primary sm:w-auto sm:gap-1.5 sm:rounded-lg sm:px-3"
         title="Sign in with Google"
       >
         <LogIn className="h-4 w-4 shrink-0" />
-        <span className="hidden sm:inline">Sign in</span>
+        <span className="hidden sm:inline text-sm">Sign in</span>
       </button>
     );
   }
@@ -53,28 +53,26 @@ export function UserMenu() {
         type="button"
         onClick={() => setOpen((prev) => !prev)}
         className={cn(
-          "flex h-9 items-center gap-1.5 rounded-full border border-border bg-surface pl-1 pr-2 transition-colors hover:border-accent/30",
-          open && "border-accent/40"
+          "flex h-9 w-9 items-center justify-center rounded-full border border-border bg-surface transition-colors hover:border-accent/30",
+          open && "border-accent/40 ring-2 ring-accent/20"
         )}
         aria-expanded={open}
         aria-haspopup="menu"
+        title={displayName}
       >
         {session.user.image ? (
           <Image
             src={session.user.image}
             alt={displayName}
-            width={28}
-            height={28}
-            className="rounded-full"
+            width={32}
+            height={32}
+            className="h-8 w-8 rounded-full"
           />
         ) : (
-          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-accent/20 text-xs font-medium text-accent">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent/20 text-xs font-semibold text-accent">
             {initial}
-          </div>
+          </span>
         )}
-        <ChevronDown
-          className={cn("h-3.5 w-3.5 text-text-muted transition-transform", open && "rotate-180")}
-        />
       </button>
 
       {open && (
