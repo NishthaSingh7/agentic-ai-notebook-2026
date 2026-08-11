@@ -1,4 +1,5 @@
 import { createLesson, iq } from "./builder";
+import { withAgentPractice } from "./agent-foundations-practice";
 import { pastelChart } from "@/lib/mermaid-pastel";
 
 /** Short bullet lines for visual-first Key Takeaways */
@@ -7,7 +8,7 @@ function b(...lines: string[]) {
 }
 
 export const agentFoundationsLessons: Record<string, ReturnType<typeof createLesson>> = {
-  "what-is-an-ai-agent": createLesson({
+  "what-is-an-ai-agent": createLesson(withAgentPractice("what-is-an-ai-agent", {
     visualFirst: true,
     concept: b(
       "Agent = LLM reasoning + tools + memory + loop until goal is done",
@@ -180,10 +181,6 @@ export const agentFoundationsLessons: Record<string, ReturnType<typeof createLes
         ),
       },
     ],
-    example:
-      "Analyze Q3 sales and email leadership: agent queries SQL, charts data, drafts email, requests approval, sends.",
-    code: `messages = [{"role": "user", "content": "Analyze Q3 sales and email leadership"}]
-# Loop: LLM → tool_calls → execute → append → repeat until done`,
     revisionNotes: {
       cheatSheet: [
         "Agent = LLM + Tools + Memory + Loop",
@@ -199,9 +196,9 @@ export const agentFoundationsLessons: Record<string, ReturnType<typeof createLes
       "Unrestricted tool access without sandboxing",
       "Treating agents as single-turn chatbots",
     ],
-  }),
+  })),
 
-  "why-llms-need-agents": createLesson({
+  "why-llms-need-agents": createLesson(withAgentPractice("why-llms-need-agents", {
     visualFirst: true,
     concept: b(
       "LLMs are stateless predictors with frozen training knowledge",
@@ -310,8 +307,6 @@ export const agentFoundationsLessons: Record<string, ReturnType<typeof createLes
         ),
       },
     ],
-    example:
-      "What are our Q3 sales? Raw LLM guesses. Agent runs SQL on Snowflake and returns exact numbers with a chart.",
     revisionNotes: {
       cheatSheet: [
         "LLM alone cannot act on the world",
@@ -321,9 +316,9 @@ export const agentFoundationsLessons: Record<string, ReturnType<typeof createLes
         "Use chatbot when no tools needed",
       ],
     },
-  }),
+  })),
 
-  "anatomy-of-an-agent": createLesson({
+  "anatomy-of-an-agent": createLesson(withAgentPractice("anatomy-of-an-agent", {
     visualFirst: true,
     concept: b(
       "Brain = LLM plus system prompt and planning strategy",
@@ -431,8 +426,6 @@ export const agentFoundationsLessons: Record<string, ReturnType<typeof createLes
         ),
       },
     ],
-    example:
-      "Coding agent: brain = Claude, senses = IDE diff, hands = file write + terminal, memory = repo index, runtime = Cursor.",
     revisionNotes: {
       cheatSheet: [
         "5 layers: brain senses hands memory runtime",
@@ -442,9 +435,9 @@ export const agentFoundationsLessons: Record<string, ReturnType<typeof createLes
         "Runtime handles retries and HITL",
       ],
     },
-  }),
+  })),
 
-  "agent-lifecycle": createLesson({
+  "agent-lifecycle": createLesson(withAgentPractice("agent-lifecycle", {
     visualFirst: true,
     concept: b(
       "Design: goals, tools, metrics, success criteria",
@@ -538,8 +531,6 @@ export const agentFoundationsLessons: Record<string, ReturnType<typeof createLes
         ),
       },
     ],
-    example:
-      "Support agent: 15% SQL tool failures detected in prod → add validation → update evals → redeploy.",
     revisionNotes: {
       cheatSheet: [
         "Design metrics before building",
@@ -549,9 +540,9 @@ export const agentFoundationsLessons: Record<string, ReturnType<typeof createLes
         "Iterate from failure logs",
       ],
     },
-  }),
+  })),
 
-  "core-concepts": createLesson({
+  "core-concepts": createLesson(withAgentPractice("core-concepts", {
     visualFirst: true,
     concept: b(
       "Perception-action: observe think act repeat",
@@ -648,8 +639,6 @@ export const agentFoundationsLessons: Record<string, ReturnType<typeof createLes
         ),
       },
     ],
-    example:
-      "Research agent: plan-and-execute, sub-agent scrapes web, pauses for human approval before publish.",
     revisionNotes: {
       cheatSheet: [
         "ReAct = think + act each step",
@@ -659,9 +648,9 @@ export const agentFoundationsLessons: Record<string, ReturnType<typeof createLes
         "HITL for destructive actions",
       ],
     },
-  }),
+  })),
 
-  "agent-capabilities": createLesson({
+  "agent-capabilities": createLesson(withAgentPractice("agent-capabilities", {
     visualFirst: true,
     concept: b(
       "Capabilities = concrete skills not vague AI magic",
@@ -750,8 +739,6 @@ export const agentFoundationsLessons: Record<string, ReturnType<typeof createLes
         ),
       },
     ],
-    example:
-      "Data analyst agent: NL-to-SQL, charts, Slack — but not production deployment.",
     revisionNotes: {
       cheatSheet: [
         "Map capabilities before building",
@@ -761,9 +748,9 @@ export const agentFoundationsLessons: Record<string, ReturnType<typeof createLes
         "L4 = multi-agent horizon",
       ],
     },
-  }),
+  })),
 
-  "types-of-agents": createLesson({
+  "types-of-agents": createLesson(withAgentPractice("types-of-agents", {
     visualFirst: true,
     concept: b(
       "Reactive: input LLM output no tools",
@@ -863,8 +850,6 @@ export const agentFoundationsLessons: Record<string, ReturnType<typeof createLes
         ),
       },
     ],
-    example:
-      "HR FAQ bot = conversational. CI PR reviewer = task-oriented with deliberative planning.",
     revisionNotes: {
       cheatSheet: [
         "Match type to task complexity",
@@ -874,9 +859,9 @@ export const agentFoundationsLessons: Record<string, ReturnType<typeof createLes
         "Hybrid architectures common",
       ],
     },
-  }),
+  })),
 
-  "agent-architectures": createLesson({
+  "agent-architectures": createLesson(withAgentPractice("agent-architectures", {
     visualFirst: true,
     concept: b(
       "ReAct: simplest loop one LLM call per step",
@@ -989,13 +974,6 @@ export const agentFoundationsLessons: Record<string, ReturnType<typeof createLes
         ),
       },
     ],
-    example:
-      "Onboarding agent uses LangGraph: verify identity → parse docs → create account → welcome email.",
-    code: `graph = StateGraph(AgentState)
-graph.add_node("plan", plan_fn)
-graph.add_node("execute", execute_fn)
-graph.add_conditional_edges("execute", route_fn)
-app = graph.compile()`,
     revisionNotes: {
       cheatSheet: [
         "ReAct = simple interpretable loop",
@@ -1005,9 +983,9 @@ app = graph.compile()`,
         "Pick based on task structure",
       ],
     },
-  }),
+  })),
 
-  "agent-terminology": createLesson({
+  "agent-terminology": createLesson(withAgentPractice("agent-terminology", {
     visualFirst: true,
     concept: b(
       "Agent: LLM plus tools in autonomous loop",
@@ -1104,8 +1082,6 @@ app = graph.compile()`,
         ),
       },
     ],
-    example:
-      "Incident: trajectory showed 3 failed search actions before fallback to cached data.",
     revisionNotes: {
       cheatSheet: [
         "Trajectory = full debug log",
@@ -1115,9 +1091,9 @@ app = graph.compile()`,
         "Eval = regression test suite",
       ],
     },
-  }),
+  })),
 
-  "current-agent-landscape": createLesson({
+  "current-agent-landscape": createLesson(withAgentPractice("current-agent-landscape", {
     visualFirst: true,
     concept: b(
       "IDE agents: Cursor Devin — code and terminal",
@@ -1221,8 +1197,6 @@ app = graph.compile()`,
         ),
       },
     ],
-    example:
-      "Startup builds support agent on LangGraph plus MCP servers for CRM and ticketing.",
     revisionNotes: {
       cheatSheet: [
         "MCP = standard tool layer",
@@ -1232,9 +1206,9 @@ app = graph.compile()`,
         "Watch protocol standards",
       ],
     },
-  }),
+  })),
 
-  planning: createLesson({
+  planning: createLesson(withAgentPractice("planning", {
     visualFirst: true,
     concept: b(
       "Planning decomposes goals into ordered steps before acting",
@@ -1353,8 +1327,6 @@ app = graph.compile()`,
         ),
       },
     ],
-    example:
-      "Board report plan: query sales DB → chart → draft summary → PDF → email board.",
     revisionNotes: {
       cheatSheet: [
         "Plan first for known workflows",
@@ -1369,9 +1341,9 @@ app = graph.compile()`,
       "Over-planning simple one-step tasks",
       "No plan validation before execution",
     ],
-  }),
+  })),
 
-  reflection: createLesson({
+  reflection: createLesson(withAgentPractice("reflection", {
     visualFirst: true,
     concept: b(
       "Reflection = agent reviews output before returning",
@@ -1459,8 +1431,6 @@ app = graph.compile()`,
         ),
       },
     ],
-    example:
-      "Agent drafts report, critiques missing date range, re-queries SQL, then returns.",
     revisionNotes: {
       cheatSheet: [
         "Reflect on high-stakes outputs",
@@ -1470,9 +1440,9 @@ app = graph.compile()`,
         "Reflexion stores lessons",
       ],
     },
-  }),
+  })),
 
-  "multi-tool": createLesson({
+  "multi-tool": createLesson(withAgentPractice("multi-tool", {
     visualFirst: true,
     concept: b(
       "Real tasks need search SQL email code in one workflow",
@@ -1559,8 +1529,6 @@ app = graph.compile()`,
         ),
       },
     ],
-    example:
-      "Research: web search → summarize → save Notion → email summary — four tools one loop.",
     revisionNotes: {
       cheatSheet: [
         "Registry = schema + handler + permissions",
@@ -1570,9 +1538,9 @@ app = graph.compile()`,
         "Rate limit expensive tools",
       ],
     },
-  }),
+  })),
 
-  "self-correction": createLesson({
+  "self-correction": createLesson(withAgentPractice("self-correction", {
     visualFirst: true,
     concept: b(
       "Self-correction detects and fixes errors inside the loop",
@@ -1663,8 +1631,6 @@ app = graph.compile()`,
         ),
       },
     ],
-    example:
-      "SQL agent gets syntax error, reads message, rewrites query, succeeds on retry 2.",
     revisionNotes: {
       cheatSheet: [
         "Detect → diagnose → retry",
@@ -1674,9 +1640,9 @@ app = graph.compile()`,
         "Escalate when stuck",
       ],
     },
-  }),
+  })),
 
-  "build-first-ai-agent": createLesson({
+  "build-first-ai-agent": createLesson(withAgentPractice("build-first-ai-agent", {
     visualFirst: true,
     concept: b(
       "Minimal agent: one LLM two tools while-loop logs",
@@ -1784,25 +1750,6 @@ app = graph.compile()`,
         ),
       },
     ],
-    example:
-      "80-line Python: search + calculator tools answering GDP and population questions.",
-    code: `def run_agent(goal, tools, max_steps=10):
-    messages = [{"role": "user", "content": goal}]
-    for step in range(max_steps):
-        resp = client.chat.completions.create(
-            model="gpt-4o-mini", messages=messages, tools=tools)
-        msg = resp.choices[0].message
-        if not msg.tool_calls:
-            return msg.content
-        messages.append(msg)
-        for tc in msg.tool_calls:
-            result = TOOL_MAP[tc.function.name](
-                **json.loads(tc.function.arguments))
-            messages.append({"role": "tool",
-                "tool_call_id": tc.id, "content": str(result)})
-    return "Max steps reached."`,
-    practiceTask:
-      "Build a 2-tool agent with max 10 steps. Log every iteration. Test on 5 queries.",
     revisionNotes: {
       cheatSheet: [
         "2-3 tools max at first",
@@ -1816,5 +1763,5 @@ app = graph.compile()`,
     interviewQuestions: [
       iq("What belongs in a minimal first agent?", "LLM, 2-3 tools with schemas, while-loop, max iterations, logging.", "easy"),
     ],
-  }),
+  })),
 };

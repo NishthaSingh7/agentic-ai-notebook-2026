@@ -5,6 +5,12 @@ import { ArrowLeft, BookOpen, FolderKanban } from "lucide-react";
 import { getPhaseBySlug, getAdjacentPhase, phases } from "@/data/roadmap";
 import { getLessonReadTime } from "@/data/lessons";
 import { ModuleList } from "@/components/module-list";
+import { PhaseGlossarySearch } from "@/components/phase-glossary-search";
+import {
+  agentFoundationsGlossary,
+  agentGlossaryCategories,
+  getAgentFoundationsGlossaryByCategory,
+} from "@/data/agent-foundations-glossary";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -47,7 +53,7 @@ export default async function PhasePage({ params }: Props) {
         <ArrowLeft className="h-3.5 w-3.5" /> Back to Roadmap
       </Link>
 
-      <div className="mb-8">
+      <div className="mb-6">
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs font-mono text-accent">{phase.subtitle}</span>
           {phase.optional && (
@@ -69,13 +75,23 @@ export default async function PhasePage({ params }: Props) {
         </p>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2">
+      <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
+        <div className="lg:col-span-2 order-1">
           <h2 className="text-lg font-semibold mb-4">Modules</h2>
           <ModuleList phaseSlug={phase.slug} modules={modules} />
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-5 order-2">
+          {slug === "agent-foundations" && (
+            <PhaseGlossarySearch
+              variant="sidebar"
+              title="Agent Glossary"
+              terms={agentFoundationsGlossary}
+              byCategory={getAgentFoundationsGlossaryByCategory()}
+              categories={agentGlossaryCategories}
+            />
+          )}
+
           {phase.projects && (
             <div className="rounded-xl border border-border bg-surface p-5">
               <h3 className="flex items-center gap-2 text-sm font-semibold mb-3">

@@ -39,8 +39,21 @@ const FOCUS_PATTERNS: Record<string, RegExp[]> = {
   "tree-of-thoughts": [/branch/i, /thought/i, /evaluate/i],
   "short-term-memory": [/buffer/i, /history/i, /messages/i],
   "long-term-memory": [/store/i, /retrieve/i, /memory/i, /vector/i],
-  planning: [/plan/i, /steps/i, /decompose/i],
-  reflection: [/reflect/i, /critique/i, /revise/i],
+  planning: [/plan/i, /depends_on/i, /steps/i, /decompose/i],
+  reflection: [/reflect/i, /critique/i, /revise/i, /CRITIQUE/i],
+  "what-is-an-ai-agent": [/tool_calls/i, /MAX_STEPS/i, /messages/i],
+  "why-llms-need-agents": [/run_sql/i, /tools=/, /LLM-only/i],
+  "anatomy-of-an-agent": [/AgentState/i, /tool_results/i, /max_steps/i],
+  "agent-lifecycle": [/golden_cases/i, /run_eval/i, /expect_tool/i],
+  "core-concepts": [/Observation/i, /ReAct/i, /web_search/i],
+  "agent-capabilities": [/CAPABILITY_TIERS/i, /tools_for_tier/i],
+  "types-of-agents": [/pick_agent_type/i, /deliberative/i, /conversational/i],
+  "agent-architectures": [/StateGraph/i, /add_node/i, /add_conditional_edges/i, /interrupt_before/i],
+  "agent-terminology": [/TrajectoryStep/i, /Episode/i, /termination/i],
+  "current-agent-landscape": [/list_tools/i, /ClientSession/i, /mcp/i],
+  "multi-tool": [/asyncio\.gather/i, /TOOLS\[/i, /parallel/i],
+  "self-correction": [/MAX_RETRIES/i, /DatabaseError/i, /fix_query/i],
+  "build-first-ai-agent": [/run_agent/i, /tool_calls/i, /max_steps/i],
 };
 
 /** Module-specific comment overrides for focus lines. */
@@ -87,6 +100,32 @@ const FOCUS_COMMENTS: Record<string, [RegExp, string][]> = {
   ],
   "top-p": [
     [/top_p/, "nucleus sampling — only sample from top probability mass"],
+  ],
+  reflection: [
+    [/CRITIQUE_PROMPT/i, "prompt that asks the model to review its own draft"],
+    [/critique/i, "reflection pass — check for gaps before returning"],
+    [/revised/i, "revise draft using critique feedback"],
+  ],
+  "what-is-an-ai-agent": [
+    [/tool_calls/i, "LLM chose a tool — execute and loop"],
+    [/MAX_STEPS/i, "hard cap prevents infinite agent loops"],
+  ],
+  "agent-architectures": [
+    [/StateGraph/i, "define workflow as a state machine graph"],
+    [/add_conditional_edges/i, "route to different nodes based on state"],
+    [/interrupt_before/i, "pause for human approval before this node"],
+  ],
+  "multi-tool": [
+    [/asyncio\.gather/i, "run independent tools in parallel"],
+    [/TOOLS\[/i, "tool registry maps name to handler"],
+  ],
+  "self-correction": [
+    [/MAX_RETRIES/i, "cap correction attempts to avoid infinite loops"],
+    [/fix_query_with_error/i, "feed DB error back so LLM can fix the query"],
+  ],
+  "build-first-ai-agent": [
+    [/run_agent/i, "main loop: LLM → tools → append → repeat"],
+    [/tool_calls/i, "when empty, agent is done — return final answer"],
   ],
 };
 
