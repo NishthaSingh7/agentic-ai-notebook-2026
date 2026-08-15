@@ -20,23 +20,37 @@ import { cn } from "@/lib/utils";
 import {
   applyLessonHighlights,
   createHighlightId,
+  DEFAULT_HIGHLIGHT_COLOR,
+  HIGHLIGHT_COLORS,
   highlightKey,
   mergeHighlights,
   normalizeHighlightText,
   readLocalHighlights,
+  sanitizeHighlights,
   unwrapLessonHighlights,
   writeLocalHighlights,
+  type HighlightColor,
   type ModuleHighlight,
 } from "@/lib/lesson-highlights";
+
+const COLOR_SWATCHES: Record<HighlightColor, string> = {
+  yellow: "bg-[#fde68a] border-[#f59e0b]",
+  green: "bg-[#bbf7d0] border-[#4ade80]",
+  orange: "bg-[#fed7aa] border-[#fb923c]",
+  blue: "bg-[#bfdbfe] border-[#60a5fa]",
+  red: "bg-[#fecaca] border-[#f87171]",
+};
 
 interface HighlightContextValue {
   enabled: boolean;
   editing: boolean;
   highlights: ModuleHighlight[];
+  selectedColor: HighlightColor;
   isSaving: boolean;
   justSaved: boolean;
   isAuthenticated: boolean;
   setEditing: (value: boolean) => void;
+  setSelectedColor: (color: HighlightColor) => void;
   save: () => Promise<void>;
   cancel: () => void;
 }
@@ -56,7 +70,7 @@ async function fetchRemoteHighlights(
   if (response.status === 401) return null;
   if (!response.ok) return [];
   const data = (await response.json()) as { highlights?: unknown };
-  return Array.isArray(data.highlights) ? (data.highlights as ModuleHighlight[]) : [];
+  return sanitizeHighlights(data.highlights);
 }
 
 async function saveRemoteHighlights(
@@ -90,6 +104,7 @@ export function LessonHighlightShell({
   const [editing, setEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [justSaved, setJustSaved] = useState(false);
+  const [selectedColor, setSelectedColor] = useState<HighlightColor>(DEFAULT_HIGHLIGHT_COLOR);
 
   useEffect(() => {
     if (!enabled) return;
@@ -164,27 +179,28 @@ export function LessonHighlightShell({
       enabled,
       editing,
       highlights,
+      selectedColor,
       isSaving,
       justSaved,
       isAuthenticated: status === "authenticated",
       setEditing,
+      setSelectedColor,
       save,
       cancel,
     }),
-    [cancel, editing, enabled, highlights, isSaving, justSaved, save, status]
+    [cancel, editing, enabled, highlights, isSaving, justSaved, save, selectedColor, status]
   );
 
-  const addHighlight = useCallback(
-    (text: string) => {
-      const normalized = normalizeHighlightText(text);
-      if (normalized.length < 3) return;
-      setHighlights((prev) => {
-        if (prev.some((item) => item.text === normalized)) return prev;
-        return [...prev, { id: createHighlightId(), text: normalized }];
-      });
-    },
-    []
-  );
+  const addHighlight = useCallback((text: string, color: HighlightColor) => {
+    const normalized = normalizeHighlightText(text);
+    if (normalized.length < 3) return;
+    setHighlights((prev) => {
+      if (prev.some((item) => item.text === normalized)) {
+        return prev.map((item) => (item.text === normalized ? { ...item, color } : item));
+      }
+      return [...prev, { id: createHighlightId(), text: normalized, color }];
+    });
+  }, []);
 
   const removeHighlight = useCallback((id: string) => {
     setHighlights((prev) => prev.filter((item) => item.id !== id));
@@ -192,7 +208,7 @@ export function LessonHighlightShell({
 
   return (
     <HighlightContext.Provider value={value}>
-      <HighlightActionsContext.Provider value={{ addHighlight, removeHighlight }}>
+      <HighlightActionsContext.Provider value={{ addHighlight, removeHighlight, selectedColor }}>
         {children}
       </HighlightActionsContext.Provider>
     </HighlightContext.Provider>
@@ -200,17 +216,57 @@ export function LessonHighlightShell({
 }
 
 const HighlightActionsContext = createContext<{
-  addHighlight: (text: string) => void;
+  addHighlight: (text: string, color: HighlightColor) => void;
   removeHighlight: (id: string) => void;
+  selectedColor: HighlightColor;
 } | null>(null);
+
+function ColorPicker({
+  value,
+  onChange,
+}: {
+  value: HighlightColor;
+  onChange: (color: HighlightColor) => void;
+}) {
+  return (
+    <div className="flex items-center gap-1.5" role="radiogroup" aria-label="Highlight color">
+      {HIGHLIGHT_COLORS.map((color) => (
+        <button
+          key={color}
+          type="button"
+          role="radio"
+          aria-checked={value === color}
+          aria-label={color}
+          title={color}
+          onClick={() => onChange(color)}
+          className={cn(
+            "h-6 w-6 rounded-full border-2 transition-transform",
+            COLOR_SWATCHES[color],
+            value === color ? "scale-110 ring-2 ring-offset-1 ring-text-primary/40" : "opacity-80 hover:opacity-100"
+          )}
+        />
+      ))}
+    </div>
+  );
+}
 
 export function HighlightToolbar() {
   const ctx = useHighlightContext();
   const pathname = usePathname();
   if (!ctx?.enabled) return null;
 
-  const { editing, highlights, isSaving, justSaved, isAuthenticated, setEditing, save, cancel } =
-    ctx;
+  const {
+    editing,
+    highlights,
+    selectedColor,
+    isSaving,
+    justSaved,
+    isAuthenticated,
+    setEditing,
+    setSelectedColor,
+    save,
+    cancel,
+  } = ctx;
 
   return (
     <div className="flex flex-wrap items-center gap-2" data-no-highlight>
@@ -233,6 +289,7 @@ export function HighlightToolbar() {
           </span>
         )}
       </button>
+      {editing && <ColorPicker value={selectedColor} onChange={setSelectedColor} />}
       <button
         type="button"
         onClick={() => void save()}
@@ -300,7 +357,7 @@ export function HighlightCanvas({ children }: { children: ReactNode }) {
     if (anchorEl?.closest("button, a, nav, pre, code, svg, [data-no-highlight]")) return;
     const text = normalizeHighlightText(selection.toString());
     if (text.length < 3) return;
-    actions.addHighlight(text);
+    actions.addHighlight(text, actions.selectedColor);
     selection.removeAllRanges();
   }, [actions, editing]);
 
@@ -324,12 +381,17 @@ export function HighlightCanvas({ children }: { children: ReactNode }) {
   return (
     <div className="space-y-6">
       {editing && (
-        <div className="not-prose flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-400/10 px-4 py-3 text-sm text-text-secondary">
-          <Highlighter className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-300" />
-          <p>
-            Select any sentence to highlight it. Click a highlight to remove it, then press{" "}
-            <strong>Save</strong> so it stays on this module next time.
-          </p>
+        <div className="not-prose flex flex-col gap-3 rounded-xl border border-amber-400/40 bg-amber-400/10 px-4 py-3 text-sm text-text-secondary sm:flex-row sm:items-center">
+          <div className="flex items-start gap-2 min-w-0">
+            <Highlighter className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-300" />
+            <p>
+              Pick a color, then select text to highlight it. Click a highlight to remove it, then press{" "}
+              <strong>Save</strong>.
+            </p>
+          </div>
+          {ctx && (
+            <ColorPicker value={ctx.selectedColor} onChange={ctx.setSelectedColor} />
+          )}
         </div>
       )}
       <div

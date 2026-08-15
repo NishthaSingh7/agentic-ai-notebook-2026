@@ -1,8 +1,17 @@
 export const HIGHLIGHTS_STORAGE_KEY = "agentic-ai-highlights";
 
+export const HIGHLIGHT_COLORS = ["yellow", "green", "orange", "blue", "red"] as const;
+export type HighlightColor = (typeof HIGHLIGHT_COLORS)[number];
+export const DEFAULT_HIGHLIGHT_COLOR: HighlightColor = "yellow";
+
+export function isHighlightColor(value: unknown): value is HighlightColor {
+  return typeof value === "string" && (HIGHLIGHT_COLORS as readonly string[]).includes(value);
+}
+
 export interface ModuleHighlight {
   id: string;
   text: string;
+  color: HighlightColor;
 }
 
 export type HighlightsMap = Record<string, ModuleHighlight[]>;
@@ -19,7 +28,7 @@ export function sanitizeHighlights(raw: unknown): ModuleHighlight[] {
 
   for (const item of raw) {
     if (!item || typeof item !== "object") continue;
-    const record = item as { id?: unknown; text?: unknown };
+    const record = item as { id?: unknown; text?: unknown; color?: unknown };
     const text = typeof record.text === "string" ? normalizeHighlightText(record.text) : "";
     if (text.length < 3 || text.length > 400) continue;
     if (seen.has(text)) continue;
@@ -28,7 +37,11 @@ export function sanitizeHighlights(raw: unknown): ModuleHighlight[] {
       typeof record.id === "string" && record.id.trim().length > 0
         ? record.id.trim()
         : createHighlightId();
-    result.push({ id, text });
+    result.push({
+      id,
+      text,
+      color: isHighlightColor(record.color) ? record.color : DEFAULT_HIGHLIGHT_COLOR,
+    });
     if (result.length >= 50) break;
   }
 
@@ -94,15 +107,16 @@ export function unwrapLessonHighlights(root: HTMLElement) {
   });
 }
 
-function wrapMatchInTextNode(node: Text, search: string, id: string): boolean {
+function wrapMatchInTextNode(node: Text, search: string, id: string, color: HighlightColor): boolean {
   const idx = node.data.indexOf(search);
   if (idx === -1) return false;
   const range = document.createRange();
   range.setStart(node, idx);
   range.setEnd(node, idx + search.length);
   const mark = document.createElement("mark");
-  mark.className = "lesson-highlight";
+  mark.className = `lesson-highlight lesson-highlight-${color}`;
   mark.dataset.highlightId = id;
+  mark.dataset.highlightColor = color;
   mark.title = "Highlighted while studying";
   try {
     range.surroundContents(mark);
@@ -118,6 +132,7 @@ export function applyLessonHighlights(root: HTMLElement, highlights: ModuleHighl
   for (const highlight of highlights) {
     const search = normalizeHighlightText(highlight.text);
     if (search.length < 3) continue;
+    const color = isHighlightColor(highlight.color) ? highlight.color : DEFAULT_HIGHLIGHT_COLOR;
 
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
       acceptNode: acceptTextNode,
@@ -125,7 +140,10 @@ export function applyLessonHighlights(root: HTMLElement, highlights: ModuleHighl
 
     let node = walker.nextNode() as Text | null;
     while (node) {
-      if (wrapMatchInTextNode(node, search, highlight.id) || wrapMatchInTextNode(node, highlight.text, highlight.id)) {
+      if (
+        wrapMatchInTextNode(node, search, highlight.id, color) ||
+        wrapMatchInTextNode(node, highlight.text, highlight.id, color)
+      ) {
         break;
       }
       node = walker.nextNode() as Text | null;

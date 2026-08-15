@@ -275,17 +275,57 @@ code {
 }
 
 mark.lesson-highlight {
-  background: #fde68a;
   color: inherit;
   padding: 0.08em 0.12em;
   border-radius: 0.2em;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
+  background: #fde68a;
 }
 
-.dark mark.lesson-highlight {
-  background: color-mix(in srgb, #854d0e 85%, transparent);
+mark.lesson-highlight-yellow {
+  background: #fde68a;
+}
+
+mark.lesson-highlight-green {
+  background: #bbf7d0;
+}
+
+mark.lesson-highlight-orange {
+  background: #fed7aa;
+}
+
+mark.lesson-highlight-blue {
+  background: #bfdbfe;
+}
+
+mark.lesson-highlight-red {
+  background: #fecaca;
+}
+
+.dark mark.lesson-highlight-yellow {
+  background: color-mix(in srgb, #854d0e 80%, transparent);
   color: #fef9c3;
+}
+
+.dark mark.lesson-highlight-green {
+  background: color-mix(in srgb, #166534 75%, transparent);
+  color: #dcfce7;
+}
+
+.dark mark.lesson-highlight-orange {
+  background: color-mix(in srgb, #9a3412 80%, transparent);
+  color: #ffedd5;
+}
+
+.dark mark.lesson-highlight-blue {
+  background: color-mix(in srgb, #1e40af 75%, transparent);
+  color: #dbeafe;
+}
+
+.dark mark.lesson-highlight-red {
+  background: color-mix(in srgb, #9f1239 75%, transparent);
+  color: #fecdd3;
 }
 
 .highlight-canvas-editing {
