@@ -6,6 +6,7 @@ import { CurriculumLessonView } from "@/components/curriculum-lesson-view";
 import { Phase0LessonView } from "@/components/phase0-lesson-view";
 import {
   isCodeWalkthroughPhase,
+  isHighlightPhase,
   isVisualFirstPhase,
 } from "@/lib/curriculum-phases";
 
@@ -53,6 +54,7 @@ export default async function ModulePage({ params }: Props) {
         nextMod={nextMod}
         slug={slug}
         includeCode={isCodeWalkthroughPhase(slug)}
+        enableHighlights={isHighlightPhase(slug)}
       />
     );
   }

@@ -52,6 +52,13 @@ export function isVisualFirstPhase(phaseSlug: string): boolean {
   return VISUAL_FIRST_PHASE_SLUGS.has(phaseSlug);
 }
 
+/** Phases where students can highlight lesson text and persist it to MongoDB. */
+export const HIGHLIGHT_PHASE_SLUGS = new Set(["llm-engineering"]);
+
+export function isHighlightPhase(phaseSlug: string): boolean {
+  return HIGHLIGHT_PHASE_SLUGS.has(phaseSlug);
+}
+
 /** All roadmap phases use the unified curriculum lesson layout. */
 export function usesCurriculumLayout(_phaseSlug: string): boolean {
   return true;

@@ -20,6 +20,11 @@ import { LessonCodeBlock } from "@/components/lesson-code-block";
 import { buildConceptBullets } from "@/lib/lesson-concept-bullets";
 import { buildLessonSections, VisualWorkflows } from "@/components/lesson-visual-blocks";
 import { ModuleCompleteButton } from "@/components/module-complete-button";
+import {
+  HighlightCanvas,
+  HighlightToolbar,
+  LessonHighlightShell,
+} from "@/components/lesson-highlights";
 import { cn } from "@/lib/utils";
 
 interface Phase0LessonViewProps {
@@ -30,6 +35,7 @@ interface Phase0LessonViewProps {
   nextMod: Module | null;
   slug: string;
   includeCode?: boolean;
+  enableHighlights?: boolean;
 }
 
 function Phase0ModuleStrip({
@@ -105,6 +111,7 @@ export function Phase0LessonView({
   nextMod,
   slug,
   includeCode = false,
+  enableHighlights = false,
 }: Phase0LessonViewProps) {
   const moduleIndex = phase.modules.findIndex((m) => m.slug === mod.slug);
   const conceptBullets = buildConceptBullets(content.concept, content.technicalExplanation).slice(0, 5);
@@ -130,6 +137,7 @@ export function Phase0LessonView({
     content.diagram || content.workflowDiagrams?.length || content.analogyDiagram;
 
   return (
+    <LessonHighlightShell enabled={enableHighlights} phaseSlug={slug} moduleSlug={mod.slug}>
     <div className="min-h-screen bg-background">
       <div className="border-b border-border bg-surface/80 backdrop-blur-sm sticky top-16 z-40">
         <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
@@ -147,6 +155,8 @@ export function Phase0LessonView({
 
         <div className="grid xl:grid-cols-[1fr_240px] gap-8 items-start">
           <div className="space-y-6 min-w-0">
+            <HighlightCanvas>
+            <div className="space-y-6">
             {/* Hero */}
             <header className="rounded-2xl border border-border bg-gradient-to-br from-surface via-surface to-accent/5 p-6 sm:p-8">
               <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
@@ -163,11 +173,14 @@ export function Phase0LessonView({
                     Module {moduleIndex + 1} of {phase.modules.length}
                   </span>
                 </div>
-                <ModuleCompleteButton
-                  phaseSlug={slug}
-                  moduleSlug={mod.slug}
-                  moduleTitle={mod.title}
-                />
+                <div className="flex flex-wrap items-center gap-2" data-no-highlight>
+                  <HighlightToolbar />
+                  <ModuleCompleteButton
+                    phaseSlug={slug}
+                    moduleSlug={mod.slug}
+                    moduleTitle={mod.title}
+                  />
+                </div>
               </div>
               <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3">{mod.title}</h1>
               <p className="text-base text-text-secondary max-w-2xl leading-relaxed">
@@ -190,7 +203,9 @@ export function Phase0LessonView({
                   Start here — <strong>scroll</strong> inside each diagram frame to explore, then use{" "}
                   <strong>+</strong> / <strong>−</strong> to zoom up to 200% if needed.
                 </p>
-                <VisualWorkflows content={content} mod={mod} visualFirst />
+                <div data-no-highlight>
+                  <VisualWorkflows content={content} mod={mod} visualFirst />
+                </div>
               </SectionCard>
             )}
 
@@ -270,12 +285,14 @@ export function Phase0LessonView({
                   <strong className="text-amber-600 dark:text-amber-400/90">{mod.title}</strong>{" "}
                   happens in the code.
                 </p>
-                <LessonCodeBlock
-                  code={content.code}
-                  language={content.codeLanguage}
-                  title={mod.title}
-                  showFocusHighlights
-                />
+                <div data-no-highlight>
+                  <LessonCodeBlock
+                    code={content.code}
+                    language={content.codeLanguage}
+                    title={mod.title}
+                    showFocusHighlights
+                  />
+                </div>
               </SectionCard>
             )}
 
@@ -322,6 +339,9 @@ export function Phase0LessonView({
                 </ul>
               </SectionCard>
             )}
+
+            </div>
+            </HighlightCanvas>
 
             {/* Prev / Next */}
             <nav className="grid sm:grid-cols-2 gap-4 pt-2">
@@ -387,5 +407,6 @@ export function Phase0LessonView({
         </div>
       </div>
     </div>
+    </LessonHighlightShell>
   );
 }

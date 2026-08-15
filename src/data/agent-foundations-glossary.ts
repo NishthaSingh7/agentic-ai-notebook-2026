@@ -11,7 +11,7 @@ export type AgentGlossaryCategory =
 export interface PhaseGlossaryTerm {
   term: string;
   meaning: string;
-  category: AgentGlossaryCategory;
+  category: string;
   /** Extra search keywords (abbreviations, synonyms) */
   aliases?: string[];
 }
@@ -556,7 +556,7 @@ export function getAgentFoundationsGlossaryByCategory(): Record<
     grouped[cat] = [];
   }
   for (const term of agentFoundationsGlossary) {
-    grouped[term.category].push(term);
+    grouped[term.category as AgentGlossaryCategory].push(term);
   }
   for (const cat of agentGlossaryCategories) {
     grouped[cat].sort((a, b) => a.term.localeCompare(b.term));

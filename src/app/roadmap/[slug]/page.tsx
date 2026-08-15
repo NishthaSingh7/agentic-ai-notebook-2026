@@ -11,6 +11,12 @@ import {
   agentGlossaryCategories,
   getAgentFoundationsGlossaryByCategory,
 } from "@/data/agent-foundations-glossary";
+import {
+  getLlmEngineeringGlossaryByCategory,
+  llmEngineeringGlossary,
+  llmGlossaryCategories,
+  llmGlossaryPopularTerms,
+} from "@/data/llm-engineering-glossary";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -89,6 +95,18 @@ export default async function PhasePage({ params }: Props) {
               terms={agentFoundationsGlossary}
               byCategory={getAgentFoundationsGlossaryByCategory()}
               categories={agentGlossaryCategories}
+            />
+          )}
+
+          {slug === "llm-engineering" && (
+            <PhaseGlossarySearch
+              variant="sidebar"
+              title="LLM Glossary"
+              terms={llmEngineeringGlossary}
+              byCategory={getLlmEngineeringGlossaryByCategory()}
+              categories={llmGlossaryCategories}
+              popularTerms={llmGlossaryPopularTerms}
+              searchPlaceholder="Token, Ollama, streaming..."
             />
           )}
 

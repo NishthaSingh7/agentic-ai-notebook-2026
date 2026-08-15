@@ -2,20 +2,22 @@
 
 import { useMemo, useState } from "react";
 import { BookMarked, ChevronDown, ChevronUp, Search, X } from "lucide-react";
-import type { AgentGlossaryCategory, PhaseGlossaryTerm } from "@/data/agent-foundations-glossary";
+import type { PhaseGlossaryTerm } from "@/data/agent-foundations-glossary";
 import { cn } from "@/lib/utils";
 
 interface PhaseGlossarySearchProps {
   title?: string;
   description?: string;
   terms: PhaseGlossaryTerm[];
-  byCategory: Record<AgentGlossaryCategory, PhaseGlossaryTerm[]>;
-  categories: AgentGlossaryCategory[];
+  byCategory: Record<string, PhaseGlossaryTerm[]>;
+  categories: string[];
+  popularTerms?: string[];
+  searchPlaceholder?: string;
   /** Compact sidebar layout — search-first, collapsed browse by default */
   variant?: "sidebar" | "inline";
 }
 
-const POPULAR_TERMS = [
+const DEFAULT_POPULAR_TERMS = [
   "ReAct",
   "HITL",
   "MCP",
@@ -71,11 +73,13 @@ export function PhaseGlossarySearch({
   terms,
   byCategory,
   categories,
+  popularTerms = DEFAULT_POPULAR_TERMS,
+  searchPlaceholder = "ReAct, HITL, trajectory...",
   variant = "sidebar",
 }: PhaseGlossarySearchProps) {
   const [query, setQuery] = useState("");
   const [browseOpen, setBrowseOpen] = useState(false);
-  const [activeCategory, setActiveCategory] = useState<AgentGlossaryCategory | "all">("all");
+  const [activeCategory, setActiveCategory] = useState<string>("all");
   const isSidebar = variant === "sidebar";
 
   const filtered = useMemo(() => {
@@ -127,7 +131,7 @@ export function PhaseGlossarySearch({
             setQuery(e.target.value);
             if (e.target.value.trim()) setBrowseOpen(false);
           }}
-          placeholder="ReAct, HITL, trajectory..."
+          placeholder={searchPlaceholder}
           className="w-full rounded-lg border border-border bg-background py-2 pl-8 pr-8 text-sm text-text-primary placeholder:text-text-muted outline-none focus:border-accent/40 transition-colors"
           aria-label="Search phase glossary"
         />
@@ -145,7 +149,7 @@ export function PhaseGlossarySearch({
 
       {!isSearching && (
         <div className="flex flex-wrap gap-1 mb-2">
-          {POPULAR_TERMS.map((name) => (
+          {popularTerms.map((name) => (
             <button
               key={name}
               type="button"

@@ -273,3 +273,32 @@ code {
 .mermaid-sketch svg .flowchart-link {
   stroke: #292524 !important;
 }
+
+mark.lesson-highlight {
+  background: #fde68a;
+  color: inherit;
+  padding: 0.08em 0.12em;
+  border-radius: 0.2em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.dark mark.lesson-highlight {
+  background: color-mix(in srgb, #854d0e 85%, transparent);
+  color: #fef9c3;
+}
+
+.highlight-canvas-editing {
+  outline: 2px dashed color-mix(in srgb, var(--accent) 45%, transparent);
+  outline-offset: 10px;
+  border-radius: 1.25rem;
+  cursor: text;
+}
+
+.highlight-canvas-editing mark.lesson-highlight {
+  cursor: pointer;
+}
+
+.highlight-canvas-editing mark.lesson-highlight:hover {
+  outline: 2px solid var(--accent);
+}
