@@ -17,17 +17,20 @@ import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Check, Highlighter, Loader2, Pencil, Save, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { pushLocalHighlightsToRemote } from "@/lib/highlight-remote";
 import {
   applyLessonHighlights,
   createHighlightId,
   DEFAULT_HIGHLIGHT_COLOR,
   HIGHLIGHT_COLORS,
+  HIGHLIGHTS_UPDATED_EVENT,
   highlightKey,
-  mergeHighlights,
   normalizeHighlightText,
+  persistModuleHighlights,
+  readHighlightsMeta,
   readLocalHighlights,
-  sanitizeHighlights,
   unwrapLessonHighlights,
+  writeHighlightsMeta,
   writeLocalHighlights,
   type HighlightColor,
   type ModuleHighlight,
@@ -48,6 +51,7 @@ interface HighlightContextValue {
   selectedColor: HighlightColor;
   isSaving: boolean;
   justSaved: boolean;
+  savedToAccount: boolean;
   isAuthenticated: boolean;
   setEditing: (value: boolean) => void;
   setSelectedColor: (color: HighlightColor) => void;
@@ -59,31 +63,6 @@ const HighlightContext = createContext<HighlightContextValue | null>(null);
 
 function useHighlightContext() {
   return useContext(HighlightContext);
-}
-
-async function fetchRemoteHighlights(
-  phaseSlug: string,
-  moduleSlug: string
-): Promise<ModuleHighlight[] | null> {
-  const params = new URLSearchParams({ phaseSlug, moduleSlug });
-  const response = await fetch(`/api/highlights?${params.toString()}`);
-  if (response.status === 401) return null;
-  if (!response.ok) return [];
-  const data = (await response.json()) as { highlights?: unknown };
-  return sanitizeHighlights(data.highlights);
-}
-
-async function saveRemoteHighlights(
-  phaseSlug: string,
-  moduleSlug: string,
-  highlights: ModuleHighlight[]
-): Promise<boolean> {
-  const response = await fetch("/api/highlights", {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ phaseSlug, moduleSlug, highlights }),
-  });
-  return response.ok;
 }
 
 export function LessonHighlightShell({
@@ -104,69 +83,68 @@ export function LessonHighlightShell({
   const [editing, setEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [justSaved, setJustSaved] = useState(false);
+  const [savedToAccount, setSavedToAccount] = useState(false);
   const [selectedColor, setSelectedColor] = useState<HighlightColor>(DEFAULT_HIGHLIGHT_COLOR);
+  const editingRef = useRef(false);
+  const metaBeforeEditRef = useRef(readHighlightsMeta());
+
+  const loadLocal = useCallback(() => {
+    const local = readLocalHighlights()[key] ?? [];
+    setHighlights(local);
+    setBaseline(local);
+  }, [key]);
+
+  useEffect(() => {
+    editingRef.current = editing;
+  }, [editing]);
 
   useEffect(() => {
     if (!enabled) return;
-
-    let cancelled = false;
-
-    async function load() {
-      const localMap = readLocalHighlights();
-      const local = localMap[key] ?? [];
-      if (!cancelled) {
-        setHighlights(local);
-        setBaseline(local);
-      }
-
-      if (status !== "authenticated") return;
-
-      const remote = await fetchRemoteHighlights(phaseSlug, moduleSlug);
-      if (cancelled || remote === null) return;
-
-      const merged = mergeHighlights(remote, local);
-      setHighlights(merged);
-      setBaseline(merged);
-      writeLocalHighlights({ ...readLocalHighlights(), [key]: merged });
-
-      if (merged.length !== remote.length) {
-        await saveRemoteHighlights(phaseSlug, moduleSlug, merged);
-      }
-    }
-
-    void load();
-
-    return () => {
-      cancelled = true;
+    loadLocal();
+    const onUpdated = () => {
+      if (editingRef.current) return;
+      loadLocal();
     };
-  }, [enabled, key, moduleSlug, phaseSlug, status]);
+    window.addEventListener(HIGHLIGHTS_UPDATED_EVENT, onUpdated);
+    return () => window.removeEventListener(HIGHLIGHTS_UPDATED_EVENT, onUpdated);
+  }, [enabled, loadLocal]);
 
   const persistLocal = useCallback(
     (next: ModuleHighlight[]) => {
-      writeLocalHighlights({ ...readLocalHighlights(), [key]: next });
+      persistModuleHighlights(phaseSlug, moduleSlug, next);
     },
-    [key]
+    [moduleSlug, phaseSlug]
   );
+
+  const beginEdit = useCallback(() => {
+    metaBeforeEditRef.current = readHighlightsMeta();
+    setBaseline(highlights);
+    setEditing(true);
+  }, [highlights]);
 
   const save = useCallback(async () => {
     persistLocal(highlights);
     setIsSaving(true);
     try {
+      let uploaded = false;
       if (status === "authenticated") {
-        await saveRemoteHighlights(phaseSlug, moduleSlug, highlights);
+        uploaded = await pushLocalHighlightsToRemote();
       }
       setBaseline(highlights);
       setEditing(false);
+      setSavedToAccount(uploaded);
       setJustSaved(true);
     } finally {
       setIsSaving(false);
     }
-  }, [highlights, moduleSlug, persistLocal, phaseSlug, status]);
+  }, [highlights, persistLocal, status]);
 
   const cancel = useCallback(() => {
     setHighlights(baseline);
+    writeLocalHighlights({ ...readLocalHighlights(), [key]: baseline });
+    writeHighlightsMeta(metaBeforeEditRef.current);
     setEditing(false);
-  }, [baseline]);
+  }, [baseline, key]);
 
   useEffect(() => {
     if (!justSaved) return;
@@ -182,29 +160,56 @@ export function LessonHighlightShell({
       selectedColor,
       isSaving,
       justSaved,
+      savedToAccount,
       isAuthenticated: status === "authenticated",
-      setEditing,
+      setEditing: (value: boolean) => {
+        if (value) beginEdit();
+        else setEditing(false);
+      },
       setSelectedColor,
       save,
       cancel,
     }),
-    [cancel, editing, enabled, highlights, isSaving, justSaved, save, selectedColor, status]
+    [
+      beginEdit,
+      cancel,
+      editing,
+      enabled,
+      highlights,
+      isSaving,
+      justSaved,
+      save,
+      savedToAccount,
+      selectedColor,
+      status,
+    ]
   );
 
-  const addHighlight = useCallback((text: string, color: HighlightColor) => {
-    const normalized = normalizeHighlightText(text);
-    if (normalized.length < 3) return;
-    setHighlights((prev) => {
-      if (prev.some((item) => item.text === normalized)) {
-        return prev.map((item) => (item.text === normalized ? { ...item, color } : item));
-      }
-      return [...prev, { id: createHighlightId(), text: normalized, color }];
-    });
-  }, []);
+  const addHighlight = useCallback(
+    (text: string, color: HighlightColor) => {
+      const normalized = normalizeHighlightText(text);
+      if (normalized.length < 3) return;
+      setHighlights((prev) => {
+        const next = prev.some((item) => item.text === normalized)
+          ? prev.map((item) => (item.text === normalized ? { ...item, color } : item))
+          : [...prev, { id: createHighlightId(), text: normalized, color }];
+        persistLocal(next);
+        return next;
+      });
+    },
+    [persistLocal]
+  );
 
-  const removeHighlight = useCallback((id: string) => {
-    setHighlights((prev) => prev.filter((item) => item.id !== id));
-  }, []);
+  const removeHighlight = useCallback(
+    (id: string) => {
+      setHighlights((prev) => {
+        const next = prev.filter((item) => item.id !== id);
+        persistLocal(next);
+        return next;
+      });
+    },
+    [persistLocal]
+  );
 
   return (
     <HighlightContext.Provider value={value}>
@@ -224,12 +229,14 @@ const HighlightActionsContext = createContext<{
 function ColorPicker({
   value,
   onChange,
+  size = "md",
 }: {
   value: HighlightColor;
   onChange: (color: HighlightColor) => void;
+  size?: "md" | "lg";
 }) {
   return (
-    <div className="flex items-center gap-1.5" role="radiogroup" aria-label="Highlight color">
+    <div className="flex items-center gap-2" role="radiogroup" aria-label="Highlight color">
       {HIGHLIGHT_COLORS.map((color) => (
         <button
           key={color}
@@ -240,9 +247,10 @@ function ColorPicker({
           title={color}
           onClick={() => onChange(color)}
           className={cn(
-            "h-6 w-6 rounded-full border-2 transition-transform",
+            "rounded-full border-2 transition-transform",
+            size === "lg" ? "h-8 w-8" : "h-6 w-6",
             COLOR_SWATCHES[color],
-            value === color ? "scale-110 ring-2 ring-offset-1 ring-text-primary/40" : "opacity-80 hover:opacity-100"
+            value === color ? "scale-110 ring-2 ring-offset-2 ring-text-primary/40" : "opacity-80 hover:opacity-100"
           )}
         />
       ))}
@@ -258,12 +266,11 @@ export function HighlightToolbar() {
   const {
     editing,
     highlights,
-    selectedColor,
     isSaving,
     justSaved,
+    savedToAccount,
     isAuthenticated,
     setEditing,
-    setSelectedColor,
     save,
     cancel,
   } = ctx;
@@ -289,7 +296,6 @@ export function HighlightToolbar() {
           </span>
         )}
       </button>
-      {editing && <ColorPicker value={selectedColor} onChange={setSelectedColor} />}
       <button
         type="button"
         onClick={() => void save()}
@@ -314,7 +320,11 @@ export function HighlightToolbar() {
       {justSaved && (
         <span className="inline-flex items-center gap-1 text-xs text-success">
           <Check className="h-3.5 w-3.5" />
-          {isAuthenticated ? "Saved" : "Saved on this device"}
+          {savedToAccount
+            ? "Saved to your account"
+            : isAuthenticated
+              ? "Saved on this device · will sync at night"
+              : "Saved on this device"}
         </span>
       )}
 
@@ -323,7 +333,7 @@ export function HighlightToolbar() {
           href={`/login?callbackUrl=${encodeURIComponent(pathname)}`}
           className="text-xs text-text-muted hover:text-accent"
         >
-          Sign in to sync highlights
+          Sign in to sync highlights at night
         </Link>
       )}
     </div>
@@ -344,7 +354,7 @@ export function HighlightCanvas({ children }: { children: ReactNode }) {
     return () => unwrapLessonHighlights(root);
   }, [ctx?.enabled, highlights]);
 
-  const handleMouseUp = useCallback(() => {
+  const captureSelection = useCallback(() => {
     if (!editing || !actions) return;
     const root = rootRef.current;
     const selection = window.getSelection();
@@ -360,6 +370,14 @@ export function HighlightCanvas({ children }: { children: ReactNode }) {
     actions.addHighlight(text, actions.selectedColor);
     selection.removeAllRanges();
   }, [actions, editing]);
+
+  const handlePointerUp = useCallback(() => {
+    captureSelection();
+  }, [captureSelection]);
+
+  const handleTouchEnd = useCallback(() => {
+    window.setTimeout(captureSelection, 80);
+  }, [captureSelection]);
 
   const handleClick = useCallback(
     (event: MouseEvent<HTMLDivElement>) => {
@@ -379,29 +397,34 @@ export function HighlightCanvas({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className={cn("space-y-6", editing && "pb-20")}>
       {editing && (
-        <div className="not-prose flex flex-col gap-3 rounded-xl border border-amber-400/40 bg-amber-400/10 px-4 py-3 text-sm text-text-secondary sm:flex-row sm:items-center">
-          <div className="flex items-start gap-2 min-w-0">
-            <Highlighter className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-300" />
-            <p>
-              Pick a color, then select text to highlight it. Click a highlight to remove it, then press{" "}
-              <strong>Save</strong>.
-            </p>
-          </div>
-          {ctx && (
-            <ColorPicker value={ctx.selectedColor} onChange={ctx.setSelectedColor} />
-          )}
+        <div className="not-prose flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-400/10 px-4 py-3 text-sm text-text-secondary">
+          <Highlighter className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-300" />
+          <p>
+            Pick a color from the bar at the bottom, then select text. Click a highlight to remove it.
+            Tap Save to store them on your account. If you skip Save, they stay on this device and sync at night.
+          </p>
         </div>
       )}
       <div
         ref={rootRef}
-        onMouseUp={handleMouseUp}
+        onPointerUp={handlePointerUp}
+        onTouchEnd={handleTouchEnd}
         onClick={handleClick}
         className={cn(editing && "highlight-canvas-editing")}
       >
         {children}
       </div>
+      {editing && ctx && (
+        <div
+          data-no-highlight
+          className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 not-prose flex items-center gap-3 rounded-full border border-border bg-surface/95 px-4 py-2.5 shadow-lg backdrop-blur-sm"
+        >
+          <span className="hidden text-xs font-medium text-text-muted sm:inline">Color</span>
+          <ColorPicker size="lg" value={ctx.selectedColor} onChange={ctx.setSelectedColor} />
+        </div>
+      )}
     </div>
   );
 }

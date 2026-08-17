@@ -134,6 +134,10 @@ const phaseDiagrams: Record<string, (title: string) => string> = {
     B --> C[Memory Store]
     C --> D[Context Assembly]
     D --> E[LLM]`,
+  "context-engineering": (t) => `flowchart TD
+    A[Memory + RAG + Tools] --> B["${t}"]
+    B --> C[Budgeted Packet]
+    C --> D[Model Call]`,
   "tool-calling": (t) => `flowchart TD
     A[LLM] -->|selects| B["${t}"]
     B --> C[External System]
@@ -144,10 +148,43 @@ const phaseDiagrams: Record<string, (title: string) => string> = {
     B --> C["${t}"]
     C --> D[External Resource]`,
   "agent-frameworks": (t) => `flowchart TD
-    A[User Input] --> B["${t}"]
-    B --> C[Graph / Workflow]
-    C --> D[Tools + LLM]
-    D --> E[Output]`,
+    A[Need an orchestrator] --> B["${t}"]
+    B --> C[Compare runtimes]
+    C --> D[Pick one and ship]`,
+  langgraph: (t) => `flowchart TD
+    A[START] --> B["${t}"]
+    B --> C{Route}
+    C -->|tool| D[Node]
+    C -->|done| E[END]
+    D --> B`,
+  "openai-agents": (t) => `flowchart TD
+    A[User] --> B[Triage]
+    B --> C["${t}"]
+    C --> D[Specialist / tool]
+    D --> E[Trace]`,
+  "claude-agent-sdk": (t) => `flowchart TD
+    A[User] --> B[Claude Agent Loop]
+    B --> C["${t}"]
+    C --> D[Tool / MCP / Subagent]
+    D --> B`,
+  crewai: (t) => `flowchart LR
+    A[Task] --> B["${t}"]
+    B --> C[Role]
+    C --> D[Next task]`,
+  "pydantic-ai": (t) => `flowchart TD
+    A[User] --> B["${t}"]
+    B --> C[Typed tool]
+    C --> D[result_type]`,
+  autogen: (t) => `flowchart TD
+    A[User] --> B[Microsoft Agent Framework]
+    B --> C["${t}"]
+    C --> D[Workflow / HITL]
+    D --> B`,
+  "google-adk": (t) => `flowchart TD
+    A[User] --> B[LlmAgent]
+    B --> C["${t}"]
+    C --> D[Sub-agent / tool]
+    D --> B`,
   "agent-design-patterns": (t) => `flowchart TD
     A[Task] --> B["${t} Pattern"]
     B --> C[Reasoning Loop]
@@ -169,6 +206,11 @@ const phaseDiagrams: Record<string, (title: string) => string> = {
     A[Traffic] --> B["${t}"]
     B --> C[Agent Service]
     C --> D[Monitor + Scale]`,
+  "ag-ui": (t) => `flowchart TD
+    A[Agent Runtime] --> B["${t}"]
+    B --> C[Frontend]
+    C --> D[HITL / Shared State]
+    D --> A`,
   "browser-agents": (t) => `flowchart TD
     A[Task] --> B["${t}"]
     B --> C[Browser]

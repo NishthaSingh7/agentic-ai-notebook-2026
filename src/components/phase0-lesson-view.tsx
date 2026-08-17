@@ -111,7 +111,7 @@ export function Phase0LessonView({
   nextMod,
   slug,
   includeCode = false,
-  enableHighlights = false,
+  enableHighlights = true,
 }: Phase0LessonViewProps) {
   const moduleIndex = phase.modules.findIndex((m) => m.slug === mod.slug);
   const conceptBullets = buildConceptBullets(content.concept, content.technicalExplanation).slice(0, 5);

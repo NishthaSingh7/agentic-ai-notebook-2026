@@ -252,7 +252,7 @@ code {
   overflow: visible !important;
   white-space: normal !important;
   word-break: break-word !important;
-  overflow-wrap: anywhere !important;
+  overflow-wrap: break-word !important;
   text-overflow: clip !important;
   max-width: none !important;
 }
@@ -333,6 +333,8 @@ mark.lesson-highlight-red {
   outline-offset: 10px;
   border-radius: 1.25rem;
   cursor: text;
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 .highlight-canvas-editing mark.lesson-highlight {

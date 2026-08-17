@@ -33,6 +33,17 @@ export const glossary: GlossaryEntry[] = [
     interviewTip: "Draw the loop diagram and explain termination conditions, max iterations, and error recovery strategies.",
   },
   {
+    term: "AG-UI",
+    slug: "ag-ui",
+    simpleDefinition: "An event protocol for connecting agent backends to user-facing apps — streaming, shared state, tool cards, and human-in-the-loop.",
+    technicalDefinition:
+      "Agent ↔ user protocol: the backend emits events (tokens, tool calls, state patches, HITL interrupts) and the frontend renders them. Complements MCP (tools/data) and A2A (agent-to-agent).",
+    analogy: "USB-C for the human side of the agent. MCP was USB-C for tools.",
+    whereUsed: "Agent chat UIs, approval queues, generative UI, full-stack agent products.",
+    relatedConcepts: ["MCP", "A2A", "HITL", "Streaming"],
+    interviewTip: "Draw the protocol stack: MCP → tools/data, A2A → agents, AG-UI → users. A spinner plus a chat box is not an agent UI.",
+  },
+  {
     term: "Attention",
     slug: "attention",
     simpleDefinition: "A mechanism that lets models focus on the most relevant parts of input when making predictions.",
@@ -46,13 +57,13 @@ export const glossary: GlossaryEntry[] = [
   {
     term: "AutoGen",
     slug: "autogen",
-    simpleDefinition: "A Microsoft framework for building multi-agent conversations where AI agents collaborate on tasks.",
+    simpleDefinition: "Microsoft's legacy multi-agent conversation framework — now in maintenance mode. Microsoft Agent Framework is the successor.",
     technicalDefinition:
-      "An open-source framework providing agent abstractions, conversation patterns (group chat, sequential), and tool integration for orchestrating multiple LLM-powered agents with human-in-the-loop support.",
+      "An open-source framework providing agent abstractions, conversation patterns (group chat, sequential), and tool integration. New Microsoft-stack work should use Agent Framework; keep AutoGen for migration and existing systems.",
     analogy: "Like a conference room where several specialists discuss a problem until they reach a solution.",
-    whereUsed: "Multi-agent research, code generation pipelines, collaborative problem-solving workflows.",
-    relatedConcepts: ["Agent", "CrewAI", "LangGraph", "Tool Calling"],
-    interviewTip: "Compare AutoGen's conversational multi-agent model with LangGraph's graph-based orchestration.",
+    whereUsed: "Existing multi-agent research and code-generation pipelines; migration to Microsoft Agent Framework.",
+    relatedConcepts: ["Microsoft Agent Framework", "CrewAI", "LangGraph", "Tool Calling"],
+    interviewTip: "Say AutoGen is maintenance-mode. Contrast its conversational model with LangGraph graphs and Microsoft Agent Framework workflows.",
   },
   {
     term: "BM25",
@@ -97,6 +108,28 @@ export const glossary: GlossaryEntry[] = [
     whereUsed: "RAG ingestion pipelines, long document Q&A, knowledge base indexing.",
     relatedConcepts: ["RAG", "Embedding", "Context Window", "Document Loader"],
     interviewTip: "Discuss chunk size tradeoffs: too small loses context, too large dilutes relevance. Mention overlap and semantic chunking.",
+  },
+  {
+    term: "Claude Agent SDK",
+    slug: "claude-agent-sdk",
+    simpleDefinition: "Anthropic's production SDK for the same agent loop used by Claude Code — tools, permissions, hooks, MCP, and sandboxing.",
+    technicalDefinition:
+      "A Python/TypeScript runtime exposing Claude Code's agent loop: built-in tools, permission gates, hooks, MCP servers, subagents, session resume, context compaction, and sandboxed code execution.",
+    analogy: "Claude Code is the reference app. The SDK is the same engine you drop into your own product.",
+    whereUsed: "Coding agents, long-running research agents, Claude-native production apps.",
+    relatedConcepts: ["Agent Loop", "MCP", "Context Engineering", "Coding Agents"],
+    interviewTip: "Contrast Claude Agent SDK (permissions + coding loop) with LangGraph (explicit graphs) and OpenAI Agents SDK (handoffs + guardrails).",
+  },
+  {
+    term: "Context Engineering",
+    slug: "context-engineering",
+    simpleDefinition: "Building the packet the model sees this turn — not just writing a prompt.",
+    technicalDefinition:
+      "Assembling, selecting, compressing, isolating, routing, and budgeting instructions, memory, retrieval, tool results, and state into a finite context window so the model can act reliably.",
+    analogy: "Prompting is the recipe card. Context engineering is packing the mise en place onto one cutting board.",
+    whereUsed: "Every production agent turn, long-running jobs, RAG + tool loops, coding agents.",
+    relatedConcepts: ["Context Window", "Memory", "RAG", "Tool Calling"],
+    interviewTip: "Draw the packet: system + tools + memory + retrieval + tool results + live user. Explain what you drop first when the budget is tight.",
   },
   {
     term: "Context Window",
@@ -363,6 +396,17 @@ export const glossary: GlossaryEntry[] = [
     interviewTip: "Describe memory types and tradeoffs: buffer vs summary vs vector retrieval. Mention when to use external DB vs in-context.",
   },
   {
+    term: "Microsoft Agent Framework",
+    slug: "microsoft-agent-framework",
+    simpleDefinition: "Microsoft's current agent runtime — the successor to AutoGen and Semantic Kernel.",
+    technicalDefinition:
+      "A unified framework for agents, tools, sessions, state, middleware, graph workflows, durable execution, HITL, telemetry, MCP, and A2A, with AutoGen remaining as migration awareness.",
+    analogy: "The current Microsoft kitchen. AutoGen and Semantic Kernel are the old appliances you migrate off.",
+    whereUsed: "Azure / Microsoft-stack agent products, enterprise HITL workflows, multi-agent teams.",
+    relatedConcepts: ["AutoGen", "Semantic Kernel", "LangGraph", "A2A"],
+    interviewTip: "Do not present AutoGen and Agent Framework as equals. Agent Framework is the successor; AutoGen is maintenance mode.",
+  },
+  {
     term: "MoE",
     slug: "moe",
     simpleDefinition: "Mixture of Experts — a model architecture where only some neural network parts activate per input.",
@@ -585,13 +629,13 @@ export const glossary: GlossaryEntry[] = [
   {
     term: "Semantic Kernel",
     slug: "semantic-kernel",
-    simpleDefinition: "Microsoft's SDK for integrating AI services into applications with plugins and planners.",
+    simpleDefinition: "Microsoft's legacy SDK for plugins and planners — now superseded by Microsoft Agent Framework (Semantic Kernel is migration awareness).",
     technicalDefinition:
-      "An open-source orchestration SDK providing abstractions for prompts, plugins (tools), memory, and planners that decompose goals into steps across .NET, Python, and Java applications.",
+      "An open-source orchestration SDK providing abstractions for prompts, plugins (tools), memory, and planners across .NET, Python, and Java. New Microsoft-stack work should use Agent Framework.",
     analogy: "Like a Swiss Army knife for AI — standardized pieces you snap together for any application.",
     whereUsed: "Enterprise .NET/Python apps, Microsoft ecosystem integrations, plugin-based agents.",
-    relatedConcepts: ["Agent", "Tool Calling", "Memory", "Plan Execute"],
-    interviewTip: "Semantic Kernel's plugin model is its core abstraction — compare with LangChain's tool ecosystem.",
+    relatedConcepts: ["Microsoft Agent Framework", "Tool Calling", "Memory", "Plan Execute"],
+    interviewTip: "Semantic Kernel is legacy/migration. Compare its plugin model with LangChain tools, then point to Microsoft Agent Framework as the successor.",
   },
   {
     term: "Semantic Search",

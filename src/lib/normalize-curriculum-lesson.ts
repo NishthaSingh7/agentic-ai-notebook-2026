@@ -44,7 +44,7 @@ function buildCheatSheet(lesson: LessonContent): string[] {
 }
 
 /**
- * Normalizes lesson content for all curriculum-layout phases (0–21).
+ * Normalizes lesson content for all curriculum-layout phases.
  */
 export function normalizeCurriculumLesson(
   lesson: LessonContent,

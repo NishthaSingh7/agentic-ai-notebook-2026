@@ -1,14 +1,20 @@
-/** Phase slugs with code walkthroughs (phases 1–20). */
+import { phases } from "@/data/roadmap";
+
+/** Phase slugs with code walkthroughs. */
 export const CODE_WALKTHROUGH_PHASE_SLUGS = new Set([
   "genai-foundations",
   "transformer-foundations",
   "llm-engineering",
   "rag-engineering",
   "agent-foundations",
-  "agent-memory",
-  "tool-calling",
-  "mcp",
   "agent-frameworks",
+  "langgraph",
+  "openai-agents",
+  "claude-agent-sdk",
+  "crewai",
+  "pydantic-ai",
+  "autogen",
+  "google-adk",
   "agent-design-patterns",
   "multi-agent-systems",
   "agent-evaluation",
@@ -46,14 +52,19 @@ export const VISUAL_FIRST_PHASE_SLUGS = new Set([
   "llm-engineering",
   "rag-engineering",
   "agent-foundations",
+  "mcp",
+  "agent-memory",
+  "context-engineering",
+  "tool-calling",
+  "ag-ui",
 ]);
 
 export function isVisualFirstPhase(phaseSlug: string): boolean {
   return VISUAL_FIRST_PHASE_SLUGS.has(phaseSlug);
 }
 
-/** Phases where students can highlight lesson text and persist it to MongoDB. */
-export const HIGHLIGHT_PHASE_SLUGS = new Set(["llm-engineering"]);
+/** Every roadmap phase supports local highlighting (synced to Mongo at night). */
+export const HIGHLIGHT_PHASE_SLUGS = new Set(phases.map((phase) => phase.slug));
 
 export function isHighlightPhase(phaseSlug: string): boolean {
   return HIGHLIGHT_PHASE_SLUGS.has(phaseSlug);

@@ -332,9 +332,9 @@ result = crew.kickoff()`,
 
   autogen: createLesson({
     concept:
-      "AutoGen is Microsoft's framework for building multi-agent conversational systems — where agents communicate through message passing to collaboratively solve tasks, with support for code execution, human proxies, and group chat orchestration.",
+      "AutoGen is Microsoft's legacy multi-agent conversation framework — now in maintenance mode. Microsoft Agent Framework is the successor (this phase). Keep AutoGen for migration: agents communicate through message passing, with code execution, human proxies, and group chat.",
     whyItExists:
-      "Some problems are best solved through agent conversation — a coder and reviewer discussing solutions, or a team debating approaches. AutoGen models agents as conversable entities that exchange messages, enabling emergent collaboration patterns beyond rigid pipelines.",
+      "AutoGen solved conversational teams — a coder and reviewer discussing solutions. New greenfield work on the Microsoft stack should use Microsoft Agent Framework. This lesson is migration awareness: how AutoGen modeled agents as conversable entities that exchange messages.",
     analogy:
       "AutoGen is like a group chat where each participant is an AI specialist — they discuss, debate, and build on each other's messages until the problem is solved.",
     technicalExplanation:
@@ -478,7 +478,7 @@ print(result.output.answer)  # typed SupportResponse`,
 
   "semantic-kernel": createLesson({
     concept:
-      "Semantic Kernel is Microsoft's open-source SDK for integrating LLMs into applications — providing plugins, planners, memory, and connectors in a model-agnostic framework optimized for enterprise .NET and Python deployments.",
+      "Semantic Kernel is Microsoft's legacy SDK for plugins, planners, and memory — now superseded by Microsoft Agent Framework. Keep it for migration: it integrated LLMs into .NET and Python apps with a plugin model, planners, and Azure connectors.",
     whyItExists:
       "Enterprise teams need a production-grade framework that integrates with existing Microsoft ecosystems (Azure OpenAI, Cosmos DB, Entra ID) while supporting multiple languages (.NET, Python, Java). Semantic Kernel provides the plugin architecture, planning, and memory abstractions for enterprise agent development.",
     analogy:

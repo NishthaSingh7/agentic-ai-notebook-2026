@@ -1,6 +1,12 @@
 import { auth } from "@/auth";
 import { isHighlightPhase } from "@/lib/curriculum-phases";
-import { sanitizeHighlights } from "@/lib/lesson-highlights";
+import {
+  highlightsToColorDict,
+  mergeHighlightedText,
+  sanitizeHighlightedText,
+  sanitizeHighlights,
+  type HighlightedText,
+} from "@/lib/lesson-highlights";
 import clientPromise, { getDbName } from "@/lib/mongodb";
 
 function parseSlug(value: unknown): string | null {
@@ -10,29 +16,40 @@ function parseSlug(value: unknown): string | null {
   return slug;
 }
 
-export async function GET(request: Request) {
+function isPhaseTree(tree: HighlightedText): boolean {
+  return Object.keys(tree).every((phaseSlug) => isHighlightPhase(phaseSlug));
+}
+
+async function loadHighlightedText(userId: string): Promise<HighlightedText> {
+  const db = (await clientPromise).db(getDbName());
+  const userDoc = await db.collection("user_highlights").findOne({ userId });
+  if (userDoc) return sanitizeHighlightedText(userDoc.highlightedText);
+
+  const oldDocs = await db.collection("module_highlights").find({ userId }).toArray();
+  if (oldDocs.length === 0) return {};
+
+  let migrated: HighlightedText = {};
+  for (const doc of oldDocs) {
+    const phaseSlug = parseSlug(doc.phaseSlug);
+    const moduleSlug = parseSlug(doc.moduleSlug);
+    if (!phaseSlug || !moduleSlug || !isHighlightPhase(phaseSlug)) continue;
+    migrated = mergeHighlightedText(migrated, {
+      [phaseSlug]: {
+        [moduleSlug]: highlightsToColorDict(sanitizeHighlights(doc.highlights)),
+      },
+    });
+  }
+  return migrated;
+}
+
+export async function GET() {
   const session = await auth();
   if (!session?.user?.id) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const url = new URL(request.url);
-  const phaseSlug = parseSlug(url.searchParams.get("phaseSlug"));
-  const moduleSlug = parseSlug(url.searchParams.get("moduleSlug"));
-
-  if (!phaseSlug || !moduleSlug || !isHighlightPhase(phaseSlug)) {
-    return Response.json({ error: "Invalid module" }, { status: 400 });
-  }
-
-  const client = await clientPromise;
-  const doc = await client
-    .db(getDbName())
-    .collection("module_highlights")
-    .findOne({ userId: session.user.id, phaseSlug, moduleSlug });
-
-  return Response.json({
-    highlights: sanitizeHighlights(doc?.highlights),
-  });
+  const highlightedText = await loadHighlightedText(session.user.id);
+  return Response.json({ highlightedText });
 }
 
 export async function PUT(request: Request) {
@@ -41,38 +58,30 @@ export async function PUT(request: Request) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body = (await request.json()) as {
-    phaseSlug?: unknown;
-    moduleSlug?: unknown;
-    highlights?: unknown;
-  };
-
-  const phaseSlug = parseSlug(body.phaseSlug);
-  const moduleSlug = parseSlug(body.moduleSlug);
-
-  if (!phaseSlug || !moduleSlug || !isHighlightPhase(phaseSlug)) {
-    return Response.json({ error: "Invalid module" }, { status: 400 });
+  const body = (await request.json()) as { highlightedText?: unknown };
+  const incoming = sanitizeHighlightedText(body.highlightedText);
+  if (!isPhaseTree(incoming)) {
+    return Response.json({ error: "Invalid highlighted text" }, { status: 400 });
   }
 
-  const highlights = sanitizeHighlights(body.highlights);
+  const existing = await loadHighlightedText(session.user.id);
+  const highlightedText = mergeHighlightedText(existing, incoming);
 
   const client = await clientPromise;
   await client
     .db(getDbName())
-    .collection("module_highlights")
+    .collection("user_highlights")
     .updateOne(
-      { userId: session.user.id, phaseSlug, moduleSlug },
+      { userId: session.user.id },
       {
         $set: {
           userId: session.user.id,
-          phaseSlug,
-          moduleSlug,
-          highlights,
+          highlightedText,
           updatedAt: new Date(),
         },
       },
       { upsert: true }
     );
 
-  return Response.json({ ok: true, highlights });
+  return Response.json({ ok: true, highlightedText });
 }

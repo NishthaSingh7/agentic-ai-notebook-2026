@@ -24,7 +24,7 @@ const SKETCH_THEME = {
   themeVariables: {
     darkMode: false,
     fontFamily: SKETCH_FONT,
-    fontSize: "14px",
+    fontSize: "13px",
     background: "#faf8f5",
     mainBkg: "#fef9c3",
     nodeBorder: "#78716c",
@@ -79,7 +79,11 @@ const ZOOM_STEP = 0.1;
 const MERMAID_FLOWCHART = {
   htmlLabels: true,
   useMaxWidth: false,
-  wrappingWidth: 280,
+  /** Wrap during layout so boxes are tall enough — growing them later overlaps neighbors. */
+  wrappingWidth: 160,
+  padding: 12,
+  nodeSpacing: 50,
+  rankSpacing: 60,
 } as const;
 
 function parseSvgLength(value: string | null): number {
@@ -120,54 +124,38 @@ function measureSvgElement(svgEl: SVGSVGElement): { width: number; height: numbe
   return { width: 0, height: 0 };
 }
 
-/** Prevent Mermaid foreignObject labels from clipping long node text */
+/** Keep labels readable inside Mermaid's layout boxes — do not grow boxes (that overlaps nodes). */
 function patchSvgLabels(root: HTMLElement) {
   root.querySelectorAll("foreignObject").forEach((fo) => {
     fo.setAttribute("overflow", "visible");
     const html = fo.querySelector("div, span, p");
     if (!(html instanceof HTMLElement)) return;
 
+    const foW = parseSvgLength(fo.getAttribute("width"));
     html.style.overflow = "visible";
     html.style.whiteSpace = "normal";
     html.style.wordBreak = "break-word";
-    html.style.overflowWrap = "anywhere";
+    html.style.overflowWrap = "break-word";
     html.style.textOverflow = "clip";
-    html.style.maxWidth = "none";
-    html.style.width = "max-content";
-    html.style.display = "inline-block";
-
-    const pad = 12;
-    const contentWidth = Math.ceil(html.scrollWidth + pad);
-    const contentHeight = Math.ceil(html.scrollHeight + pad);
-    const foW = parseSvgLength(fo.getAttribute("width"));
-    const foH = parseSvgLength(fo.getAttribute("height"));
-
-    if (contentWidth > foW) {
-      fo.setAttribute("width", String(contentWidth));
-    }
-    if (contentHeight > foH) {
-      fo.setAttribute("height", String(contentHeight));
-    }
-
-    const nodeGroup = fo.closest(".node");
-    const rect = nodeGroup?.querySelector("rect");
-    if (rect instanceof SVGRectElement) {
-      const rectW = rect.width.baseVal.value;
-      const rectH = rect.height.baseVal.value;
-      if (contentWidth > rectW) {
-        rect.setAttribute("width", String(contentWidth));
-      }
-      if (contentHeight > rectH) {
-        rect.setAttribute("height", String(contentHeight));
-      }
+    html.style.lineHeight = "1.25";
+    html.style.textAlign = "center";
+    html.style.boxSizing = "border-box";
+    html.style.padding = "2px 6px";
+    html.style.display = "block";
+    if (foW > 0) {
+      html.style.width = `${Math.max(foW - 4, 48)}px`;
+      html.style.maxWidth = `${Math.max(foW - 4, 48)}px`;
+    } else {
+      html.style.maxWidth = "none";
     }
   });
 
-  root.querySelectorAll(".nodeLabel, .edgeLabel").forEach((el) => {
+  root.querySelectorAll(".nodeLabel, .edgeLabel, .cluster-label").forEach((el) => {
     if (el instanceof HTMLElement) {
       el.style.overflow = "visible";
       el.style.whiteSpace = "normal";
       el.style.wordBreak = "break-word";
+      el.style.overflowWrap = "break-word";
     }
   });
 }

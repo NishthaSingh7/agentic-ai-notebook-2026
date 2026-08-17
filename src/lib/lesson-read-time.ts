@@ -1,7 +1,7 @@
 import readingTime from "reading-time";
 import type { LessonContent } from "@/data/lesson-types";
 
-/** Text shown on the lesson page (excludes revision notes — those have their own durations). */
+/** Lesson body only — excludes project writeups, glossary, and revision notes. */
 function getLessonReadableText(lesson: LessonContent): string {
   return [
     lesson.concept,
@@ -11,7 +11,6 @@ function getLessonReadableText(lesson: LessonContent): string {
     lesson.architecture,
     lesson.example,
     lesson.code,
-    lesson.project,
     ...(lesson.commonMistakes ?? []),
     ...lesson.interviewQuestions.flatMap((q) => [q.question, q.answer]),
   ]

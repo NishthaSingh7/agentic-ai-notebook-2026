@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { Bot, Heart, Github } from "lucide-react";
+import { Heart, Github } from "lucide-react";
 import { siteConfig } from "@/config/site";
+import { BrandLogo } from "@/components/brand-logo";
 
 export function Footer() {
   return (
@@ -9,9 +10,7 @@ export function Footer() {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2.5 mb-4">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg brand-gradient">
-                <Bot className="h-4 w-4 text-white" />
-              </div>
+              <BrandLogo />
               <span className="font-semibold">{siteConfig.name}</span>
             </div>
             <p className="text-sm text-text-muted leading-relaxed mb-4 max-w-sm">
@@ -42,7 +41,6 @@ export function Footer() {
             <ul className="space-y-2 text-sm text-text-muted">
               <li><Link href="/get-api-keys" className="hover:text-text-secondary transition-colors">Get API Keys</Link></li>
               <li><Link href="/glossary" className="hover:text-text-secondary transition-colors">Glossary</Link></li>
-              <li><Link href="/resources" className="hover:text-text-secondary transition-colors">Resources</Link></li>
             </ul>
           </div>
 

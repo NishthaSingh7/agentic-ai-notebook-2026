@@ -404,6 +404,11 @@ const PHASE_DIAGRAM_BUILDERS: Record<string, (title: string) => string> = {
     ["Context", ["What goes in prompt", "Window limits", "Compression", "Ranking"]],
     ["Implementation", ["In-memory vs persistent", "Vector store", "Summarization", "TTL and cleanup"]],
   ]),
+  "context-engineering": (title) => buildTopicDiagram(title, [
+    ["Packet", ["Instructions", "Memory", "Retrieval", "Tool results"]],
+    ["Budget", ["Select", "Compress", "Compact", "Prioritize"]],
+    ["Safety", ["Isolate untrusted", "Freshness", "Pollution", "Don't dump"]],
+  ]),
   "tool-calling": (title) => buildTopicDiagram(title, [
     ["Tool Definition", ["Schema design", "Parameter validation", "Error responses", "Idempotency"]],
     ["Execution", ["Selection logic", "Parallel vs serial", "Retry and fallback", "Permissions"]],
@@ -419,6 +424,41 @@ const PHASE_DIAGRAM_BUILDERS: Record<string, (title: string) => string> = {
     ["Features", ["Persistence", "Human-in-loop", "Multi-agent", "Observability"]],
     ["When to Use", ["vs raw API", "Learning curve", "Production readiness", "Ecosystem"]],
   ]),
+  langgraph: (title) => buildTopicDiagram(title, [
+    ["Graph", ["State", "Nodes", "Edges", "Compile"]],
+    ["Control", ["Conditional routing", "Cycles", "Subgraphs", "Send / fan-out"]],
+    ["Production", ["Checkpointer", "thread_id", "interrupt()", "LangSmith"]],
+  ]),
+  "openai-agents": (title) => buildTopicDiagram(title, [
+    ["Primitives", ["Agent", "Runner", "Tools", "Handoffs"]],
+    ["Safety", ["Input guardrail", "Output guardrail", "Tracing", "Max turns"]],
+    ["When to Use", ["OpenAI-native", "Triage desk", "vs LangGraph", "vs raw API"]],
+  ]),
+  "claude-agent-sdk": (title) => buildTopicDiagram(title, [
+    ["Loop", ["Query", "Tools", "Permissions", "Hooks"]],
+    ["Context", ["Sessions", "Compaction", "MCP", "Subagents"]],
+    ["When to Use", ["Coding agents", "Claude Code loop", "Sandbox exec", "vs LangGraph"]],
+  ]),
+  crewai: (title) => buildTopicDiagram(title, [
+    ["Crew", ["Agents / roles", "Tasks", "Process", "Tools"]],
+    ["Execution", ["Sequential", "Hierarchical", "Flows", "kickoff"]],
+    ["When to Use", ["Role teams", "Reports", "vs LangGraph", "vs AutoGen"]],
+  ]),
+  "pydantic-ai": (title) => buildTopicDiagram(title, [
+    ["Types", ["Agent", "result_type", "Tools", "Deps"]],
+    ["Runtime", ["RunContext", "Validation retry", "Model-agnostic", "Tests"]],
+    ["When to Use", ["Python APIs", "Strict JSON", "vs OpenAI SDK", "vs LangGraph"]],
+  ]),
+  autogen: (title) => buildTopicDiagram(title, [
+    ["Agent Framework", ["Agents", "Workflows", "State", "Middleware"]],
+    ["Runtime", ["Durable execution", "HITL", "MCP / A2A", "Hosting"]],
+    ["Legacy", ["AutoGen migration", "Semantic Kernel", "vs CrewAI", "vs LangGraph"]],
+  ]),
+  "google-adk": (title) => buildTopicDiagram(title, [
+    ["ADK", ["LlmAgent", "Tools", "Sub-agents", "Runner"]],
+    ["Platform", ["Local ADK", "Session", "Vertex", "Agent Engine"]],
+    ["When to Use", ["Gemini-native", "Google Cloud", "vs LangGraph", "vs OpenAI SDK"]],
+  ]),
   "agent-design-patterns": (title) => buildTopicDiagram(title, [
     ["Pattern", ["Problem it solves", "Core loop", "When to apply", "When to avoid"]],
     ["Implementation", ["Prompt structure", "State tracking", "Termination condition", "Error recovery"]],
@@ -430,19 +470,24 @@ const PHASE_DIAGRAM_BUILDERS: Record<string, (title: string) => string> = {
     ["Production", ["A2A protocol", "Observability", "Failure recovery", "Cost control"]],
   ]),
   "agent-evaluation": (title) => buildTopicDiagram(title, [
-    ["Observability", ["Traces and spans", "LangSmith / Phoenix", "OpenTelemetry", "Dashboards"]],
-    ["Evaluation Types", ["LLM output quality", "Agent trajectory", "Tool call accuracy", "Regression tests"]],
-    ["Workflow", ["Golden datasets", "Hallucination detection", "CI integration", "Alert on drift"]],
+    ["Eval types", ["Task success", "Trajectory grading", "Tool correctness", "Safety / policy"]],
+    ["Datasets", ["Golden sets", "Synthetic", "User simulation", "Regression suites"]],
+    ["Proof", ["LLM-as-judge", "SWE-bench / tau-bench", "Online vs offline", "Pass@k"]],
   ]),
   "security-guardrails": (title) => buildTopicDiagram(title, [
-    ["Threats", ["Prompt injection", "Jailbreaks", "PII leakage", "Unsafe tool use"]],
-    ["Defenses", ["Input scanning", "Output filtering", "Tool restrictions", "Policy engine"]],
-    ["Operations", ["Human approval", "Audit logs", "Rate limits", "Incident response"]],
+    ["Threats", ["Goal hijacking", "Tool misuse", "Identity abuse", "Memory poisoning"]],
+    ["Defenses", ["Least privilege", "Sandbox", "Policy engine", "HITL approval"]],
+    ["Operations", ["Auditability", "Supply chain", "MCP / A2A trust", "Governance"]],
   ]),
   "production-agents": (title) => buildTopicDiagram(title, [
-    ["Serving", ["FastAPI endpoints", "Async workers", "Queues", "Streaming responses"]],
-    ["Infrastructure", ["Docker / Kubernetes", "GPU / vLLM", "Scaling", "Deployments"]],
-    ["Reliability", ["Monitoring", "Tracing", "Rate limits", "Cost optimization"]],
+    ["Runtime", ["Durable execution", "Checkpoints", "Cancel / resume", "Sandbox"]],
+    ["Routing", ["Model routing", "Fallbacks", "Token / cost budgets", "Caching"]],
+    ["Ops", ["Versioning", "Canary / rollback", "DLQ / retries", "Idempotency"]],
+  ]),
+  "ag-ui": (title) => buildTopicDiagram(title, [
+    ["Protocol", ["Events", "Shared state", "Streaming", "HITL"]],
+    ["UI", ["Tool cards", "Progress", "Generative UI", "Citations"]],
+    ["Integration", ["BFF", "Auth", "Cancel / resume", "Handoff"]],
   ]),
   "browser-agents": (title) => buildTopicDiagram(title, [
     ["Automation", ["Playwright browser", "DOM interaction", "Screenshots", "Form filling"]],
@@ -579,6 +624,11 @@ const PHASE_DEFAULT_COMMANDS: Record<string, string[]> = {
     "pip install redis  # fast session / working memory",
     "pip install tiktoken  # count tokens before injecting memory",
   ],
+  "context-engineering": [
+    "pip install tiktoken  # count tokens before packing context",
+    "len(enc.encode(section))  # budget each context section",
+    "Keep untrusted tool/RAG text fenced — never in the system prompt",
+  ],
   "tool-calling": [
     'client.chat.completions.create(..., tools=[...])  # pass tool schemas to API',
     "json.loads(response.choices[0].message.tool_calls[0].function.arguments)  # parse tool args",
@@ -590,9 +640,37 @@ const PHASE_DEFAULT_COMMANDS: Record<string, string[]> = {
     "uvx mcp-server-filesystem  # run a filesystem MCP server",
   ],
   "agent-frameworks": [
-    "pip install langgraph langchain-openai  # LangGraph agent framework",
+    "pip install llama-index  # LlamaIndex workflows",
+    "pip install semantic-kernel  # Microsoft Semantic Kernel",
+    "pip install smolagents  # Hugging Face agents",
+  ],
+  langgraph: [
+    "pip install langgraph langchain-openai  # LangGraph + OpenAI",
+    "pip install langgraph-checkpoint-postgres  # production checkpointer",
+  ],
+  "openai-agents": [
     "pip install openai-agents  # OpenAI Agents SDK",
-    "pip install crewai  # multi-agent CrewAI framework",
+    "python -c \"from agents import Agent, Runner\"  # verify install",
+  ],
+  "claude-agent-sdk": [
+    "npm install @anthropic-ai/claude-agent-sdk  # Claude Agent SDK",
+    "pip install claude-agent-sdk  # Python Claude Agent SDK",
+  ],
+  crewai: [
+    "pip install crewai crewai-tools  # CrewAI + tools",
+    "crewai create crew demo  # scaffold a crew",
+  ],
+  "pydantic-ai": [
+    "pip install pydantic-ai  # type-safe agents",
+    "pip install pydantic-ai[openai]  # OpenAI model backend",
+  ],
+  autogen: [
+    "pip install agent-framework  # Microsoft Agent Framework",
+    "pip install autogen-agentchat  # AutoGen (legacy / migration)",
+  ],
+  "google-adk": [
+    "pip install google-adk  # Google Agent Development Kit",
+    "adk web  # local ADK UI",
   ],
   "agent-design-patterns": [
     "pip install langchain langchain-openai  # patterns work with any LLM SDK",
@@ -616,6 +694,10 @@ const PHASE_DEFAULT_COMMANDS: Record<string, string[]> = {
     "pip install fastapi uvicorn  # serve agent APIs",
     "docker build -t agent-api .  # containerize for production",
     "kubectl apply -f deployment.yaml  # deploy to Kubernetes",
+  ],
+  "ag-ui": [
+    "Stream AG-UI events (tokens, tool cards, HITL) over SSE",
+    "Keep the model API key on the BFF — never in the browser",
   ],
   "browser-agents": [
     "pip install playwright  # browser automation",

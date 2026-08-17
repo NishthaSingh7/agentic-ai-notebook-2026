@@ -14,11 +14,11 @@ This website is built for **engineers, by engineers** — whether you are alread
 
 **You will learn:**
 
-- LLMs, embeddings, and prompt engineering
-- RAG pipelines and vector search
-- Agent loops, tool calling, and reasoning patterns
-- Frameworks like LangGraph, CrewAI, and OpenAI Agents SDK
-- MCP, observability, and production deployment
+- LLMs, embeddings, prompt engineering, and context engineering
+- RAG pipelines, vector search, and graph RAG
+- Agent loops, memory, tool calling, and MCP
+- Frameworks like LangGraph, OpenAI Agents SDK, Claude Agent SDK, CrewAI, PydanticAI, Microsoft Agent Framework, and Google ADK
+- AG-UI, evaluation, security, durable runtimes, and production deployment
 
 ---
 
@@ -26,10 +26,10 @@ This website is built for **engineers, by engineers** — whether you are alread
 
 | | |
 |---|---|
-| **21 phases** | Programming → GenAI → RAG → Agents → Frameworks → Production → Capstones (+ optional Phase 1.1 ML) |
-| **247 modules** | Concept, diagram, code example, project tie-in, and revision notes |
+| **30 phases** | Programming → GenAI → RAG → Agents → Memory → Context → Tools → MCP → Frameworks (LangGraph, OpenAI, Claude, CrewAI, PydanticAI, Microsoft AF, ADK) → Eval → Security → Runtime → AG-UI → Production → Capstones (+ optional Phase 1.1 ML) |
+| **383 modules** | Concept, diagram, code example, project tie-in, and revision notes |
 | **8 projects** | Beginner to production portfolio ideas |
-| **69 glossary terms** | Definitions, analogies, and interview tips |
+| **74 glossary terms** | Definitions, analogies, and interview tips |
 
 All roadmap phases and modules are live with lesson content. Interview prep is built but hidden from navigation until a later release.
 

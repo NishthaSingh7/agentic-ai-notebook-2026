@@ -8,6 +8,13 @@ import { phase5Lessons } from "./phase-5";
 import { phase6Lessons } from "./phase-6";
 import { agentFoundationsLessons } from "./agent-foundations";
 import { capstoneProjectsLessons } from "./capstone-projects";
+import { mcpLessons } from "./mcp";
+import { agentMemoryLessons } from "./agent-memory";
+import { toolCallingLessons } from "./tool-calling";
+import { contextEngineeringLessons } from "./context-engineering";
+import { claudeAgentSdkLessons } from "./claude-agent-sdk";
+import { agUiLessons } from "./ag-ui";
+import { frameworkPhaseLessons } from "./framework-phases";
 import { generatedLessonMaps } from "./v2-generated";
 
 /**
@@ -54,10 +61,46 @@ const v1ByPhase: Record<string, Record<string, LessonContent>> = {
     evaluation: phase4Lessons.evaluation,
   },
   "agent-foundations": agentFoundationsLessons,
+  mcp: mcpLessons,
+  "agent-memory": agentMemoryLessons,
+  "context-engineering": contextEngineeringLessons,
+  "tool-calling": toolCallingLessons,
   "agent-frameworks": {
-    ...phase6Lessons,
-    autogen: phase6Lessons.autogen,
+    "why-frameworks": frameworkPhaseLessons["why-frameworks"],
+    "choosing-a-framework": frameworkPhaseLessons["choosing-a-framework"],
     "semantic-kernel": phase6Lessons["semantic-kernel"],
+  },
+  langgraph: {
+    langgraph: phase6Lessons.langgraph,
+    "langgraph-subgraphs": frameworkPhaseLessons["langgraph-subgraphs"],
+    "build-langgraph-agent": frameworkPhaseLessons["build-langgraph-agent"],
+  },
+  "openai-agents": {
+    "openai-agents-sdk": phase6Lessons["openai-agents-sdk"],
+    "build-openai-agent": frameworkPhaseLessons["build-openai-agent"],
+  },
+  "claude-agent-sdk": claudeAgentSdkLessons,
+  crewai: {
+    "crewai-agents-roles": frameworkPhaseLessons["crewai-agents-roles"],
+    "crewai-tasks-process": frameworkPhaseLessons["crewai-tasks-process"],
+    "crewai-flows": frameworkPhaseLessons["crewai-flows"],
+    "build-crewai-crew": frameworkPhaseLessons["build-crewai-crew"],
+  },
+  "pydantic-ai": {
+    "pydantic-ai": phase6Lessons["pydantic-ai"],
+    "pydantic-ai-tools": frameworkPhaseLessons["pydantic-ai-tools"],
+    "pydantic-ai-deps": frameworkPhaseLessons["pydantic-ai-deps"],
+    "pydantic-ai-results": frameworkPhaseLessons["pydantic-ai-results"],
+    "build-pydantic-ai-agent": frameworkPhaseLessons["build-pydantic-ai-agent"],
+  },
+  autogen: {
+    autogen: phase6Lessons.autogen,
+    "autogen-group-chat": frameworkPhaseLessons["autogen-group-chat"],
+    "build-autogen-team": frameworkPhaseLessons["build-autogen-team"],
+  },
+  "google-adk": {
+    "google-adk": phase6Lessons["google-adk"],
+    "build-google-adk-agent": frameworkPhaseLessons["build-google-adk-agent"],
   },
   "agent-design-patterns": {
     react: phase5Lessons.react,
@@ -75,6 +118,7 @@ const v1ByPhase: Record<string, Record<string, LessonContent>> = {
     streaming: phase1Lessons.streaming,
     fastapi: phase0Lessons["rest-apis"],
   },
+  "ag-ui": agUiLessons,
   "advanced-ai": {
     "fine-tuning": phase1Lessons["fine-tuning"],
     multimodal: phase3Lessons.multimodal,

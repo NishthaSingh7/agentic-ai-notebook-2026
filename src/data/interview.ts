@@ -14,13 +14,13 @@ export const interviewTopics: InterviewTopic[] = [
   { slug: "llm-apis", title: "LLM APIs & Integration", category: "coding", questionCount: 20, phase: 3 },
   { slug: "rag-system-design", title: "RAG System Design", category: "system-design", questionCount: 20, phase: 4 },
   { slug: "vector-search", title: "Vector Search & Embeddings", category: "theory", questionCount: 20, phase: 4 },
-  { slug: "agent-architecture", title: "Agent Architecture", category: "architecture", questionCount: 20, phase: 5 },
-  { slug: "react-pattern", title: "ReAct & Agent Patterns", category: "theory", questionCount: 20, phase: 5 },
-  { slug: "langgraph", title: "LangGraph", category: "coding", questionCount: 20, phase: 6 },
-  { slug: "mcp-design", title: "MCP System Design", category: "system-design", questionCount: 20, phase: 7 },
-  { slug: "production-ai", title: "Production AI Systems", category: "system-design", questionCount: 20, phase: 8 },
-  { slug: "ai-observability", title: "AI Observability", category: "architecture", questionCount: 20, phase: 8 },
-  { slug: "fine-tuning", title: "Fine Tuning", category: "theory", questionCount: 20, phase: 9 },
+  { slug: "agent-architecture", title: "Agent Architecture", category: "architecture", questionCount: 20, phase: 4 },
+  { slug: "react-pattern", title: "ReAct & Agent Patterns", category: "theory", questionCount: 20, phase: 17 },
+  { slug: "langgraph", title: "LangGraph", category: "coding", questionCount: 20, phase: 10 },
+  { slug: "mcp-design", title: "MCP System Design", category: "system-design", questionCount: 20, phase: 8 },
+  { slug: "production-ai", title: "Production AI Systems", category: "system-design", questionCount: 20, phase: 21 },
+  { slug: "ai-observability", title: "AI Observability", category: "architecture", questionCount: 20, phase: 19 },
+  { slug: "fine-tuning", title: "Fine Tuning", category: "theory", questionCount: 20, phase: 27 },
 ];
 
 export interface InterviewQuestion {

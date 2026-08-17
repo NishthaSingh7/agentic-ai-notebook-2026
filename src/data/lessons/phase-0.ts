@@ -153,7 +153,7 @@ export const phase0Lessons: Record<string, LessonContent> = {
         L3[Requests / httpx - API calls]
         L4[Pydantic - validation]
         L5[LangChain / LangGraph - workflows]
-        L6[CrewAI / AutoGen - agents]
+        L6[CrewAI / Microsoft AF - agents]
         L7[Chroma / FAISS - vector DB]
         L8[OpenAI / Anthropic / Gemini APIs]
         L9[Tiktoken - tokens]

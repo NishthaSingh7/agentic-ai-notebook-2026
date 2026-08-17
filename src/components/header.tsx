@@ -10,7 +10,6 @@ import {
   Bot,
   ChevronDown,
   KeyRound,
-  Library,
   FileText,
   Info,
   Terminal,
@@ -21,6 +20,7 @@ import { SearchDialog } from "./search-dialog";
 import { UserMenu } from "./user-menu";
 import { ThemeToggle } from "./theme-toggle";
 import { NavProgress } from "./nav-progress";
+import { BrandLogo } from "./brand-logo";
 
 const primaryNav = [
   { name: "Roadmap", href: "/roadmap" },
@@ -30,7 +30,6 @@ const primaryNav = [
 
 const moreLinks = [
   { name: "Get API Keys", href: "/get-api-keys", icon: KeyRound },
-  { name: "Resources", href: "/resources", icon: Library },
   { name: "Blog", href: "/blog", icon: FileText },
   { name: "About", href: "/about", icon: Info },
 ] as const;
@@ -115,9 +114,7 @@ export function Header() {
         <div className="mx-auto flex h-14 max-w-7xl items-center gap-4 px-4 sm:px-6">
           {/* Brand */}
           <Link href="/" className="flex shrink-0 items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg brand-gradient">
-              <Bot className="h-4 w-4 text-white" />
-            </div>
+            <BrandLogo />
             <span className="hidden font-semibold tracking-tight sm:block">
               Agentic AI
               <span className="ml-1.5 font-normal text-text-muted">2026</span>

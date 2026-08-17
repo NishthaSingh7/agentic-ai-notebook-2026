@@ -9,8 +9,14 @@ import {
   useState,
 } from "react";
 import { useSession } from "next-auth/react";
-import { phases, totalModules, isOptionalModuleKey } from "@/data/roadmap";
+import {
+  phases,
+  totalModules,
+  isOptionalModuleKey,
+  getPhaseLessonHours,
+} from "@/data/roadmap";
 import { getRandomCompletionQuote } from "@/data/completion-quotes";
+import { playAchievementSound, playUncheckSound } from "@/lib/achievement-sound";
 import {
   CompletionCelebration,
   type CelebrationState,
@@ -121,7 +127,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
   const toggleModule = useCallback(
     (phaseSlug: string, moduleSlug: string, moduleTitle?: string) => {
       const key = `${phaseSlug}/${moduleSlug}`;
-      let shouldCelebrate = false;
+      const markingComplete = !completed.has(key);
 
       setCompleted((prev) => {
         const next = new Set(prev);
@@ -129,7 +135,6 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
           next.delete(key);
         } else {
           next.add(key);
-          shouldCelebrate = true;
         }
 
         writeLocalProgress(next);
@@ -141,14 +146,17 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
         return next;
       });
 
-      if (shouldCelebrate) {
+      if (markingComplete) {
+        playAchievementSound();
         setCelebration({
           quote: getRandomCompletionQuote(),
           moduleTitle: formatModuleTitle(moduleSlug, moduleTitle),
         });
+      } else {
+        playUncheckSound();
       }
     },
-    [status]
+    [completed, status]
   );
 
   const isCompleted = useCallback(
@@ -169,16 +177,15 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
   const remainingHours = useMemo(
     () =>
       Math.round(
-        phases
-          .filter((p) => !p.optional)
-          .reduce((acc, phase) => {
-            const done = phase.modules.filter((m) =>
-              completed.has(`${phase.slug}/${m.slug}`)
-            ).length;
-            const remaining = phase.modules.length - done;
-            const hoursPerModule = phase.estimatedHours / phase.modules.length;
-            return acc + remaining * hoursPerModule;
-          }, 0)
+        phases.reduce((acc, phase) => {
+          const lessonHours = getPhaseLessonHours(phase);
+          if (lessonHours === 0 || phase.modules.length === 0) return acc;
+          const done = phase.modules.filter((m) =>
+            completed.has(`${phase.slug}/${m.slug}`)
+          ).length;
+          const remaining = phase.modules.length - done;
+          return acc + remaining * (lessonHours / phase.modules.length);
+        }, 0)
       ),
     [completed]
   );

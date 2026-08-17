@@ -1127,15 +1127,17 @@ export const agentFoundationsLessons: Record<string, ReturnType<typeof createLes
     subgraph Frameworks["Open-Source Frameworks"]
         F1[LangGraph - stateful agent graphs]
         F2[CrewAI - role-based crews]
-        F3[AutoGen - Microsoft multi-agent]
+        F3[Microsoft Agent Framework]
         F4[OpenAI Agents SDK]
-        F5[PydanticAI smolagents Agno]
+        F5[Claude Agent SDK]
+        F6[PydanticAI smolagents Agno]
     end
 
     subgraph Protocols["Protocols and Standards"]
-        P1[MCP - Model Context Protocol tools]
-        P2[A2A - agent to agent communication]
-        P3[OpenTelemetry - observability]
+        P1[MCP - Agent to tools and data]
+        P2[A2A - Agent to agent]
+        P3[AG-UI - Agent to user]
+        P4[OpenTelemetry - observability]
     end
 
     subgraph Trends["2026 Trends"]
@@ -1172,8 +1174,8 @@ export const agentFoundationsLessons: Record<string, ReturnType<typeof createLes
       `class LS hub
     class I1,I2,I3,I4 grp1
     class E1,E2,E3,E4,E5 grp2
-    class F1,F2,F3,F4,F5 grp3
-    class P1,P2,P3 grp4
+    class F1,F2,F3,F4,F5,F6 grp3
+    class P1,P2,P3,P4 grp4
     class T1,T2,T3,T4,T5,T6 grp5
     class BB1,BB2,BB3,BB4,BB5 grp6
     class MC1,MC2,MC3,MC4 grp7`

@@ -6,6 +6,7 @@ import { Footer } from "@/components/footer";
 import { AuthSessionProvider } from "@/components/session-provider";
 import { AppProgressProvider } from "@/components/progress-provider";
 import { ThemeProvider } from "@/components/theme-provider";
+import { HighlightSync } from "@/components/highlight-sync";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
 
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${inter.variable} ${jetbrainsMono.variable} antialiased flex flex-col min-h-screen`}>
         <ThemeProvider>
           <AuthSessionProvider>
+            <HighlightSync />
             <AppProgressProvider>
               <Header />
               <main className="flex-1">{children}</main>

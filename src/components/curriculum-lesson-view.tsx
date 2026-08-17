@@ -19,6 +19,12 @@ import { LessonCodeBlock } from "@/components/lesson-code-block";
 import { MermaidDiagram } from "@/components/mermaid-diagram";
 import { buildConceptBullets } from "@/lib/lesson-concept-bullets";
 import { buildLessonSections, VisualWorkflows } from "@/components/lesson-visual-blocks";
+import {
+  HighlightCanvas,
+  HighlightToolbar,
+  LessonHighlightShell,
+} from "@/components/lesson-highlights";
+import { ModuleCompleteButton } from "@/components/module-complete-button";
 
 interface CurriculumLessonViewProps {
   phase: Phase;
@@ -144,6 +150,7 @@ export function CurriculumLessonView({
   );
 
   return (
+    <LessonHighlightShell enabled phaseSlug={slug} moduleSlug={mod.slug}>
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
       <div className="mb-6">
         <Link
@@ -157,15 +164,29 @@ export function CurriculumLessonView({
       <div className="grid lg:grid-cols-4 gap-8">
         <div className="lg:col-span-3 space-y-8">
           <header>
-            <span className="text-xs font-mono text-accent">{phase.subtitle}</span>
-            <h1 className="text-3xl font-bold mt-1 mb-2">{mod.title}</h1>
-            {visualFirst ? (
-              <p className="text-sm text-text-secondary max-w-2xl">{content.whyItExists}</p>
-            ) : readTime ? (
-              <p className="text-sm text-text-muted">~{readTime} min read</p>
-            ) : null}
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <span className="text-xs font-mono text-accent">{phase.subtitle}</span>
+                <h1 className="text-3xl font-bold mt-1 mb-2">{mod.title}</h1>
+                {visualFirst ? (
+                  <p className="text-sm text-text-secondary max-w-2xl">{content.whyItExists}</p>
+                ) : readTime ? (
+                  <p className="text-sm text-text-muted">~{readTime} min read</p>
+                ) : null}
+              </div>
+              <div className="flex flex-wrap items-center gap-2 shrink-0" data-no-highlight>
+                <HighlightToolbar />
+                <ModuleCompleteButton
+                  phaseSlug={slug}
+                  moduleSlug={mod.slug}
+                  moduleTitle={mod.title}
+                />
+              </div>
+            </div>
           </header>
 
+          <HighlightCanvas>
+          <div className="space-y-8">
           {visualFirst ? (
             <>
               {visualWorkflowsBlock}
@@ -282,6 +303,8 @@ export function CurriculumLessonView({
               <div />
             )}
           </nav>
+          </div>
+          </HighlightCanvas>
         </div>
 
         <aside className="hidden lg:block">
@@ -289,6 +312,7 @@ export function CurriculumLessonView({
         </aside>
       </div>
     </div>
+    </LessonHighlightShell>
   );
 }
 

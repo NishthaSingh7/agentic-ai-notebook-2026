@@ -6,17 +6,7 @@ import { getPhaseBySlug, getAdjacentPhase, phases } from "@/data/roadmap";
 import { getLessonReadTime } from "@/data/lessons";
 import { ModuleList } from "@/components/module-list";
 import { PhaseGlossarySearch } from "@/components/phase-glossary-search";
-import {
-  agentFoundationsGlossary,
-  agentGlossaryCategories,
-  getAgentFoundationsGlossaryByCategory,
-} from "@/data/agent-foundations-glossary";
-import {
-  getLlmEngineeringGlossaryByCategory,
-  llmEngineeringGlossary,
-  llmGlossaryCategories,
-  llmGlossaryPopularTerms,
-} from "@/data/llm-engineering-glossary";
+import { getPhaseGlossaryBundle } from "@/lib/phase-glossary";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -49,6 +39,7 @@ export default async function PhasePage({ params }: Props) {
     title: mod.title,
     readTime: getLessonReadTime(phase.slug, mod.slug),
   }));
+  const glossary = getPhaseGlossaryBundle(slug);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
@@ -88,25 +79,15 @@ export default async function PhasePage({ params }: Props) {
         </div>
 
         <div className="space-y-5 order-2">
-          {slug === "agent-foundations" && (
+          {glossary && (
             <PhaseGlossarySearch
               variant="sidebar"
-              title="Agent Glossary"
-              terms={agentFoundationsGlossary}
-              byCategory={getAgentFoundationsGlossaryByCategory()}
-              categories={agentGlossaryCategories}
-            />
-          )}
-
-          {slug === "llm-engineering" && (
-            <PhaseGlossarySearch
-              variant="sidebar"
-              title="LLM Glossary"
-              terms={llmEngineeringGlossary}
-              byCategory={getLlmEngineeringGlossaryByCategory()}
-              categories={llmGlossaryCategories}
-              popularTerms={llmGlossaryPopularTerms}
-              searchPlaceholder="Token, Ollama, streaming..."
+              title={glossary.title}
+              terms={glossary.terms}
+              byCategory={glossary.byCategory}
+              categories={glossary.categories}
+              popularTerms={glossary.popularTerms}
+              searchPlaceholder={glossary.searchPlaceholder}
             />
           )}
 

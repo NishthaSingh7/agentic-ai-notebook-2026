@@ -24,9 +24,9 @@ export function ProfileCompletedModules({ completed }: ProfileCompletedModulesPr
     <div className="rounded-2xl border border-border bg-surface p-5">
       <div className="mb-4 flex items-center justify-between">
         <div>
-          <h2 className="font-semibold">Modules you&apos;ve checked</h2>
+          <h2 className="font-semibold">Wins so far</h2>
           <p className="text-xs text-text-muted mt-0.5">
-            Tap any module to revisit the lesson
+            Every check here is a module you finished. Tap to revisit.
           </p>
         </div>
         <Link
