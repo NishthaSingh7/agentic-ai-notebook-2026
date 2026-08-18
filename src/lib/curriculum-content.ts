@@ -440,9 +440,9 @@ const PHASE_DIAGRAM_BUILDERS: Record<string, (title: string) => string> = {
     ["When to Use", ["Coding agents", "Claude Code loop", "Sandbox exec", "vs LangGraph"]],
   ]),
   crewai: (title) => buildTopicDiagram(title, [
-    ["Crew", ["Agents / roles", "Tasks", "Process", "Tools"]],
-    ["Execution", ["Sequential", "Hierarchical", "Flows", "kickoff"]],
-    ["When to Use", ["Role teams", "Reports", "vs LangGraph", "vs AutoGen"]],
+    ["Crews", ["Agents / roles", "Tasks", "Sequential / hierarchical", "Tools"]],
+    ["Flows", ["Start / listen", "Router", "Typed state", "Can contain a Crew"]],
+    ["Mental model", ["Flow controls the app", "Crew collaborates", "Loop underneath", "vs LangGraph"]],
   ]),
   "pydantic-ai": (title) => buildTopicDiagram(title, [
     ["Types", ["Agent", "result_type", "Tools", "Deps"]],

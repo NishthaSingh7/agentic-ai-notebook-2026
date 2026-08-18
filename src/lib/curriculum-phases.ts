@@ -11,7 +11,6 @@ export const CODE_WALKTHROUGH_PHASE_SLUGS = new Set([
   "langgraph",
   "openai-agents",
   "claude-agent-sdk",
-  "crewai",
   "pydantic-ai",
   "autogen",
   "google-adk",
@@ -56,6 +55,7 @@ export const VISUAL_FIRST_PHASE_SLUGS = new Set([
   "agent-memory",
   "context-engineering",
   "tool-calling",
+  "crewai",
   "ag-ui",
 ]);
 

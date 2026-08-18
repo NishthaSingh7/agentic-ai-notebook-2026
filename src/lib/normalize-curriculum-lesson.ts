@@ -60,10 +60,12 @@ export function normalizeCurriculumLesson(
   const cheatSheet = buildCheatSheet(lesson);
   const isPhase0 = isFoundationPhase(phaseSlug);
   const visualFirst = isVisualFirstPhase(phaseSlug);
-  const includeCode = isCodeWalkthroughPhase(phaseSlug);
+  const isCodePhase = isCodeWalkthroughPhase(phaseSlug);
+  const hasHandCode = Boolean(lesson.code?.trim());
+  const includeCode = isCodePhase || hasHandCode;
 
   let code = lesson.code;
-  if (includeCode) {
+  if (isCodePhase) {
     code = code ? enhanceLessonCode(code, moduleSlug, moduleTitle) : generateFallbackCode(moduleTitle, moduleSlug);
   }
 

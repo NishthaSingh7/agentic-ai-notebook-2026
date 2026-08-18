@@ -156,13 +156,13 @@ export const glossary: GlossaryEntry[] = [
   {
     term: "CrewAI",
     slug: "crewai",
-    simpleDefinition: "A framework for orchestrating teams of AI agents with defined roles working together on tasks.",
+    simpleDefinition: "A Python framework for agentic apps: role-based Crews for collaboration and Flows for controlled orchestration.",
     technicalDefinition:
-      "A Python framework modeling agent crews with role-based agents, task delegation, sequential/hierarchical processes, and tool integration for collaborative multi-agent workflows.",
-    analogy: "Like assembling a project team — a researcher, writer, and editor each doing their part toward one deliverable.",
-    whereUsed: "Content pipelines, research automation, multi-role business workflows.",
-    relatedConcepts: ["Agent", "AutoGen", "LangGraph", "Tool Calling"],
-    interviewTip: "Describe role-based agent design: how you define goals, backstories, and delegation between crew members.",
+      "CrewAI models Agent (role, goal, backstory, tools), Task, Crew (sequential or hierarchical process), plus Flows (@start / @listen / @router with typed state). Production apps typically put a Flow around a Crew.",
+    analogy: "A film crew collaborates on set; the shooting schedule is the Flow that decides what happens when it rains.",
+    whereUsed: "Research crews, content pipelines, multi-role business workflows, production agent apps.",
+    relatedConcepts: ["Agent", "Flow", "LangGraph", "Tool Calling"],
+    interviewTip: "Do not say CrewAI is only multi-agent. Draw Crew vs Flow: Flow controls the app; Crew handles autonomous collaboration inside it.",
   },
   {
     term: "Cross Encoder",

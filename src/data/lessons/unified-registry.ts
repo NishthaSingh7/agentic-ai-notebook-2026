@@ -14,6 +14,7 @@ import { toolCallingLessons } from "./tool-calling";
 import { contextEngineeringLessons } from "./context-engineering";
 import { claudeAgentSdkLessons } from "./claude-agent-sdk";
 import { agUiLessons } from "./ag-ui";
+import { crewaiLessons } from "./crewai";
 import { frameworkPhaseLessons } from "./framework-phases";
 import { generatedLessonMaps } from "./v2-generated";
 
@@ -80,12 +81,7 @@ const v1ByPhase: Record<string, Record<string, LessonContent>> = {
     "build-openai-agent": frameworkPhaseLessons["build-openai-agent"],
   },
   "claude-agent-sdk": claudeAgentSdkLessons,
-  crewai: {
-    "crewai-agents-roles": frameworkPhaseLessons["crewai-agents-roles"],
-    "crewai-tasks-process": frameworkPhaseLessons["crewai-tasks-process"],
-    "crewai-flows": frameworkPhaseLessons["crewai-flows"],
-    "build-crewai-crew": frameworkPhaseLessons["build-crewai-crew"],
-  },
+  crewai: crewaiLessons,
   "pydantic-ai": {
     "pydantic-ai": phase6Lessons["pydantic-ai"],
     "pydantic-ai-tools": frameworkPhaseLessons["pydantic-ai-tools"],

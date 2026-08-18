@@ -49,7 +49,7 @@ export default async function ModulePage({ params }: Props) {
         prevMod={prevMod}
         nextMod={nextMod}
         slug={slug}
-        includeCode={isCodeWalkthroughPhase(slug)}
+        includeCode={isCodeWalkthroughPhase(slug) || Boolean(content.code)}
         enableHighlights
       />
     );
@@ -64,7 +64,7 @@ export default async function ModulePage({ params }: Props) {
       prevMod={prevMod}
       nextMod={nextMod}
       slug={slug}
-      includeCode={isCodeWalkthroughPhase(slug)}
+      includeCode={isCodeWalkthroughPhase(slug) || Boolean(content.code)}
       showOrientationExtras
     />
   );

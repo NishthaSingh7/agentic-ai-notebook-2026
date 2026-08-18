@@ -167,10 +167,11 @@ const phaseDiagrams: Record<string, (title: string) => string> = {
     B --> C["${t}"]
     C --> D[Tool / MCP / Subagent]
     D --> B`,
-  crewai: (t) => `flowchart LR
-    A[Task] --> B["${t}"]
-    B --> C[Role]
-    C --> D[Next task]`,
+  crewai: (t) => `flowchart TD
+    A[User] --> B[Flow or Crew]
+    B --> C["${t}"]
+    C --> D[Researcher / Writer]
+    D --> E[Result]`,
   "pydantic-ai": (t) => `flowchart TD
     A[User] --> B["${t}"]
     B --> C[Typed tool]
