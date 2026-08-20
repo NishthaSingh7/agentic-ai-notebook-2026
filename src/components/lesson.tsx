@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { CopyButton } from "@/components/copy-button";
 import { cn } from "@/lib/utils";
 
 interface LessonSectionProps {
@@ -125,13 +126,14 @@ export function CommandsCard({ commands }: CommandsCardProps) {
         {commands.map((cmd, i) => {
           const { command, comment } = parseCommandEntry(cmd);
           return (
-            <li key={i}>
-              <code className="block text-sm font-mono bg-surface-elevated border border-border rounded-lg px-3 py-2 leading-relaxed">
+            <li key={i} className="flex items-start gap-2">
+              <code className="block min-w-0 flex-1 text-sm font-mono bg-surface-elevated border border-border rounded-lg px-3 py-2 leading-relaxed">
                 <span className="text-text-primary">{command}</span>
                 {comment ? (
                   <span className="text-accent/90 ml-2"># {comment}</span>
                 ) : null}
               </code>
+              <CopyButton text={command} label="Copy command" className="mt-0.5 shrink-0" />
             </li>
           );
         })}

@@ -1,3 +1,5 @@
+import { CopyButton } from "@/components/copy-button";
+import { stripFocusMarker } from "@/lib/enhance-lesson-code";
 import { highlightCodeToLines } from "@/lib/highlight-code";
 
 interface LessonCodeBlockProps {
@@ -8,6 +10,13 @@ interface LessonCodeBlockProps {
   showFocusHighlights?: boolean;
 }
 
+function copyableCode(code: string): string {
+  return code
+    .split("\n")
+    .map((line) => stripFocusMarker(line).content)
+    .join("\n");
+}
+
 export function LessonCodeBlock({
   code,
   language,
@@ -15,17 +24,23 @@ export function LessonCodeBlock({
   showFocusHighlights,
 }: LessonCodeBlockProps) {
   const lines = highlightCodeToLines(code, language);
+  const copyText = copyableCode(code);
 
   return (
     <div className="not-prose rounded-xl border border-border overflow-hidden">
-      {title && (
-        <div className="flex items-center gap-2 px-4 py-2 bg-surface-elevated border-b border-border">
-          <span className="h-2.5 w-2.5 rounded-full bg-rose-400/80" />
-          <span className="h-2.5 w-2.5 rounded-full bg-amber-400/80" />
-          <span className="h-2.5 w-2.5 rounded-full bg-accent/80" />
+      <div className="flex items-center gap-2 px-4 py-2 bg-surface-elevated border-b border-border">
+        <span className="h-2.5 w-2.5 rounded-full bg-rose-400/80" />
+        <span className="h-2.5 w-2.5 rounded-full bg-amber-400/80" />
+        <span className="h-2.5 w-2.5 rounded-full bg-accent/80" />
+        {title ? (
           <span className="ml-2 text-xs text-text-muted font-mono">{title}</span>
-        </div>
-      )}
+        ) : null}
+        <CopyButton
+          text={copyText}
+          label={title === "Terminal" ? "Copy command" : "Copy code"}
+          className="ml-auto shrink-0"
+        />
+      </div>
       <pre className="lesson-code overflow-x-auto p-4 text-sm leading-relaxed font-mono">
         <code>
           {lines.map((line, i) => (

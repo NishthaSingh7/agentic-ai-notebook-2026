@@ -1,4 +1,4 @@
-import type { LessonContent, WorkflowDiagram } from "../lesson-types";
+import type { BuildStep, LessonContent, WorkflowDiagram } from "../lesson-types";
 
 export interface LessonInput {
   concept: string;
@@ -16,6 +16,7 @@ export interface LessonInput {
   learnElsewhere?: string[];
   code?: string;
   codeLanguage?: string;
+  buildSteps?: BuildStep[];
   commandsToRemember?: string[];
   project?: string;
   interviewQuestions?: { question: string; answer: string; difficulty: "easy" | "medium" | "hard" }[];
@@ -42,6 +43,7 @@ export function createLesson(input: LessonInput): LessonContent {
     learnElsewhere: input.learnElsewhere,
     code: input.code,
     codeLanguage: input.codeLanguage,
+    buildSteps: input.buildSteps,
     commandsToRemember: input.commandsToRemember,
     project: input.project,
     interviewQuestions: input.interviewQuestions ?? [],

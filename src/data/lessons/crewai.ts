@@ -631,82 +631,202 @@ export const crewaiLessons: Record<string, ReturnType<typeof createLesson>> = {
     visualFirst: false,
     practiceTask: "",
     concept: b(
-      "Last CrewAI module: stop theory and build one working sequential crew from scratch",
-      "AI Research Crew — user gives a topic → Researcher investigates → Writer produces report.md",
-      "You will use Python 3.10–3.13, uv, the CrewAI CLI, YAML configs, and crewai run",
-      "This demonstrates agents, tasks, crew, sequential process, task context, LLM, env vars, and CLI execution"
+      "This is the only CrewAI module you run on your machine — follow the steps in order",
+      "Install tools, create the project, then answer the CLI questions about agents and tasks",
+      "AI Research Crew: you type a topic → Researcher investigates → Writer writes report.md",
+      "Do not skip the create-wizard questions. Those answers become the agents and tasks"
     ),
     whyItExists:
-      "Tutorials stop at class names. This module is the one example you actually run locally, then you move on. The goal is the agent architecture underneath, not memorizing every CrewAI API.",
+      "Pasting every file at once does not teach you how to build. This module walks install → create → the CLI questions for agents and tasks → folder → each file → run, in the order you should actually do it.",
     analogy:
-      "A two-person newsroom: one reporter gathers facts, one writer files the story. You are the editor who hits run.",
+      "A two-person newsroom: one reporter gathers facts, one writer files the story. You are the editor who sets up the desk, then hits run.",
     analogyDiagram: pastelChart(
       `flowchart TD
-    User([USER]) --> Topic[Research topic]
-    Topic --> R[Researcher agent]
-    R --> Data[Research data]
+    User([YOU type a topic]) --> R[Researcher agent]
+    R --> Data[Research notes]
     Data --> W[Writer agent]
-    W --> Report[Final report.md]`,
-      `class User,Topic hub
+    W --> Report[report.md]`,
+      `class User hub
     class R,W grp1
     class Data,Report grp2`
     ),
     diagram: pastelChart(
       `flowchart TD
-    subgraph Project["ai_research_crew/"]
-        ENV[".env"]
-        PY["pyproject.toml"]
+    subgraph Root["WHERE: folder ai_research_crew/"]
+        ENV[".env — API key"]
         SRC["src/ai_research_crew/"]
-        SRC --> MAIN["main.py"]
-        SRC --> CREW["crew.py"]
-        SRC --> CFG["config/agents.yaml + tasks.yaml"]
+        SRC --> MAIN["main.py — entry"]
+        SRC --> CREW["crew.py — wires the crew"]
+        SRC --> AG["config/agents.yaml"]
+        SRC --> TK["config/tasks.yaml"]
     end`,
-      `class Project hub
-    class ENV,PY grp1
-    class SRC,MAIN,CREW,CFG grp2`
+      `class Root hub
+    class ENV grp1
+    class SRC,MAIN,CREW,AG,TK grp2`
     ),
-    workflowDiagrams: [
-      {
-        title: "What actually happens",
-        caption: "You pass a topic. The crew orchestrates. Agents do the work. Tasks define done. The LLM reasons.",
-        chart: pastelChart(
-          `flowchart TD
-    User["Agentic AI"] --> Crew
-    Crew --> Researcher
-    Researcher --> Think[Decides what to research]
-    Think --> Research
-    Research --> Writer
-    Writer --> Report[report.md]`,
-          `class User,Crew hub
-    class Researcher,Think,Research grp1
-    class Writer,Report grp2`
-        ),
-      },
-      {
-        title: "Make it agentic next",
-        caption: "Add search_web() so the researcher thinks → acts → observes → continues.",
-        chart: pastelChart(
-          `flowchart TD
-    R[Researcher] --> Need["I need current information"]
-    Need --> Tool["search_web()"]
-    Tool --> Obs[Observation]
-    Obs --> Reason
-    Reason --> Tool
-    Reason --> Done[Research complete]`,
-          `class R,Need hub
-    class Tool,Obs,Reason grp1
-    class Done grp2`
-        ),
-      },
-    ],
     technicalExplanation:
-      "Prerequisites: Python 3.10+ (3.11 or 3.12 recommended; CrewAI supports >=3.10 <3.14). Install uv, then `uv tool install crewai`. Scaffold with `crewai create crew ai_research_crew`, `cd ai_research_crew`, `crewai install`. Put OPENAI_API_KEY in .env — never commit it. Replace agents.yaml and tasks.yaml, implement crew.py with @CrewBase / @agent / @task / @crew and Process.sequential, implement main.py to read a topic and kickoff. Run `crewai run`. writing_task.output_file writes report.md. {topic} is filled from kickoff inputs. After it works, add a search tool so the researcher uses the real think-act-observe loop.",
+      "Work in your Mac Terminal. Install Python check, then uv (once on the machine), then the CrewAI CLI (once on the machine). When you run crewai create crew, the CLI stops and asks questions: LLM provider, then how many agents, each agent's role / goal / backstory, then each task's description / expected output. Type the answers in this module — do not press Enter on empty prompts. After the wizard finishes, every later command runs inside ai_research_crew/. Confirm YAML, then crew.py, then main.py. Run last.",
     example:
-      "Prompt: Agentic AI. Researcher produces key concepts, developments, applications, advantages, limitations. Writer turns that into a Markdown report with Introduction through Conclusion. report.md appears in the project directory.",
+      "When the app asks Enter a topic to research, type Agentic AI. Researcher fills notes, Writer writes a Markdown report, and report.md appears in the project folder.",
     exampleSolution:
-      "If kickoff fails: confirm Python version, crewai version, .env key, and that you ran crewai install from the project root. If the writer ignores research, you forgot sequential process or task context. If report.md is missing, writing_task has no output_file.",
-    code: `# src/ai_research_crew/config/agents.yaml
-researcher:
+      "If it fails: check python --version is 3.10–3.13, you ran crewai install inside ai_research_crew, and .env has OPENAI_API_KEY. If report.md is missing, writing_task needs output_file: report.md.",
+    buildSteps: [
+      {
+        title: "Check Python is installed",
+        where: "Your Mac Terminal — any folder. Do this first, before anything else.",
+        body: "CrewAI needs Python 3.10, 3.11, 3.12, or 3.13. Prefer 3.11 or 3.12. If this command fails or shows 3.9, install a newer Python before you continue.",
+        command: "python3 --version",
+      },
+      {
+        title: "Install uv (package runner)",
+        where: "Same Terminal, still any folder. Install once on this Mac — not inside the project yet.",
+        body: "uv is how the official CrewAI setup installs tools. After it finishes, close the terminal tab and open a new one so crewai is on your PATH.",
+        command: "curl -LsSf https://astral.sh/uv/install.sh | sh",
+      },
+      {
+        title: "Confirm uv works",
+        where: "A fresh Terminal window, any folder.",
+        body: "You should see a version number. If 'command not found', the new PATH did not load — open a new terminal and try again.",
+        command: "uv --version",
+      },
+      {
+        title: "Install the CrewAI CLI",
+        where: "Same Terminal, any folder. Still not inside a project. This installs the crewai command for your user.",
+        body: "This is the CrewAI command-line tool. You install it now so the next step can scaffold the folder structure for you.",
+        command: "uv tool install crewai",
+      },
+      {
+        title: "Confirm CrewAI CLI works",
+        where: "Same Terminal, any folder.",
+        body: "You should see a CrewAI version. If this fails, repeat the uv install and open a new terminal.",
+        command: "crewai version",
+      },
+      {
+        title: "Create the project folder",
+        where: "Pick a parent folder first, for example Documents. cd there, then run create. Stop after this command — do not paste extra lines yet.",
+        body: "This command does not finish instantly. The CLI creates the folder, then pauses and asks questions. Stay in this terminal. Do not type cd ai_research_crew until every question is answered, or those extra lines will be used as answers.",
+        command: "cd ~/Documents\ncrewai create crew ai_research_crew",
+      },
+      {
+        title: "Answer the LLM provider questions",
+        where: "Same Terminal, still inside the create wizard. These questions come first on most CrewAI versions.",
+        body: "Pick OpenAI for this project. gpt-4o-mini is enough. You can paste your API key now, or press Enter to skip and add it in .env later. If a question is not shown, skip this step.",
+        prompts: [
+          {
+            ask: "Select a provider to set up (openai, anthropic, gemini, groq, ollama, other)",
+            type: "openai",
+          },
+          {
+            ask: "Select a model to use for openai",
+            type: "gpt-4o-mini",
+          },
+        ],
+      },
+      {
+        title: "Answer how many agents, then Agent 1",
+        where: "Same Terminal, still in the create wizard. If it never asks about agents, skip ahead — your version scaffolds default YAML instead.",
+        body: "This project needs two agents. Agent 1 is the researcher. Role = who they are. Goal = what they try to achieve. Backstory = experience that shapes how they think. Include {topic} so the run prompt can fill it later. Press Enter after each answer.",
+        prompts: [
+          { ask: "How many agents do you want to create?", type: "2" },
+          { ask: "Agent 1 — name (used in YAML / code)", type: "researcher" },
+          { ask: "Agent 1 — role", type: "Senior AI Researcher" },
+          {
+            ask: "Agent 1 — goal",
+            type: "Research {topic} and identify the most important, accurate, and useful information about it.",
+          },
+          {
+            ask: "Agent 1 — backstory",
+            type: "You are an experienced AI researcher who specializes in analyzing emerging technologies and extracting reliable information from multiple sources.",
+          },
+        ],
+      },
+      {
+        title: "Answer Agent 2 — the writer",
+        where: "Same Terminal, still in the create wizard. This is the second of the two agents.",
+        body: "Do not give the writer the same role as the researcher. The writer only turns research notes into a report. If it also asks for tools, LLM, or allow_delegation, leave those blank / default and press Enter.",
+        prompts: [
+          { ask: "Agent 2 — name", type: "writer" },
+          { ask: "Agent 2 — role", type: "Technical Report Writer" },
+          {
+            ask: "Agent 2 — goal",
+            type: "Transform the research findings about {topic} into a clear, structured and useful technical report.",
+          },
+          {
+            ask: "Agent 2 — backstory",
+            type: "You are an expert technical writer who can transform complex technical information into concise, understandable documentation.",
+          },
+        ],
+      },
+      {
+        title: "Answer how many tasks, then Task 1",
+        where: "Same Terminal, still in the create wizard. Tasks come after agents.",
+        body: "Two tasks, one per agent. Description = what to do. Expected output = what 'done' looks like. Assign Task 1 to researcher. Keep {topic} in the description.",
+        prompts: [
+          { ask: "How many tasks do you want to create?", type: "2" },
+          { ask: "Task 1 — name", type: "research_task" },
+          {
+            ask: "Task 1 — description",
+            type: "Research the topic: {topic}. Investigate the most important concepts, current developments, practical applications, advantages, limitations, and important considerations. Focus on useful and accurate information.",
+          },
+          {
+            ask: "Task 1 — expected output",
+            type: "A detailed research document containing: key concepts, important developments, practical applications, advantages, limitations, and important considerations.",
+          },
+          { ask: "Task 1 — which agent should do this?", type: "researcher" },
+        ],
+      },
+      {
+        title: "Answer Task 2 — the report",
+        where: "Same Terminal, last questions in the create wizard. After these, the CLI finishes and the folder exists.",
+        body: "Assign this task to writer. If it asks for an output file, type report.md — that is how the Markdown file appears after a successful run. If it asks for process, pick sequential.",
+        prompts: [
+          { ask: "Task 2 — name", type: "writing_task" },
+          {
+            ask: "Task 2 — description",
+            type: "Using the research produced by the researcher, create a comprehensive technical report about {topic}. Organize the report with clear headings and concise explanations.",
+          },
+          {
+            ask: "Task 2 — expected output",
+            type: "A polished Markdown report about {topic} containing: Introduction, Key concepts, Current developments, Applications, Advantages, Limitations, and Conclusion.",
+          },
+          { ask: "Task 2 — which agent should do this?", type: "writer" },
+          { ask: "Task 2 — output file (if asked)", type: "report.md" },
+          { ask: "Process (if asked): sequential or hierarchical?", type: "sequential" },
+        ],
+      },
+      {
+        title: "Enter the project folder",
+        where: "Only after the create wizard prints that the project was created and returns you to a normal prompt.",
+        body: "Now it is safe to cd. If you cd'd during the questions, the extra text became an agent name or task description — delete that folder and run create again.",
+        command: "cd ~/Documents/ai_research_crew",
+      },
+      {
+        title: "Look at the files the CLI created",
+        where: "Inside ai_research_crew/ (you should already have cd'd here).",
+        body: "You should see .env, pyproject.toml, and src/ai_research_crew/ with main.py, crew.py, config/agents.yaml, config/tasks.yaml, and tools/. Newer CLI versions may create agents/*.jsonc and crew.jsonc instead. Either way, the next steps make the files match this research crew — do not create a second project.",
+        command: "ls -la && ls src/ai_research_crew && ls src/ai_research_crew/config",
+      },
+      {
+        title: "Install project dependencies",
+        where: "MUST be inside ai_research_crew/ — the folder that contains pyproject.toml. Not your home folder.",
+        body: "This downloads the Python packages this crew needs. If you run it in the wrong directory, imports will fail later.",
+        command: "crewai install",
+      },
+      {
+        title: "Add your OpenAI API key",
+        where: "File: ai_research_crew/.env  (project root, next to pyproject.toml). Never commit this file.",
+        body: "Open .env in Cursor. Put your real key on the right of the equals sign. No quotes. Save the file. The crew reads this when it starts — you do not paste the key into Python.",
+        file: ".env",
+        codeLanguage: "bash",
+        code: "OPENAI_API_KEY=sk-your-real-key-here",
+      },
+      {
+        title: "Write the two agents",
+        where: "File: src/ai_research_crew/config/agents.yaml — open it and make it match this exactly.",
+        body: "If you typed the wizard answers above, this file should already be close. Open it anyway. Role, goal, and backstory must match. {topic} is filled later from main.py. Researcher finds facts. Writer turns facts into a report. Do not give both agents the same role. If the file looks different, replace the whole file.",
+        file: "src/ai_research_crew/config/agents.yaml",
+        codeLanguage: "yaml",
+        code: `researcher:
   role: >
     Senior AI Researcher
   goal: >
@@ -726,15 +846,23 @@ writer:
   backstory: >
     You are an expert technical writer who can transform
     complex technical information into concise,
-    understandable documentation.
-
-# src/ai_research_crew/config/tasks.yaml
-research_task:
+    understandable documentation.`,
+      },
+      {
+        title: "Write the two tasks",
+        where: "File: src/ai_research_crew/config/tasks.yaml — open it and make it match this exactly.",
+        body: "If the create wizard asked for task description and expected output, those answers landed here. Confirm agent: researcher and agent: writer match the names in agents.yaml. output_file: report.md is why a Markdown file appears after a successful run. Sequential process will run research_task first, then writing_task. If anything is missing, replace the whole file.",
+        file: "src/ai_research_crew/config/tasks.yaml",
+        codeLanguage: "yaml",
+        code: `research_task:
   description: >
     Research the topic: {topic}.
+
     Investigate the most important concepts, current
     developments, practical applications, advantages,
     limitations, and important considerations.
+
+    Focus on useful and accurate information.
   expected_output: >
     A detailed research document containing:
     - Key concepts
@@ -749,6 +877,9 @@ writing_task:
   description: >
     Using the research produced by the researcher,
     create a comprehensive technical report about {topic}.
+
+    Organize the report with clear headings and concise
+    explanations.
   expected_output: >
     A polished Markdown report about {topic} containing:
     - Introduction
@@ -759,11 +890,17 @@ writing_task:
     - Limitations
     - Conclusion
   agent: writer
-  output_file: report.md
-
-# src/ai_research_crew/crew.py
-from crewai import Agent, Crew, Process, Task
+  output_file: report.md`,
+      },
+      {
+        title: "Wire the crew in Python",
+        where: "File: src/ai_research_crew/crew.py — replace the whole file.",
+        body: "Do this after YAML, not before. @CrewBase loads those YAML files. Process.sequential means Researcher finishes, then Writer starts with that research. verbose=True prints the loop so you can see it think.",
+        file: "src/ai_research_crew/crew.py",
+        codeLanguage: "python",
+        code: `from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
+
 
 @CrewBase
 class AiResearchCrew:
@@ -772,19 +909,29 @@ class AiResearchCrew:
 
     @agent
     def researcher(self) -> Agent:
-        return Agent(config=self.agents_config["researcher"], verbose=True)
+        return Agent(
+            config=self.agents_config["researcher"],
+            verbose=True,
+        )
 
     @agent
     def writer(self) -> Agent:
-        return Agent(config=self.agents_config["writer"], verbose=True)
+        return Agent(
+            config=self.agents_config["writer"],
+            verbose=True,
+        )
 
     @task
     def research_task(self) -> Task:
-        return Task(config=self.tasks_config["research_task"])
+        return Task(
+            config=self.tasks_config["research_task"],
+        )
 
     @task
     def writing_task(self) -> Task:
-        return Task(config=self.tasks_config["writing_task"])
+        return Task(
+            config=self.tasks_config["writing_task"],
+        )
 
     @crew
     def crew(self) -> Crew:
@@ -793,47 +940,89 @@ class AiResearchCrew:
             tasks=self.tasks,
             process=Process.sequential,
             verbose=True,
-        )
+        )`,
+      },
+      {
+        title: "Create the entry point",
+        where: "File: src/ai_research_crew/main.py — replace the whole file.",
+        body: "This is what starts when you run the crew. It asks you for a topic, puts it in inputs['topic'] (that fills {topic} in YAML), then kickoff() runs Researcher then Writer.",
+        file: "src/ai_research_crew/main.py",
+        codeLanguage: "python",
+        code: `from ai_research_crew.crew import AiResearchCrew
 
-# src/ai_research_crew/main.py
-from ai_research_crew.crew import AiResearchCrew
 
 def run():
     topic = input("Enter a topic to research: ")
-    result = AiResearchCrew().crew().kickoff(inputs={"topic": topic})
-    print("\\n==============================\\nFINAL RESULT\\n==============================\\n")
+
+    inputs = {
+        "topic": topic
+    }
+
+    result = AiResearchCrew().crew().kickoff(inputs=inputs)
+
+    print("\\n\\n==============================")
+    print("FINAL RESULT")
+    print("==============================\\n")
     print(result)
+
 
 if __name__ == "__main__":
     run()`,
-    codeLanguage: "python",
+      },
+      {
+        title: "Run the crew",
+        where: "Terminal, inside ai_research_crew/ (the folder with pyproject.toml). After every file above is saved.",
+        body: "Use the official CLI. When it asks, type a topic such as Agentic AI and press Enter. First run can take a minute while models load. Watch Researcher, then Writer.",
+        command: "crewai run",
+      },
+      {
+        title: "If the CLI run fails, run main.py directly",
+        where: "Still inside ai_research_crew/.",
+        body: "Same crew, different starter. You should still be prompted for a topic.",
+        command: "python src/ai_research_crew/main.py",
+      },
+      {
+        title: "Find the report",
+        where: "Project root ai_research_crew/ — same folder you ran the command from.",
+        body: "Because writing_task has output_file: report.md, a Markdown file should appear after the writer finishes. Open it in Cursor. That is the finished sequential crew: topic in, report out.",
+        command: "ls -la report.md && head -20 report.md",
+      },
+      {
+        title: "Optional next — give the researcher a tool",
+        where: "Same project, after the basic crew already runs. Do not start here.",
+        body: "The version you just ran is multi-agent orchestration. To make the researcher actually agentic, attach a web search tool so the loop becomes think → search_web() → observe → think again. Add that only after report.md is working.",
+      },
+    ],
     commandsToRemember: [
-      "python --version  # need 3.10–3.13",
-      "curl -LsSf https://astral.sh/uv/install.sh | sh",
-      "uv tool install crewai && crewai version",
-      "crewai create crew ai_research_crew && cd ai_research_crew",
-      "crewai install",
-      "echo 'OPENAI_API_KEY=your_key' >> .env  # never commit .env",
-      "crewai run  # or: python src/ai_research_crew/main.py",
+      "python3 --version  # do this first, anywhere",
+      "uv tool install crewai  # once on this Mac",
+      "cd ~/Documents && crewai create crew ai_research_crew  # then answer the wizard — do not cd yet",
+      "cd ~/Documents/ai_research_crew  # only after the create questions finish",
+      "crewai install  # inside the project folder only",
+      "crewai run  # inside the project folder, after files are saved",
     ],
     commonMistakes: [
-      "Python older than 3.10 or 3.14+",
+      "Running crewai install from your home folder instead of ai_research_crew/",
+      "Pasting cd ai_research_crew while the create wizard is still asking questions — those lines become agent/task answers",
+      "Skipping the create-wizard questions for agent role, goal, backstory, and task description",
+      "Editing YAML before the project exists — always create crew first, answer the questions, then edit",
+      "Python 3.9 or 3.14+",
       "Committing .env with the API key",
-      "Skipping crewai install so imports fail",
-      "Forgetting process=Process.sequential so writer never sees research",
-      "No output_file on writing_task so report.md never appears",
+      "Forgetting process=Process.sequential so the writer never sees the research",
+      "No output_file on writing_task, so report.md never appears",
     ],
     revisionNotes: {
       cheatSheet: [
-        "Scaffold with crewai create crew",
-        "YAML for roles and tasks",
-        "Sequential: researcher then writer",
-        "{topic} from kickoff inputs",
-        "crewai run → report.md",
-        "Next: give researcher a search tool",
+        "Install uv + crewai on the Mac first",
+        "Then create the project folder",
+        "Then answer provider + 2 agents + 2 tasks in the wizard",
+        "Then cd into the folder",
+        "Then crewai install inside it",
+        "Then .env, then YAML, then crew.py, then main.py",
+        "Then crewai run → report.md",
       ],
     },
-    glossary: ["CrewBase", "kickoff", "Process.sequential", "output_file", "uv"],
+    glossary: ["CrewBase", "kickoff", "Process.sequential", "output_file", "uv", "role", "goal", "backstory"],
     learnElsewhere: ["What is CrewAI", "Tasks", "Tools", "Processes"],
     furtherReading: [
       { title: "CrewAI documentation", url: "https://docs.crewai.com/" },

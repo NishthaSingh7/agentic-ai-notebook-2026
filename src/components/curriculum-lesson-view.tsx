@@ -16,6 +16,7 @@ import {
 import type { Phase, Module } from "@/data/roadmap";
 import { LessonNav, LessonSection, RevisionCard, CommandsCard } from "@/components/lesson";
 import { LessonCodeBlock } from "@/components/lesson-code-block";
+import { LessonBuildSteps } from "@/components/lesson-build-steps";
 import { MermaidDiagram } from "@/components/mermaid-diagram";
 import { buildConceptBullets } from "@/lib/lesson-concept-bullets";
 import { buildLessonSections, VisualWorkflows } from "@/components/lesson-visual-blocks";
@@ -66,6 +67,7 @@ export function CurriculumLessonView({
     }
     if (s.id === "example") return showOrientationExtras && !!content.example && !visualFirst;
     if (s.id === "practice") return showOrientationExtras && !!content.practiceTask;
+    if (s.id === "build-steps") return !!content.buildSteps?.length;
     if (s.id === "code") return includeCode && !!content.code;
     if (s.id === "commands") return !!content.commandsToRemember?.length;
     if (s.id === "mistakes") return !!content.commonMistakes && !visualFirst;
@@ -218,6 +220,15 @@ export function CurriculumLessonView({
                   <p>{content.exampleSolution}</p>
                 </>
               )}
+            </LessonSection>
+          )}
+
+          {content.buildSteps && content.buildSteps.length > 0 && (
+            <LessonSection id="build-steps" title="Build it step by step" icon={<ListChecks className="h-5 w-5 text-accent" />}>
+              <p className="text-sm text-text-muted mb-4 not-prose">
+                Do these in order. Each step says where to work, what to install or edit, and when.
+              </p>
+              <LessonBuildSteps steps={content.buildSteps} />
             </LessonSection>
           )}
 

@@ -17,6 +17,7 @@ import {
 import type { Phase, Module } from "@/data/roadmap";
 import { LessonNav, RevisionCard, CommandsCard } from "@/components/lesson";
 import { LessonCodeBlock } from "@/components/lesson-code-block";
+import { LessonBuildSteps } from "@/components/lesson-build-steps";
 import { buildConceptBullets } from "@/lib/lesson-concept-bullets";
 import { buildLessonSections, VisualWorkflows } from "@/components/lesson-visual-blocks";
 import { ModuleCompleteButton } from "@/components/module-complete-button";
@@ -127,6 +128,7 @@ export function Phase0LessonView({
       return !!content.workflowDiagrams?.[idx];
     }
     if (s.id === "code") return includeCode && !!content.code;
+    if (s.id === "build-steps") return !!content.buildSteps?.length;
     if (s.id === "practice") return !!content.practiceTask;
     if (s.id === "commands") return !!content.commandsToRemember?.length;
     if (s.id === "mistakes") return !!content.commonMistakes?.length;
@@ -263,6 +265,20 @@ export function Phase0LessonView({
                 </SectionCard>
               )}
             </div>
+
+            {content.buildSteps && content.buildSteps.length > 0 && (
+              <SectionCard
+                id="build-steps"
+                title="Build it step by step"
+                icon={<ListChecks className="h-5 w-5 text-accent shrink-0" />}
+              >
+                <p className="text-sm text-text-muted mb-5 not-prose">
+                  Do these in order. Each step says <strong>where</strong> to work,{" "}
+                  <strong>what</strong> to install or edit, and <strong>when</strong>.
+                </p>
+                <LessonBuildSteps steps={content.buildSteps} />
+              </SectionCard>
+            )}
 
             {content.practiceTask && (
               <SectionCard

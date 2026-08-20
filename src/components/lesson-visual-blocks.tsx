@@ -74,6 +74,9 @@ export function buildLessonSections(
     });
     sections.push({ id: "concept", title: "Key Takeaways" });
     if (content.example) sections.push({ id: "example", title: "Real Example" });
+    if (content.buildSteps?.length) {
+      sections.push({ id: "build-steps", title: "Build step by step" });
+    }
     if (showOrientationExtras && content.practiceTask) {
       sections.push({ id: "practice", title: "Practice Task" });
     }
@@ -96,6 +99,9 @@ export function buildLessonSections(
     content.workflowDiagrams.forEach((wf, i) => {
       sections.push({ id: `workflow-${i}`, title: wf.title });
     });
+  }
+  if (content.buildSteps?.length) {
+    sections.push({ id: "build-steps", title: "Build step by step" });
   }
   if (showOrientationExtras) {
     if (content.example) sections.push({ id: "example", title: "Example" });
