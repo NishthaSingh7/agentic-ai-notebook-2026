@@ -30,7 +30,8 @@ export function ProfileCompletedModules({ completed }: ProfileCompletedModulesPr
   const [modulePage, setModulePage] = useState(0);
 
   useEffect(() => {
-    setPhaseIndex((current) => Math.min(current, Math.max(0, phasesWithProgress.length - 1)));
+    // Land on the furthest chapter with wins, not Phase 0.
+    setPhaseIndex(Math.max(0, phasesWithProgress.length - 1));
   }, [phasesWithProgress.length]);
 
   const current = phasesWithProgress[Math.min(phaseIndex, Math.max(0, phasesWithProgress.length - 1))];
@@ -67,11 +68,10 @@ export function ProfileCompletedModules({ completed }: ProfileCompletedModulesPr
     <div className="rounded-2xl border border-border bg-surface p-5">
       <div className="mb-4 flex items-center justify-between">
         <div>
-          <h2 className="font-semibold">Wins so far</h2>
+          <h2 className="font-semibold">Relive your wins</h2>
           <p className="text-xs text-text-muted mt-0.5">
-            {doneCount} module{doneCount === 1 ? "" : "s"} done across{" "}
-            {phasesWithProgress.length} phase{phasesWithProgress.length === 1 ? "" : "s"} — one
-            phase at a time.
+            {doneCount} module{doneCount === 1 ? "" : "s"} you actually finished — flip through
+            chapters by name.
           </p>
         </div>
         <Link
@@ -100,16 +100,20 @@ export function ProfileCompletedModules({ completed }: ProfileCompletedModulesPr
           </button>
         ) : null}
 
-        <div className="min-w-0 flex-1 rounded-xl border border-border bg-background/60 px-3 py-2">
+        <div className="min-w-0 flex-1 rounded-xl border border-border bg-background/60 px-3 py-2.5">
           <Link
             href={`/roadmap/${current.phase.slug}`}
-            className="block text-sm font-medium truncate hover:text-royal transition-colors"
+            className="block font-sketch text-lg leading-tight truncate hover:text-royal transition-colors"
           >
-            {current.phase.subtitle} · {current.phase.title}
+            {current.phase.title}
           </Link>
           <p className="text-[11px] text-text-muted tabular-nums mt-0.5">
-            {current.doneModules.length}/{current.phase.modules.length} in this phase
-            {showPhasePager ? ` · ${phaseIndex + 1} of ${phasesWithProgress.length} phases` : ""}
+            {current.phase.subtitle}
+            {current.phase.optional ? " · Optional" : ""} · {current.doneModules.length}/
+            {current.phase.modules.length} finished
+            {showPhasePager
+              ? ` · ${phaseIndex + 1} of ${phasesWithProgress.length} chapters`
+              : ""}
           </p>
         </div>
 
@@ -138,7 +142,7 @@ export function ProfileCompletedModules({ completed }: ProfileCompletedModulesPr
               key={entry.phase.slug}
               type="button"
               onClick={() => goPhase(i)}
-              aria-label={`${entry.phase.subtitle}, ${entry.doneModules.length} done`}
+              aria-label={`${entry.phase.title}, ${entry.doneModules.length} done`}
               aria-current={i === phaseIndex ? "true" : undefined}
               className={cn(
                 "h-1.5 rounded-full transition-all",

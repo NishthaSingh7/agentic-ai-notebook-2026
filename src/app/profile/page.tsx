@@ -3,7 +3,7 @@ import { ProfileContent } from "@/components/profile-content";
 
 export const metadata: Metadata = {
   title: "Profile",
-  description: "See how far you've come — modules, phases, and what's next on the roadmap.",
+  description: "Your medals, the chapter you're in, and what's next on the roadmap.",
 };
 
 export default function ProfilePage() {
