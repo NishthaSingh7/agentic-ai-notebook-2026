@@ -17,6 +17,7 @@ import {
 } from "@/lib/curriculum-practice";
 import { autoPastelChart } from "@/lib/mermaid-pastel";
 import { LLM_ENGINEERING_VISUALS } from "@/data/lessons/llm-engineering-visuals";
+import { RAG_ENGINEERING_VISUALS } from "@/data/lessons/rag-engineering-visuals";
 
 /** Capstone lessons with hand-crafted diagrams — preserve when present. */
 const HAND_CRAFTED_DIAGRAM_SLUGS = new Set([
@@ -69,14 +70,19 @@ export function normalizeCurriculumLesson(
     code = code ? enhanceLessonCode(code, moduleSlug, moduleTitle) : generateFallbackCode(moduleTitle, moduleSlug);
   }
 
-  const phase2Visuals = phaseSlug === "llm-engineering" ? LLM_ENGINEERING_VISUALS[moduleSlug] : undefined;
+  const overlayVisuals =
+    phaseSlug === "llm-engineering"
+      ? LLM_ENGINEERING_VISUALS[moduleSlug]
+      : phaseSlug === "rag-engineering"
+        ? RAG_ENGINEERING_VISUALS[moduleSlug]
+        : undefined;
 
   const keepHandDiagram =
     !!lesson.diagram &&
     (visualFirst || isPhase0 || HAND_CRAFTED_DIAGRAM_SLUGS.has(moduleSlug));
 
   const diagram =
-    phase2Visuals?.diagram ??
+    overlayVisuals?.diagram ??
     (keepHandDiagram
       ? lesson.diagram
       : getCurriculumDiagram(
@@ -88,15 +94,15 @@ export function normalizeCurriculumLesson(
         ));
 
   const commandsToRemember = visualFirst
-    ? phase2Visuals?.commandsToRemember ?? lesson.commandsToRemember
+    ? overlayVisuals?.commandsToRemember ?? lesson.commandsToRemember
     : getCurriculumCommands(moduleSlug, phaseSlug, cheatSheet, lesson.commandsToRemember);
 
   const analogyDiagram =
-    phase2Visuals?.analogyDiagram ??
+    overlayVisuals?.analogyDiagram ??
     lesson.analogyDiagram ??
     (visualFirst ? undefined : getCurriculumAnalogyDiagram(moduleTitle));
 
-  const workflowDiagrams = phase2Visuals?.workflowDiagrams ?? lesson.workflowDiagrams;
+  const workflowDiagrams = overlayVisuals?.workflowDiagrams ?? lesson.workflowDiagrams;
 
   const example = lesson.example?.trim() || `A production team uses ${moduleTitle} in a real ${phaseTitle} workflow.`;
 

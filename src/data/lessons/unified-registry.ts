@@ -15,6 +15,7 @@ import { contextEngineeringLessons } from "./context-engineering";
 import { claudeAgentSdkLessons } from "./claude-agent-sdk";
 import { agUiLessons } from "./ag-ui";
 import { crewaiLessons } from "./crewai";
+import { ragEngineeringLessons } from "./rag-engineering";
 import { frameworkPhaseLessons } from "./framework-phases";
 import { generatedLessonMaps } from "./v2-generated";
 
@@ -60,6 +61,7 @@ const v1ByPhase: Record<string, Record<string, LessonContent>> = {
     "vector-databases": phase1Lessons["vector-databases"],
     retrievers: phase1Lessons.retrievers,
     evaluation: phase4Lessons.evaluation,
+    ...ragEngineeringLessons,
   },
   "agent-foundations": agentFoundationsLessons,
   mcp: mcpLessons,

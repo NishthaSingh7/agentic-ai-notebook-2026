@@ -25,6 +25,12 @@ import {
   memoryGlossaryPopularTerms,
 } from "@/data/memory-glossary";
 import {
+  getRagEngineeringGlossaryByCategory,
+  ragEngineeringGlossary,
+  ragGlossaryCategories,
+  ragGlossaryPopularTerms,
+} from "@/data/rag-engineering-glossary";
+import {
   getToolGlossaryByCategory,
   toolGlossary,
   toolGlossaryCategories,
@@ -187,6 +193,17 @@ export function getPhaseGlossaryBundle(phaseSlug: string): PhaseGlossaryBundle |
       categories: [...llmGlossaryCategories],
       byCategory: { ...getLlmEngineeringGlossaryByCategory() },
       popularTerms: llmGlossaryPopularTerms,
+    };
+  }
+
+  if (phaseSlug === "rag-engineering") {
+    return {
+      title: "RAG Glossary",
+      searchPlaceholder: "Chunking, HNSW, hybrid search...",
+      terms: ragEngineeringGlossary,
+      categories: [...ragGlossaryCategories],
+      byCategory: { ...getRagEngineeringGlossaryByCategory() },
+      popularTerms: ragGlossaryPopularTerms,
     };
   }
 
