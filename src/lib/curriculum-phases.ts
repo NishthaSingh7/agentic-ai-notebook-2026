@@ -8,7 +8,6 @@ export const CODE_WALKTHROUGH_PHASE_SLUGS = new Set([
   "rag-engineering",
   "agent-foundations",
   "agent-frameworks",
-  "langgraph",
   "openai-agents",
   "claude-agent-sdk",
   "pydantic-ai",
@@ -57,6 +56,7 @@ export const VISUAL_FIRST_PHASE_SLUGS = new Set([
   "tool-calling",
   "crewai",
   "ag-ui",
+  "langgraph",
 ]);
 
 export function isVisualFirstPhase(phaseSlug: string): boolean {

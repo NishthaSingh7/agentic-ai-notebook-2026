@@ -15,6 +15,7 @@ import { contextEngineeringLessons } from "./context-engineering";
 import { claudeAgentSdkLessons } from "./claude-agent-sdk";
 import { agUiLessons } from "./ag-ui";
 import { crewaiLessons } from "./crewai";
+import { langgraphLessons } from "./langgraph";
 import { ragEngineeringLessons } from "./rag-engineering";
 import { frameworkPhaseLessons } from "./framework-phases";
 import { generatedLessonMaps } from "./v2-generated";
@@ -73,11 +74,7 @@ const v1ByPhase: Record<string, Record<string, LessonContent>> = {
     "choosing-a-framework": frameworkPhaseLessons["choosing-a-framework"],
     "semantic-kernel": phase6Lessons["semantic-kernel"],
   },
-  langgraph: {
-    langgraph: phase6Lessons.langgraph,
-    "langgraph-subgraphs": frameworkPhaseLessons["langgraph-subgraphs"],
-    "build-langgraph-agent": frameworkPhaseLessons["build-langgraph-agent"],
-  },
+  langgraph: langgraphLessons,
   "openai-agents": {
     "openai-agents-sdk": phase6Lessons["openai-agents-sdk"],
     "build-openai-agent": frameworkPhaseLessons["build-openai-agent"],
