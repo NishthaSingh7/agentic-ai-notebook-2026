@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Maximize2, Minus, Plus, RotateCcw } from "lucide-react";
+import { Check, Copy, Maximize2, Minus, Plus, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface MermaidDiagramProps {
@@ -75,6 +75,66 @@ const DEFAULT_THEME = {
 const MIN_ZOOM = 0.5;
 const MAX_ZOOM = 2;
 const ZOOM_STEP = 0.1;
+
+async function copyMermaidSource(source: string) {
+  const value = source.trim();
+  if (!value) return;
+  try {
+    await navigator.clipboard.writeText(value);
+  } catch {
+    const textarea = document.createElement("textarea");
+    textarea.value = value;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "fixed";
+    textarea.style.left = "-9999px";
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textarea);
+  }
+}
+
+function CopyMermaidButton({
+  chart,
+  compact,
+}: {
+  chart: string;
+  compact?: boolean;
+}) {
+  const [copied, setCopied] = useState(false);
+
+  async function handleCopy() {
+    await copyMermaidSource(chart);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1600);
+  }
+
+  return (
+    <button
+      type="button"
+      data-no-highlight
+      onClick={handleCopy}
+      disabled={!chart.trim()}
+      aria-label={copied ? "Mermaid code copied" : "Copy Mermaid code"}
+      title={copied ? "Copied" : "Copy Mermaid code"}
+      className={cn(
+        "inline-flex items-center justify-center rounded-md transition-colors disabled:opacity-40 disabled:pointer-events-none",
+        compact
+          ? "h-7 w-7 hover:bg-stone-200/80 text-stone-600"
+          : "h-7 gap-1 px-1.5 hover:bg-stone-200/80 text-stone-700"
+      )}
+    >
+      {copied ? (
+        <Check className="h-3.5 w-3.5 text-accent" strokeWidth={2.5} />
+      ) : (
+        <Copy className="h-3.5 w-3.5" strokeWidth={2} />
+      )}
+      {!compact ? (
+        <span className="text-[10px] font-medium">{copied ? "Copied" : "Mermaid"}</span>
+      ) : null}
+    </button>
+  );
+}
 
 const MERMAID_FLOWCHART = {
   htmlLabels: true,
@@ -277,9 +337,14 @@ export function MermaidDiagram({
   if (error) {
     return (
       <div className={containerClass}>
-        {title && !compact && (
-          <p className="text-xs font-semibold text-stone-600 mb-2 uppercase">{title}</p>
-        )}
+        <div className="flex items-center justify-between gap-2 px-3 pt-3">
+          {title && !compact ? (
+            <p className="text-xs font-semibold text-stone-600 uppercase">{title}</p>
+          ) : (
+            <span />
+          )}
+          <CopyMermaidButton chart={chart} compact />
+        </div>
         <p className="text-sm text-amber-700 dark:text-amber-400/90 px-4 py-3 not-prose">
           Diagram could not be rendered. Refresh the page or report this module if it persists.
         </p>
@@ -362,6 +427,8 @@ export function MermaidDiagram({
             >
               <Maximize2 className="h-3.5 w-3.5" />
             </button>
+            <span className="mx-0.5 h-4 w-px bg-stone-300/80" aria-hidden />
+            <CopyMermaidButton chart={chart} compact />
           </div>
         </div>
         <div
@@ -401,18 +468,30 @@ export function MermaidDiagram({
   }
 
   return (
-    <div className={containerClass}>
-      {title && !compact && (
-        <p
-          className={cn(
-            "text-xs font-semibold mb-3 uppercase tracking-wider px-5 pt-5",
-            sketch ? "text-stone-600" : "text-text-muted"
-          )}
-        >
-          {title}
-        </p>
+    <div className={cn(containerClass, "relative")}>
+      {title && !compact ? (
+        <div className="flex items-center justify-between gap-2 px-5 pt-4 mb-1">
+          <p
+            className={cn(
+              "text-xs font-semibold uppercase tracking-wider truncate",
+              sketch ? "text-stone-600" : "text-text-muted"
+            )}
+          >
+            {title}
+          </p>
+          <CopyMermaidButton chart={chart} />
+        </div>
+      ) : (
+        <div className="absolute top-1.5 right-1.5 z-10">
+          <CopyMermaidButton chart={chart} compact />
+        </div>
       )}
-      <div className={cn(!title || compact ? "" : "px-5 pb-5", "flex justify-center")}>
+      <div
+        className={cn(
+          title && !compact ? "px-5 pb-5" : compact ? "pt-1" : "px-5 py-5",
+          "flex justify-center"
+        )}
+      >
         {diagramContent}
       </div>
     </div>
