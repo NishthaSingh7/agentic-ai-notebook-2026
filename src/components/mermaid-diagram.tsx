@@ -10,6 +10,8 @@ interface MermaidDiagramProps {
   compact?: boolean;
   /** Excalidraw-style hand-drawn flowcharts on a light canvas */
   sketch?: boolean;
+  /** Clean editorial diagrams for the Challenge route */
+  editorial?: boolean;
   /** Fit inside a viewport at 50% with zoom controls */
   zoomable?: boolean;
   /** Initial zoom level (1 = 100%) */
@@ -51,6 +53,35 @@ const SKETCH_THEME = {
     noteTextColor: "#0f0f0f",
     attributeBackgroundColorEven: "#e0f2fe",
     attributeBackgroundColorOdd: "#fce7f3",
+  },
+};
+
+const EDITORIAL_THEME = {
+  theme: "base" as const,
+  themeVariables: {
+    darkMode: false,
+    fontFamily: "IBM Plex Sans, ui-sans-serif, system-ui, sans-serif",
+    fontSize: "13px",
+    background: "#f6f3ec",
+    mainBkg: "#ecfdf5",
+    nodeBorder: "#0f7668",
+    clusterBkg: "#eef2f6",
+    clusterBorder: "#94a3b8",
+    titleColor: "#1b2430",
+    edgeLabelBackground: "#fffdf8",
+    primaryColor: "#dbeafe",
+    primaryTextColor: "#1e3a8a",
+    primaryBorderColor: "#3b82f6",
+    secondaryColor: "#ccfbf1",
+    secondaryTextColor: "#115e59",
+    secondaryBorderColor: "#14b8a6",
+    tertiaryColor: "#fef3c7",
+    tertiaryTextColor: "#92400e",
+    tertiaryBorderColor: "#d97706",
+    lineColor: "#334155",
+    textColor: "#1b2430",
+    nodeTextColor: "#1b2430",
+    labelTextColor: "#1b2430",
   },
 };
 
@@ -220,11 +251,18 @@ function patchSvgLabels(root: HTMLElement) {
   });
 }
 
+function mermaidTheme(sketch?: boolean, editorial?: boolean) {
+  if (editorial) return EDITORIAL_THEME;
+  if (sketch) return SKETCH_THEME;
+  return DEFAULT_THEME;
+}
+
 export function MermaidDiagram({
   chart,
   title,
   compact,
   sketch,
+  editorial,
   zoomable = false,
   defaultZoom = 1,
 }: MermaidDiagramProps) {
@@ -269,7 +307,7 @@ export function MermaidDiagram({
       mermaid.initialize({
         startOnLoad: false,
         flowchart: MERMAID_FLOWCHART,
-        ...(useSketch ? SKETCH_THEME : DEFAULT_THEME),
+        ...mermaidTheme(useSketch, editorial),
       });
       const id = `mermaid-${Math.random().toString(36).slice(2)}`;
       const { svg: rendered } = await mermaid.render(id, chart);
@@ -312,7 +350,7 @@ export function MermaidDiagram({
     return () => {
       cancelled = true;
     };
-  }, [chart, sketch]);
+  }, [chart, sketch, editorial]);
 
   const zoomIn = useCallback(() => {
     setZoom((z) => Math.min(MAX_ZOOM, Math.round((z + ZOOM_STEP) * 100) / 100));
@@ -327,7 +365,9 @@ export function MermaidDiagram({
   const containerClass = cn(
     zoomable ? "not-prose" : "overflow-x-auto",
     !zoomable && (compact ? "p-3 my-3 max-w-lg" : "p-5 my-4"),
-    sketch
+    editorial
+      ? "rounded-xl border border-[#d6d1c6] bg-[#fffdf8] shadow-sm challenge-mermaid"
+      : sketch
       ? "rounded-xl border-2 border-stone-300/80 bg-[#faf8f5] shadow-sm"
       : compact
         ? "rounded-lg border border-border/60 bg-surface-elevated/40"
@@ -358,7 +398,7 @@ export function MermaidDiagram({
       dangerouslySetInnerHTML={{ __html: svg }}
       className={cn(
         "inline-block [&_svg]:max-w-none [&_svg]:h-auto [&_svg]:overflow-visible",
-        sketch && "mermaid-sketch",
+        sketch && !editorial && "mermaid-sketch",
         !zoomable && compact && "scale-[0.92] origin-center"
       )}
     />
@@ -381,7 +421,14 @@ export function MermaidDiagram({
 
     return (
       <div className={containerClass}>
-        <div className="flex items-center justify-between gap-2 px-3 py-2 border-b border-stone-300/60 bg-white/60">
+        <div
+          className={cn(
+            "flex items-center justify-between gap-2 px-3 py-2 border-b",
+            editorial
+              ? "border-[#d6d1c6] bg-[#fffdf8]"
+              : "border-stone-300/60 bg-white/60"
+          )}
+        >
           <div className="min-w-0">
             {title && (
               <p className="text-xs font-semibold text-stone-700 uppercase tracking-wide truncate">
@@ -433,7 +480,10 @@ export function MermaidDiagram({
         </div>
         <div
           ref={scrollRef}
-          className="overflow-auto overscroll-contain p-3 bg-[#faf8f5] min-h-[min(50vh,360px)] max-h-[min(80vh,720px)]"
+          className={cn(
+            "overflow-auto overscroll-contain p-3 min-h-[min(50vh,360px)] max-h-[min(80vh,720px)]",
+            editorial ? "bg-[#f6f3ec]" : "bg-[#faf8f5]"
+          )}
         >
           {hasMeasuredSize ? (
             <div

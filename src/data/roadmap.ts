@@ -238,25 +238,16 @@ export const phases: Phase[] = [
     title: "Context Engineering",
     subtitle: "Phase 6",
     description:
-      "How an agent builds the next model call: assemble, select, compress, isolate, route, and budget context from instructions, memory, retrieval, tools, and state — not just a static prompt.",
-    estimatedHours: 18,
+      "Give the model a full brief — rules, data, memory, tools, and the output you want — so a hard task becomes something it can actually do.",
+    estimatedHours: 8,
     color: "from-teal-500 to-teal-800",
     modules: [
-      mod("context-vs-prompt", "Context vs Prompt Engineering"),
-      mod("context-assembly", "Context Assembly"),
-      mod("context-selection", "Context Selection"),
-      mod("context-compression", "Context Compression"),
-      mod("context-compaction", "Context Compaction"),
-      mod("context-isolation", "Context Isolation"),
-      mod("context-routing", "Context Routing"),
-      mod("context-windows", "Context Windows"),
-      mod("context-budgeting", "Context Budgeting"),
-      mod("tool-result-management", "Tool Result Management"),
-      mod("memory-context-pipeline", "Memory → Context Pipeline"),
-      mod("long-running-context", "Long-Running Context"),
-      mod("context-pollution", "Context Pollution"),
-      mod("context-freshness", "Context Freshness"),
-      mod("context-prioritization", "Context Prioritization"),
+      mod("what-is-context-engineering", "What Is Context Engineering?"),
+      mod("vibe-coding", "Why Vibe Coding Breaks"),
+      mod("prompt-vs-context", "Prompt vs Context"),
+      mod("context-ingredients", "Six Ingredients of Context"),
+      mod("context-window-challenges", "Context Window Problems"),
+      mod("custom-instructions-demo", "Try It: Custom Instructions"),
     ],
   },
   {
@@ -859,6 +850,7 @@ export function getAdjacentPhase(
 }
 
 export function isOptionalModuleKey(key: string): boolean {
+  if (key.startsWith("challenge/")) return true;
   const phaseSlug = key.split("/")[0];
   const phase = getPhaseBySlug(phaseSlug);
   return phase?.optional === true;

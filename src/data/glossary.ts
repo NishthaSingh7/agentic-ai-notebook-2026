@@ -123,13 +123,15 @@ export const glossary: GlossaryEntry[] = [
   {
     term: "Context Engineering",
     slug: "context-engineering",
-    simpleDefinition: "Building the packet the model sees this turn — not just writing a prompt.",
+    simpleDefinition:
+      "Setting up the rules, data, memory, tools, and output shape so a model can do the job instead of guessing.",
     technicalDefinition:
-      "Assembling, selecting, compressing, isolating, routing, and budgeting instructions, memory, retrieval, tool results, and state into a finite context window so the model can act reliably.",
-    analogy: "Prompting is the recipe card. Context engineering is packing the mise en place onto one cutting board.",
+      "Context is rules plus data plus memory plus tools plus the desired output. Prompt engineering writes one request. Context engineering designs the whole environment the model works in.",
+    analogy:
+      "Asking a chef to 'make dinner' is a prompt. Handing over the pantry, the allergies, the guest count, and how you like the plate is context.",
     whereUsed: "Every production agent turn, long-running jobs, RAG + tool loops, coding agents.",
     relatedConcepts: ["Context Window", "Memory", "RAG", "Tool Calling"],
-    interviewTip: "Draw the packet: system + tools + memory + retrieval + tool results + live user. Explain what you drop first when the budget is tight.",
+    interviewTip: "Write the formula: rules + data + memory + tools + output shape. Contrast a one-line prompt with a full brief, then name one window problem and its fix.",
   },
   {
     term: "Context Window",
@@ -141,6 +143,30 @@ export const glossary: GlossaryEntry[] = [
     whereUsed: "Long document Q&A, chat history management, RAG chunk selection.",
     relatedConcepts: ["Token", "KV Cache", "RAG", "Chunking"],
     interviewTip: "Discuss strategies for handling documents larger than the context window: chunking, summarization, RAG.",
+  },
+  {
+    term: "Lost in the Middle",
+    slug: "lost-in-the-middle",
+    simpleDefinition:
+      "Important text buried in the middle of a long prompt is easier for a model to skip than text at the start or the end.",
+    technicalDefinition:
+      "A known attention bias: recall is stronger for tokens near the beginning and end of the context window than for tokens in the middle, so critical rules should be placed at the edges.",
+    analogy: "People remember the opening and the closing of a speech, and forget the ramble in between.",
+    whereUsed: "Long briefs, multi-document prompts, system rules mixed into retrieved text.",
+    relatedConcepts: ["Context Window", "Context Engineering", "System Prompt"],
+    interviewTip: "Put hard rules at the start and repeat the question at the end. Do not hide policy in the middle of a document dump.",
+  },
+  {
+    term: "Custom Instructions",
+    slug: "custom-instructions",
+    simpleDefinition:
+      "Saved rules a chat app applies before your message, such as a role, a format, and what every answer must include.",
+    technicalDefinition:
+      "A product setting that prepends persistent system guidance to each turn. It is the rules slot of context engineering without writing application code.",
+    analogy: "A standing brief for a new hire, so you do not repeat the job description every morning.",
+    whereUsed: "ChatGPT custom instructions, Claude projects, and any assistant with a saved system prompt.",
+    relatedConcepts: ["System Prompt", "Context Engineering", "Prompt"],
+    interviewTip: "Show the same question with and without custom instructions. The difference is the rules slot, not a cleverer sentence.",
   },
   {
     term: "Cosine Similarity",

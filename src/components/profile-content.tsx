@@ -9,6 +9,7 @@ import { phases } from "@/data/roadmap";
 import { useProgress } from "@/hooks/use-progress";
 import { ProfilePhaseGrid } from "@/components/profile-phase-grid";
 import { ProfileCompletedModules } from "@/components/profile-completed-modules";
+import { ProfileChallengeProgress } from "@/components/profile-challenge-progress";
 import {
   getCompletedPhaseCount,
   getFocusPhase,
@@ -236,6 +237,8 @@ export function ProfileContent() {
       <div className="mb-6 rounded-2xl border border-border bg-surface p-5">
         <ProfilePhaseGrid completed={completed} focusSlug={focusPhase.slug} />
       </div>
+
+      <ProfileChallengeProgress completed={completed} />
 
       {completedCount > 0 ? (
         <ProfileCompletedModules completed={completed} />

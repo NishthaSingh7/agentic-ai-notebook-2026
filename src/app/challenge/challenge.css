@@ -1,0 +1,348 @@
+.challenge-root {
+  --ch-desk: #16110d;
+  --ch-leather: #241c15;
+  --ch-paper: #f3ead8;
+  --ch-card: #fff8ec;
+  --ch-ink: #1b1612;
+  --ch-body: #3a322a;
+  --ch-muted: #7a6f63;
+  --ch-wax: #9f1239;
+  --ch-gold: #c4a574;
+  --ch-rule: #e4d6be;
+  --ch-display: var(--font-fraunces), "Iowan Old Style", Palatino, Georgia, serif;
+  --ch-serif: var(--font-source-serif), "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  --ch-ui: var(--font-ibm-plex), "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --ch-anchor: 5.5rem;
+  --accent: #9f1239;
+  --accent-dim: #be123c;
+  --royal: #1d4ed8;
+  --success: #047857;
+  --on-accent: #fff8ec;
+  width: 100%;
+  min-height: calc(100dvh - 5.5rem);
+  background:
+    radial-gradient(900px 420px at 50% -10%, rgba(196, 165, 116, 0.16), transparent 55%),
+    var(--ch-desk);
+  color: var(--ch-ink);
+  font-family: var(--ch-ui);
+}
+
+.ch-anchor {
+  scroll-margin-top: var(--ch-anchor);
+}
+
+.ch-display {
+  font-family: var(--ch-display);
+  letter-spacing: -0.03em;
+}
+
+.ch-ui {
+  font-family: var(--ch-ui);
+}
+
+.ch-serif {
+  font-family: var(--ch-serif);
+}
+
+.ch-kicker {
+  font-family: var(--ch-ui);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ch-gold);
+}
+
+.ch-chip {
+  font-family: var(--ch-ui);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.ch-hero {
+  position: relative;
+  isolation: isolate;
+}
+
+.ch-letter {
+  position: relative;
+  background: var(--ch-paper);
+  box-shadow: 0 -24px 60px -28px rgba(0, 0, 0, 0.55);
+}
+
+.ch-letter::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(27, 22, 18, 0.035), transparent 48px),
+    linear-gradient(180deg, rgba(27, 22, 18, 0.04), transparent 36px);
+}
+
+.ch-prose p {
+  font-family: var(--ch-serif);
+  font-size: 1.12rem;
+  line-height: 1.8;
+  color: var(--ch-body);
+}
+
+.ch-prose p + p {
+  margin-top: 1.15rem;
+}
+
+.ch-rail {
+  background: #1d1712;
+  border: 1px solid rgba(196, 165, 116, 0.18);
+  box-shadow: 0 18px 40px -24px rgba(0, 0, 0, 0.7);
+}
+
+.ch-rail-link {
+  display: block;
+  border-radius: 0.55rem;
+  padding: 0.48rem 0.7rem;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: #c4b8a6;
+  transition: background 0.15s, color 0.15s;
+}
+
+.ch-rail-link:hover {
+  background: rgba(255, 248, 236, 0.06);
+  color: #fff8ec;
+}
+
+.ch-rail-link[data-active="true"] {
+  background: rgba(159, 18, 57, 0.22);
+  color: #ffe4e6;
+  font-weight: 600;
+  box-shadow: inset 3px 0 0 #e11d48;
+}
+
+.ch-path-chip {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  border-radius: 999px;
+  border: 1px solid var(--ch-rule);
+  background: var(--ch-card);
+  padding: 0.35rem 0.7rem;
+  font-size: 0.72rem;
+  color: var(--ch-muted);
+}
+
+.ch-path-chip[data-active="true"] {
+  border-color: #9f1239;
+  background: #9f1239;
+  color: #fff1f2;
+}
+
+.ch-stage-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--ch-rule);
+  background: var(--ch-card);
+  box-shadow: 0 14px 36px -28px rgba(27, 22, 18, 0.55);
+}
+
+.ch-diagram-board {
+  margin-top: 1.4rem;
+  overflow: hidden;
+  border-radius: 1rem;
+  border: 1px solid var(--ch-rule);
+  background: #fffdf8;
+}
+
+.ch-diagram-board figcaption {
+  padding: 0 0.2rem 0.85rem;
+  font-family: var(--ch-ui);
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--ch-muted);
+}
+
+.ch-case {
+  overflow: hidden;
+  border: 1px solid #e8c9a0;
+  background: linear-gradient(180deg, #fff4e4, #fff8ec 42%);
+}
+
+.challenge-root ::selection {
+  background: color-mix(in srgb, var(--ch-wax) 22%, transparent);
+}
+
+.challenge-root details summary {
+  font-family: var(--ch-ui);
+  list-style: none;
+}
+
+.challenge-root details summary::-webkit-details-marker {
+  display: none;
+}
+
+.challenge-mermaid svg foreignObject div,
+.challenge-mermaid svg foreignObject span,
+.challenge-mermaid svg foreignObject p {
+  font-family: var(--ch-ui) !important;
+}
+
+/* Closed letter: one rectangle, V-crease on the face, wax on the point */
+.ch-table {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 1.6rem 1rem 1.2rem;
+  perspective: 1100px;
+}
+
+.ch-table::before {
+  content: "";
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: 8%;
+  height: 28%;
+  border-radius: 999px;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.5), transparent 72%);
+  filter: blur(10px);
+}
+
+.ch-mail {
+  position: relative;
+  width: min(24rem, 88vw);
+  height: 13.5rem;
+  transform-style: preserve-3d;
+}
+
+.ch-mail-sheet {
+  position: absolute;
+  left: 1.15rem;
+  right: 1.15rem;
+  top: 0.85rem;
+  height: 10.4rem;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #fffdf8, #f4ead4);
+  box-shadow: 0 10px 18px -14px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  z-index: 1;
+  transform: translateY(18px);
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ch-mail[data-open="true"] .ch-mail-sheet {
+  transform: translateY(-3.8rem);
+}
+
+.ch-mail-body {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  border-radius: 6px;
+  background:
+    linear-gradient(180deg, #e7d3ae 0%, #d7bc90 58%, #c9aa7c 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    inset 0 -10px 18px rgba(92, 64, 28, 0.16),
+    0 22px 34px -20px rgba(0, 0, 0, 0.7);
+}
+
+.ch-mail-body::before,
+.ch-mail-body::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 52%;
+  height: 54%;
+  background: linear-gradient(180deg, rgba(80, 55, 20, 0.08), transparent);
+  pointer-events: none;
+}
+
+.ch-mail-body::before {
+  left: 0;
+  clip-path: polygon(0 0, 100% 100%, 0 100%);
+}
+
+.ch-mail-body::after {
+  right: 0;
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+
+.ch-mail-flap {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 58%;
+  z-index: 4;
+  transform-origin: top center;
+  transform-style: preserve-3d;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  background:
+    linear-gradient(180deg, #f3e2c2 0%, #e4cc9f 70%, #cdae80 100%);
+  box-shadow: 0 10px 16px -14px rgba(0, 0, 0, 0.45);
+  transition: transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ch-mail[data-open="true"] .ch-mail-flap {
+  transform: rotateX(-168deg);
+}
+
+.ch-wax {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  z-index: 5;
+  width: 3.75rem;
+  height: 3.75rem;
+  margin-left: -1.875rem;
+  border-radius: 47% 53% 50% 50%;
+  background:
+    radial-gradient(circle at 30% 26%, #fb7185, #e11d48 40%, #9f1239 76%);
+  box-shadow:
+    0 10px 16px -8px rgba(80, 0, 20, 0.7),
+    inset 0 -7px 10px rgba(80, 0, 20, 0.38),
+    inset 0 3px 4px rgba(255, 255, 255, 0.22);
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.ch-wax::after {
+  content: "";
+  position: absolute;
+  inset: 20%;
+  border: 1.5px solid rgba(255, 228, 230, 0.5);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 4px rgba(127, 29, 29, 0.18);
+}
+
+.ch-mail[data-open="true"] .ch-wax {
+  transform: translateY(1.4rem) scale(0.4);
+  opacity: 0;
+}
+
+.ch-draw-btn {
+  font-family: var(--ch-ui);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  border-radius: 999px;
+  background: #9f1239;
+  color: #fff7ed;
+  padding: 0.8rem 1.4rem;
+  font-size: 0.92rem;
+  font-weight: 500;
+  box-shadow: 0 14px 32px -16px rgba(159, 18, 57, 0.9);
+  transition: background 0.15s, transform 0.15s;
+}
+
+.ch-draw-btn:hover:not(:disabled) {
+  background: #be123c;
+}
+
+.ch-draw-btn:disabled {
+  opacity: 0.65;
+}

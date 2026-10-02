@@ -24,6 +24,7 @@ import { BrandLogo } from "./brand-logo";
 
 const primaryNav = [
   { name: "Roadmap", href: "/roadmap" },
+  { name: "Challenge", href: "/challenge" },
   { name: "Projects", href: "/projects" },
   { name: "Glossary", href: "/glossary" },
 ] as const;

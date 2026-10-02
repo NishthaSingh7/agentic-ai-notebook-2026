@@ -2,18 +2,19 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { Search, BookOpen, Map, FolderKanban, BookMarked, MessageSquare } from "lucide-react";
+import { Search, BookOpen, Map, FolderKanban, BookMarked, MessageSquare, Dices } from "lucide-react";
 import { phases } from "@/data/roadmap";
 import { glossary } from "@/data/glossary";
 import { projects } from "@/data/projects";
 import { interviewTopics } from "@/data/interview";
+import { challengeTopics } from "@/data/challenges";
 import { cn } from "@/lib/utils";
 
 interface SearchResult {
   title: string;
   description: string;
   href: string;
-  type: "module" | "glossary" | "project" | "interview" | "phase";
+  type: "module" | "glossary" | "project" | "interview" | "phase" | "challenge";
   icon: typeof BookOpen;
 }
 
@@ -79,6 +80,24 @@ export function SearchDialog({ open, onClose }: SearchDialogProps) {
       });
     });
 
+    results.push({
+      title: "Challenge for a Day",
+      description: "Draw a random agentic AI topic for one sitting",
+      href: "/challenge",
+      type: "challenge",
+      icon: Dices,
+    });
+
+    challengeTopics.forEach((topic) => {
+      results.push({
+        title: topic.title,
+        description: `Challenge · ${topic.category} — ${topic.tagline}`,
+        href: `/challenge/${topic.slug}`,
+        type: "challenge",
+        icon: Dices,
+      });
+    });
+
     return results;
   }, []);
 
@@ -136,6 +155,7 @@ export function SearchDialog({ open, onClose }: SearchDialogProps) {
     project: "Project",
     interview: "Interview",
     phase: "Phase",
+    challenge: "Challenge",
   };
 
   return (

@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import clientPromise, { getDbName } from "@/lib/mongodb";
+import { scheduleNotionRoadmapSync } from "@/lib/notion-roadmap-sync";
 
 export async function GET() {
   const session = await auth();
@@ -36,6 +37,11 @@ export async function PUT(request: Request) {
       { $set: { completed, updatedAt: new Date() } },
       { upsert: true }
     );
+
+  scheduleNotionRoadmapSync({
+    completed,
+    email: session.user.email,
+  });
 
   return Response.json({ ok: true, completed });
 }

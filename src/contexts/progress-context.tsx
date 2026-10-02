@@ -15,6 +15,7 @@ import {
   isOptionalModuleKey,
   getPhaseLessonHours,
 } from "@/data/roadmap";
+import { isChallengeKey } from "@/data/challenges";
 import { getRandomCompletionQuote } from "@/data/completion-quotes";
 import { playAchievementSound, playUncheckSound } from "@/lib/achievement-sound";
 import {
@@ -191,7 +192,8 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
   );
 
   const countedCompleted = useMemo(
-    () => [...completed].filter((key) => !isOptionalModuleKey(key)).length,
+    () =>
+      [...completed].filter((key) => !isOptionalModuleKey(key) && !isChallengeKey(key)).length,
     [completed]
   );
 

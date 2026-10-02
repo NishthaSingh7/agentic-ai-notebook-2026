@@ -405,9 +405,9 @@ const PHASE_DIAGRAM_BUILDERS: Record<string, (title: string) => string> = {
     ["Implementation", ["In-memory vs persistent", "Vector store", "Summarization", "TTL and cleanup"]],
   ]),
   "context-engineering": (title) => buildTopicDiagram(title, [
-    ["Packet", ["Instructions", "Memory", "Retrieval", "Tool results"]],
-    ["Budget", ["Select", "Compress", "Compact", "Prioritize"]],
-    ["Safety", ["Isolate untrusted", "Freshness", "Pollution", "Don't dump"]],
+    ["The brief", ["Rules", "Data", "Memory", "Tools", "Output shape"]],
+    ["Vs a prompt", ["One sentence", "A full binder", "One reply", "Repeatable"]],
+    ["When it breaks", ["Too long", "Lost in the middle", "Sources clash", "Messy memory"]],
   ]),
   "tool-calling": (title) => buildTopicDiagram(title, [
     ["Tool Definition", ["Schema design", "Parameter validation", "Error responses", "Idempotency"]],
