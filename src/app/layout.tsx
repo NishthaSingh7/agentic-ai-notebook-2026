@@ -21,8 +21,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteConfig.url),
   title: {
-    default: `${siteConfig.name} — Agentic AI Engineering Notebook`,
+    default: `${siteConfig.name}`,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
@@ -45,13 +46,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {`(function(){try{var t=localStorage.getItem('theme');if(t==='dark')document.documentElement.classList.add('dark');}catch(e){}})();`}
         </Script>
       </head>
-      <body className={`${inter.variable} ${jetbrainsMono.variable} antialiased flex flex-col min-h-screen`}>
+      <body className={`${inter.variable} ${jetbrainsMono.variable} antialiased flex min-h-screen w-full min-w-0 flex-col overflow-x-hidden`}>
         <ThemeProvider>
           <AuthSessionProvider>
             <HighlightSync />
             <AppProgressProvider>
               <Header />
-              <main className="flex-1">{children}</main>
+              <main className="w-full min-w-0 flex-1">{children}</main>
               <Footer />
             </AppProgressProvider>
           </AuthSessionProvider>

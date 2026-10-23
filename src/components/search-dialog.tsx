@@ -3,9 +3,9 @@
 import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Search, BookOpen, Map, FolderKanban, BookMarked, MessageSquare, Dices } from "lucide-react";
-import { phases } from "@/data/roadmap";
+import { getChapterBuilds, phases } from "@/data/roadmap";
 import { glossary } from "@/data/glossary";
-import { projects } from "@/data/projects";
+import { notes } from "@/data/notes";
 import { interviewTopics } from "@/data/interview";
 import { challengeTopics } from "@/data/challenges";
 import { cn } from "@/lib/utils";
@@ -14,7 +14,7 @@ interface SearchResult {
   title: string;
   description: string;
   href: string;
-  type: "module" | "glossary" | "project" | "interview" | "phase" | "challenge";
+  type: "module" | "glossary" | "project" | "interview" | "phase" | "challenge" | "note";
   icon: typeof BookOpen;
 }
 
@@ -60,13 +60,34 @@ export function SearchDialog({ open, onClose }: SearchDialogProps) {
       });
     });
 
-    projects.forEach((project) => {
+    getChapterBuilds().forEach(({ phase, module, href }) => {
       results.push({
-        title: project.title,
-        description: project.description,
-        href: `/projects/${project.slug}`,
+        title: module.title,
+        description: `${phase.title} — ${module.description}`,
+        href,
         type: "project",
         icon: FolderKanban,
+      });
+    });
+
+    notes.forEach((note) => {
+      results.push({
+        title: note.title,
+        description: note.placeholder
+          ? "Notes — a placeholder card. The real topic is not written yet."
+          : `Notes — ${note.topic}. ${note.summary}`,
+        href: `/notes/${note.slug}`,
+        type: "note",
+        icon: BookOpen,
+      });
+      note.cards?.forEach((card) => {
+        results.push({
+          title: card.title,
+          description: `Notes — ${note.title}. ${card.lead}`,
+          href: `/notes/${note.slug}/${card.slug}`,
+          type: "note",
+          icon: BookOpen,
+        });
       });
     });
 
@@ -154,8 +175,9 @@ export function SearchDialog({ open, onClose }: SearchDialogProps) {
     glossary: "Glossary",
     project: "Project",
     interview: "Interview",
-    phase: "Phase",
+    phase: "Chapter",
     challenge: "Challenge",
+    note: "Notes",
   };
 
   return (
@@ -168,7 +190,7 @@ export function SearchDialog({ open, onClose }: SearchDialogProps) {
             autoFocus
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search modules, glossary, projects..."
+            placeholder="Search the path and Notes..."
             className="flex-1 bg-transparent py-3.5 text-sm text-text-primary placeholder:text-text-muted outline-none"
           />
           <kbd className="rounded border border-border bg-surface px-1.5 py-0.5 text-[10px] font-mono text-text-muted">

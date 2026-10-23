@@ -16,14 +16,14 @@ This means Google does **not** have the exact callback URL your app is using.
 
 ```
 http://localhost:3000
-https://agentic-ai-notebook-2026.netlify.app
+https://hellohumans.netlify.app
 ```
 
 **Authorized redirect URIs** (add both — copy/paste exactly):
 
 ```
 http://localhost:3000/api/auth/callback/google
-https://agentic-ai-notebook-2026.netlify.app/api/auth/callback/google
+https://hellohumans.netlify.app/api/auth/callback/google
 ```
 
 Rules:
@@ -56,7 +56,7 @@ On Google's error page, click **error details**. It shows the `redirect_uri` you
 
 | Variable | Local | Netlify production |
 |----------|-------|-------------------|
-| `AUTH_URL` | `http://localhost:3000` | `https://agentic-ai-notebook-2026.netlify.app` |
+| `AUTH_URL` | `http://localhost:3000` | `https://hellohumans.netlify.app` |
 | `AUTH_GOOGLE_ID` | Same client ID | Same client ID |
 | `AUTH_GOOGLE_SECRET` | Same secret | Same secret |
 | `AUTH_SECRET` | Your generated secret | Same or separate |

@@ -1,37 +1,37 @@
 @import "tailwindcss";
 
 :root {
-  --background: #faf8f5;
+  --background: #f7f3ec;
   --surface: #ffffff;
-  --surface-elevated: #f5f5f4;
-  --border: #e7e5e4;
-  --border-subtle: #f0eeec;
-  --text-primary: #1c1917;
-  --text-secondary: #57534e;
-  --text-muted: #78716c;
-  --accent: #c2410c;
-  --accent-dim: #9a3412;
-  --royal: #7c3aed;
-  --royal-dim: #6d28d9;
-  --success: #059669;
-  --on-accent: #fffaf5;
+  --surface-elevated: #f0e9df;
+  --border: #e4d8c8;
+  --border-subtle: #efe6da;
+  --text-primary: #27221d;
+  --text-secondary: #6f6256;
+  --text-muted: #8a7b6c;
+  --accent: #b85e40;
+  --accent-dim: #9a4e34;
+  --royal: #6f5bc7;
+  --royal-dim: #5c4aad;
+  --success: #2f7a56;
+  --on-accent: #f7f1e8;
 }
 
 .dark {
-  --background: #1c1917;
-  --surface: #292524;
-  --surface-elevated: #44403c;
-  --border: #57534e;
-  --border-subtle: #3f3a36;
-  --text-primary: #fafaf9;
-  --text-secondary: #d6d3d1;
-  --text-muted: #a8a29e;
-  --accent: #fb923c;
-  --accent-dim: #ea580c;
-  --royal: #a78bfa;
-  --royal-dim: #8b5cf6;
-  --success: #34d399;
-  --on-accent: #1c1917;
+  --background: #171411;
+  --surface: #27221d;
+  --surface-elevated: #332b24;
+  --border: #443a30;
+  --border-subtle: #3a322a;
+  --text-primary: #f7f1e8;
+  --text-secondary: #b8aa9a;
+  --text-muted: #8f8274;
+  --accent: #e99a75;
+  --accent-dim: #f2ad8c;
+  --royal: #b8a4ff;
+  --royal-dim: #a08ef0;
+  --success: #8cc9a7;
+  --on-accent: #171411;
 }
 
 @theme inline {
@@ -72,6 +72,169 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.card-press {
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease;
+}
+
+.card-press:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--text-primary) 10%, transparent);
+}
+
+.card-press:active,
+.card-press:has(> a:active) {
+  transform: scale(0.98);
+  box-shadow: none;
+}
+
+.row-press {
+  transition: background-color 160ms ease, transform 160ms ease;
+}
+
+.row-press:hover {
+  background-color: var(--surface-elevated);
+}
+
+.row-press:active {
+  transform: scale(0.985);
+  background-color: color-mix(in srgb, var(--accent) 14%, var(--surface));
+}
+
+.complete-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background: color-mix(in srgb, #171411 58%, transparent);
+  animation: complete-veil-in 160ms ease both;
+}
+
+.complete-confetti {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.complete-piece {
+  position: absolute;
+  top: -16px;
+  opacity: 0;
+  animation: complete-fall linear forwards;
+}
+
+.complete-card {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 24rem);
+  border-radius: 1.75rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  padding: 2rem 1.75rem 1.5rem;
+  text-align: center;
+  box-shadow: 0 28px 70px color-mix(in srgb, #171411 28%, transparent);
+  animation: complete-card-in 280ms cubic-bezier(0.2, 1.05, 0.36, 1) both;
+}
+
+.complete-seal {
+  position: relative;
+  display: grid;
+  width: 4.5rem;
+  height: 4.5rem;
+  margin: 0 auto;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--on-accent);
+  animation: complete-seal-in 520ms cubic-bezier(0.2, 1.4, 0.36, 1) 80ms both;
+}
+
+.complete-seal-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 2px solid var(--accent);
+  animation: complete-seal-ring 700ms ease-out 120ms forwards;
+}
+
+.complete-check {
+  width: 2.1rem;
+  height: 2.1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.complete-check path {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  animation: complete-draw 380ms ease 280ms forwards;
+}
+
+@keyframes complete-veil-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes complete-card-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes complete-seal-in {
+  from { opacity: 0; transform: scale(0.4); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes complete-seal-ring {
+  from { transform: scale(1); opacity: 0.7; }
+  to { transform: scale(1.85); opacity: 0; }
+}
+
+@keyframes complete-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes complete-fall {
+  0% { opacity: 0; transform: translate3d(0, -6vh, 0) rotate(0deg); }
+  14% { opacity: 1; }
+  100% { opacity: 0; transform: translate3d(var(--drift), 108vh, 0) rotate(var(--spin)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-press,
+  .card-press:hover,
+  .card-press:active,
+  .card-press:has(> a:active),
+  .row-press,
+  .row-press:active,
+  .complete-veil,
+  .complete-card,
+  .complete-seal,
+  .complete-seal-ring {
+    transform: none;
+    transition: none;
+    animation: none;
+    opacity: 1;
+  }
+  .complete-check path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .complete-piece {
+    display: none;
+  }
 }
 
 ::selection {
@@ -272,6 +435,27 @@ code {
 .mermaid-sketch svg .edgePath path,
 .mermaid-sketch svg .flowchart-link {
   stroke: #292524 !important;
+}
+
+.mermaid-fit {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.mermaid-fit svg {
+  width: auto !important;
+  max-width: none !important;
+  height: auto !important;
+  display: block;
+}
+
+.diagram-thumb .mermaid-fit svg,
+.diagram-thumb svg {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
 }
 
 mark.lesson-highlight {

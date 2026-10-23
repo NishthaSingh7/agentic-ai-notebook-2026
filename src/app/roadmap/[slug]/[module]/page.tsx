@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { phases, getPhaseBySlug, getModule } from "@/data/roadmap";
-import { getLessonContent, getLessonReadTime } from "@/data/lessons";
-import { CurriculumLessonView } from "@/components/curriculum-lesson-view";
-import { Phase0LessonView } from "@/components/phase0-lesson-view";
-import { isCodeWalkthroughPhase, isVisualFirstPhase } from "@/lib/curriculum-phases";
+import { notFound, redirect } from "next/navigation";
+import { getModule, getPhaseBySlug, legacyPhaseRedirects, phases } from "@/data/roadmap";
+import { estimateSpokenMinutes, getNextCard, getSpokenLesson } from "@/data/spoken-lessons";
+import { SpokenLessonView } from "@/components/spoken-lesson-view";
 
 interface Props {
   params: Promise<{ slug: string; module: string }>;
@@ -23,49 +21,33 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug, module: moduleSlug } = await params;
   const mod = getModule(slug, moduleSlug);
   if (!mod) return { title: "Not Found" };
-  return { title: mod.title, description: `Learn ${mod.title} — lesson, code, and revision notes.` };
+  return { title: mod.title, description: mod.question };
 }
 
 export default async function ModulePage({ params }: Props) {
   const { slug, module: moduleSlug } = await params;
+  const legacy = legacyPhaseRedirects[slug];
+  if (legacy) redirect(legacy);
+
   const phase = getPhaseBySlug(slug);
   const mod = getModule(slug, moduleSlug);
   if (!phase || !mod) notFound();
 
-  const content = getLessonContent(slug, moduleSlug);
-  if (!content) notFound();
-  const readTime = getLessonReadTime(slug, moduleSlug);
+  const lesson = getSpokenLesson(slug, moduleSlug);
+  if (!lesson) notFound();
 
-  const moduleIndex = phase.modules.findIndex((m) => m.slug === moduleSlug);
-  const prevMod = moduleIndex > 0 ? phase.modules[moduleIndex - 1] : null;
-  const nextMod = moduleIndex < phase.modules.length - 1 ? phase.modules[moduleIndex + 1] : null;
-
-  if (isVisualFirstPhase(slug)) {
-    return (
-      <Phase0LessonView
-        phase={phase}
-        mod={mod}
-        content={content}
-        prevMod={prevMod}
-        nextMod={nextMod}
-        slug={slug}
-        includeCode={isCodeWalkthroughPhase(slug) || Boolean(content.code)}
-        enableHighlights
-      />
-    );
-  }
+  const moduleIndex = phase.modules.findIndex((item) => item.slug === moduleSlug);
+  const prev = moduleIndex > 0 ? phase.modules[moduleIndex - 1] : null;
 
   return (
-    <CurriculumLessonView
+    <SpokenLessonView
       phase={phase}
       mod={mod}
-      content={content}
-      readTime={readTime}
-      prevMod={prevMod}
-      nextMod={nextMod}
-      slug={slug}
-      includeCode={isCodeWalkthroughPhase(slug) || Boolean(content.code)}
-      showOrientationExtras
+      lesson={lesson}
+      minutes={estimateSpokenMinutes(lesson)}
+      nextCard={getNextCard(phase, moduleSlug)}
+      prevHref={prev ? `/roadmap/${phase.slug}/${prev.slug}` : null}
+      prevTitle={prev?.title ?? null}
     />
   );
 }

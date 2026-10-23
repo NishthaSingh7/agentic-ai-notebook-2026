@@ -1,17 +1,18 @@
 export const siteConfig = {
-  name: "Agentic AI Notebook 2026",
-  tagline: "Study agents. Build systems. Ship to production.",
+  name: "Hello, human",
+  url: "https://hellohumans.netlify.app",
+  tagline: "Learn it properly. Use it in a project. Open any card.",
   description:
-    "A practical notebook for software engineers learning Agentic AI — from LLMs and RAG to autonomous agents, frameworks, and production deployment.",
+    "A free path for learning AI in plain English, from a first chat to a small agent you can actually use. Topics already studied are written up in Notes.",
   copyright: {
     holder: "Nishtha Singh",
-    year: 2026,
+    year: 2027,
     repoUrl: "https://github.com/NishthaSingh7/agentic-ai-notebook-2026",
   },
   hero: {
-    eyebrow: "Free curriculum · Open source",
-    title: "Agentic AI Engineering",
-    titleLead: "Master",
+    eyebrow: "Free to read",
+    title: "Hello, human",
+    titleLead: "Learn",
   },
   github: {
     username: "NishthaSingh7",

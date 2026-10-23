@@ -1,10 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { ArrowRight, BookOpen, CheckCircle2 } from "lucide-react";
 import type { Phase } from "@/data/roadmap";
-import { cn } from "@/lib/utils";
 import { useProgress } from "@/hooks/use-progress";
 
 interface PhaseCardProps {
@@ -12,75 +9,43 @@ interface PhaseCardProps {
   index: number;
 }
 
-export function PhaseCard({ phase, index }: PhaseCardProps) {
-  const { getPhaseProgress } = useProgress();
-  const progress = getPhaseProgress(phase.slug);
+export function PhaseCard({ phase }: PhaseCardProps) {
+  const { isCompleted } = useProgress();
+  const read = phase.modules.filter((mod) => isCompleted(phase.slug, mod.slug)).length;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ delay: Math.min(index * 0.02, 0.12), duration: 0.25 }}
+    <article
+      className={`card-press group relative flex h-full flex-col rounded-3xl border border-border p-5 hover:border-accent/40 ${phase.color}`}
     >
       <Link
         href={`/roadmap/${phase.slug}`}
-        className="group block rounded-xl border border-border bg-surface p-6 transition-all hover:border-border hover:bg-surface-elevated hover:shadow-lg"
-      >
-        <div className="flex items-start justify-between mb-4">
-          <div>
-            <span className="text-xs font-mono text-text-muted">{phase.subtitle}</span>
-            <div className="flex flex-wrap items-center gap-2 mt-1">
-              <h3 className="text-lg font-semibold group-hover:text-accent transition-colors">
-                {phase.title}
-              </h3>
-              {phase.optional && (
-                <span className="text-[10px] font-medium uppercase tracking-wide text-text-muted bg-surface-elevated border border-border px-1.5 py-0.5 rounded">
-                  Optional
-                </span>
-              )}
-            </div>
-          </div>
-          <div
-            className={cn(
-              "flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br text-white text-sm font-bold",
-              phase.color
-            )}
+        aria-label={phase.title}
+        className="absolute inset-0 z-0 rounded-3xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+      />
+      <div className="pointer-events-none relative z-10 flex items-start justify-between gap-3">
+        <div>
+          <p className="text-xs text-text-muted">{phase.subtitle}</p>
+          <p className="mt-1 text-xl font-semibold text-text-primary">{phase.title}</p>
+        </div>
+        <span className="rounded-full bg-surface/80 px-2 py-1 text-xs text-text-secondary">{phase.id}</span>
+      </div>
+      <p className="pointer-events-none relative z-10 mt-3 text-sm leading-relaxed text-text-secondary">
+        {phase.description}
+      </p>
+      <div className="pointer-events-none relative z-10 mt-4 flex flex-wrap gap-2">
+        {phase.modules.map((mod) => (
+          <Link
+            key={mod.slug}
+            href={`/roadmap/${phase.slug}/${mod.slug}`}
+            className="pointer-events-auto rounded-full bg-surface/80 px-2.5 py-1 text-xs text-text-primary hover:bg-surface"
           >
-            {phase.id}
-          </div>
-        </div>
-
-        <p className="text-sm text-text-secondary leading-relaxed mb-4 line-clamp-2">
-          {phase.description}
-        </p>
-
-        <div className="flex items-center gap-4 text-xs text-text-muted mb-4">
-          <span className="flex items-center gap-1">
-            <BookOpen className="h-3.5 w-3.5" />
-            {phase.modules.length} modules
-          </span>
-          {progress > 0 && (
-            <span className="flex items-center gap-1 text-accent">
-              <CheckCircle2 className="h-3.5 w-3.5" />
-              {progress}%
-            </span>
-          )}
-        </div>
-
-        {progress > 0 && (
-          <div className="h-1 rounded-full bg-surface-elevated mb-4 overflow-hidden">
-            <div
-              className="h-full rounded-full brand-gradient transition-all"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-        )}
-
-        <div className="flex items-center gap-1 text-sm text-accent opacity-0 group-hover:opacity-100 transition-opacity">
-          Start learning <ArrowRight className="h-3.5 w-3.5" />
-        </div>
-      </Link>
-    </motion.div>
+            {mod.title}
+          </Link>
+        ))}
+      </div>
+      <p className="pointer-events-none relative z-10 mt-4 text-xs text-text-muted">
+        {read > 0 ? `${read} read` : "Open any card"}
+      </p>
+    </article>
   );
 }

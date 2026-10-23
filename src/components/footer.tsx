@@ -29,10 +29,10 @@ export function Footer() {
             <h3 className="text-sm font-semibold mb-3">Learn</h3>
             <ul className="space-y-2 text-sm text-text-muted">
               <li><Link href="/roadmap" className="hover:text-text-secondary transition-colors">Roadmap</Link></li>
-              <li><Link href="/challenge" className="hover:text-text-secondary transition-colors">Challenge for a Day</Link></li>
-              <li><Link href="/roadmap/programming-foundations" className="hover:text-text-secondary transition-colors">Programming</Link></li>
-              <li><Link href="/roadmap/genai-foundations" className="hover:text-text-secondary transition-colors">GenAI</Link></li>
-              <li><Link href="/roadmap/agent-foundations" className="hover:text-text-secondary transition-colors">Agents</Link></li>
+              <li><Link href="/notes" className="hover:text-text-secondary transition-colors">Notes</Link></li>
+              <li><Link href="/roadmap/meet-ai" className="hover:text-text-secondary transition-colors">Meet AI</Link></li>
+              <li><Link href="/roadmap/generative-ai" className="hover:text-text-secondary transition-colors">Generative AI</Link></li>
+              <li><Link href="/roadmap/how-an-agent-thinks" className="hover:text-text-secondary transition-colors">Agents</Link></li>
               <li><Link href="/projects" className="hover:text-text-secondary transition-colors">Projects</Link></li>
             </ul>
           </div>

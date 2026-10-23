@@ -1,135 +1,75 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, BookOpen, FolderKanban } from "lucide-react";
-import { getPhaseBySlug, getAdjacentPhase, phases } from "@/data/roadmap";
-import { getLessonReadTime } from "@/data/lessons";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { getAdjacentPhase, getPhaseBySlug, legacyPhaseRedirects, phases } from "@/data/roadmap";
 import { ModuleList } from "@/components/module-list";
-import { PhaseGlossarySearch } from "@/components/phase-glossary-search";
-import { getPhaseGlossaryBundle } from "@/lib/phase-glossary";
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
-  return phases.map((p) => ({ slug: p.slug }));
+  return phases.map((phase) => ({ slug: phase.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const phase = getPhaseBySlug(slug);
   if (!phase) return { title: "Not Found" };
-  return {
-    title: `${phase.title} — ${phase.subtitle}`,
-    description: phase.description,
-  };
+  return { title: phase.title, description: phase.description };
 }
 
 export default async function PhasePage({ params }: Props) {
   const { slug } = await params;
+  const legacy = legacyPhaseRedirects[slug];
+  if (legacy) redirect(legacy);
+
   const phase = getPhaseBySlug(slug);
   if (!phase) notFound();
 
   const prevPhase = getAdjacentPhase(slug, "prev");
   const nextPhase = getAdjacentPhase(slug, "next");
 
-  const modules = phase.modules.map((mod) => ({
-    slug: mod.slug,
-    title: mod.title,
-    readTime: getLessonReadTime(phase.slug, mod.slug),
-  }));
-  const glossary = getPhaseGlossaryBundle(slug);
-
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
+    <div className="mx-auto w-full min-w-0 max-w-7xl px-4 py-12 sm:px-6">
       <Link
         href="/roadmap"
-        className="inline-flex items-center gap-1.5 text-sm text-text-muted hover:text-text-secondary mb-6 transition-colors"
+        className="inline-flex items-center gap-1.5 text-sm text-text-muted hover:text-text-secondary mb-6"
       >
-        <ArrowLeft className="h-3.5 w-3.5" /> Back to Roadmap
+        <ArrowLeft className="h-3.5 w-3.5" /> Back to the roadmap
       </Link>
 
-      <div className="mb-6">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-mono text-accent">{phase.subtitle}</span>
-          {phase.optional && (
-            <span className="text-xs font-medium text-text-muted bg-surface-elevated border border-border px-2 py-0.5 rounded-full">
-              Optional — not counted in progress
-            </span>
-          )}
-        </div>
-        <h1 className="text-3xl font-bold mt-1 mb-3">{phase.title}</h1>
-        <p className="text-text-secondary max-w-2xl leading-relaxed">{phase.description}</p>
-
-        <div className="flex flex-wrap gap-4 mt-4 text-sm text-text-muted">
-          <span className="flex items-center gap-1.5">
-            <BookOpen className="h-4 w-4" /> {phase.modules.length} modules
-          </span>
-        </div>
-        <p className="text-xs text-text-muted mt-2">
-          Estimated read time is shown per module based on lesson length.
-        </p>
+      <div className={`rounded-3xl p-6 sm:p-8 ${phase.color}`}>
+        <p className="text-xs text-text-muted">{phase.subtitle}</p>
+        <h1 className="mt-1 text-3xl font-semibold text-text-primary">{phase.title}</h1>
+        <p className="mt-3 max-w-xl text-base leading-relaxed text-text-secondary">{phase.description}</p>
+        {phase.optional ? (
+          <p className="mt-3 text-sm text-text-muted">This shelf is optional. The main path does not wait on it.</p>
+        ) : null}
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
-        <div className="lg:col-span-2 order-1">
-          <h2 className="text-lg font-semibold mb-4">Modules</h2>
-          <ModuleList phaseSlug={phase.slug} modules={modules} />
-        </div>
+      <h2 className="mt-10 text-lg font-semibold">What is inside</h2>
+      <p className="mt-1 text-sm text-text-secondary">Open any of these. The order is a good way through, not a lock.</p>
+      <div className="mt-4">
+        <ModuleList phaseSlug={phase.slug} modules={phase.modules} />
+      </div>
 
-        <div className="space-y-5 order-2">
-          {glossary && (
-            <PhaseGlossarySearch
-              variant="sidebar"
-              title={glossary.title}
-              terms={glossary.terms}
-              byCategory={glossary.byCategory}
-              categories={glossary.categories}
-              popularTerms={glossary.popularTerms}
-              searchPlaceholder={glossary.searchPlaceholder}
-            />
-          )}
-
-          {phase.projects && (
-            <div className="rounded-xl border border-border bg-surface p-5">
-              <h3 className="flex items-center gap-2 text-sm font-semibold mb-3">
-                <FolderKanban className="h-4 w-4 text-accent" />
-                Projects
-              </h3>
-              <ul className="space-y-2">
-                {phase.projects.map((project) => (
-                  <li key={project} className="text-sm text-text-secondary flex items-start gap-2">
-                    <span className="text-accent mt-0.5">→</span>
-                    {project}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          <div className="rounded-xl border border-border bg-surface p-5">
-            <h3 className="text-sm font-semibold mb-3">Navigation</h3>
-            <div className="space-y-2">
-              {prevPhase && (
-                <Link
-                  href={`/roadmap/${prevPhase.slug}`}
-                  className="block text-sm text-text-secondary hover:text-accent transition-colors"
-                >
-                  ← {prevPhase.title}
-                </Link>
-              )}
-              {nextPhase && (
-                <Link
-                  href={`/roadmap/${nextPhase.slug}`}
-                  className="block text-sm text-text-secondary hover:text-accent transition-colors"
-                >
-                  {nextPhase.title} →
-                </Link>
-              )}
-            </div>
-          </div>
-        </div>
+      <div className="mt-10 flex flex-col gap-3 border-t border-border pt-6 sm:flex-row sm:justify-between">
+        {prevPhase ? (
+          <Link href={`/roadmap/${prevPhase.slug}`} className="text-sm text-text-secondary hover:text-accent">
+            <ArrowLeft className="mr-1 inline h-3.5 w-3.5" />
+            {prevPhase.title}
+          </Link>
+        ) : (
+          <span />
+        )}
+        {nextPhase ? (
+          <Link href={`/roadmap/${nextPhase.slug}`} className="text-sm text-accent">
+            {nextPhase.title}
+            <ArrowRight className="ml-1 inline h-3.5 w-3.5" />
+          </Link>
+        ) : null}
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { useSession } from "next-auth/react";
@@ -16,14 +17,19 @@ import {
   getPhaseLessonHours,
 } from "@/data/roadmap";
 import { isChallengeKey } from "@/data/challenges";
-import { getRandomCompletionQuote } from "@/data/completion-quotes";
-import { playAchievementSound, playUncheckSound } from "@/lib/achievement-sound";
+import { playPop } from "@/lib/pop-sound";
+import { CompleteBurst } from "@/components/complete-burst";
 import {
-  CompletionCelebration,
-  type CelebrationState,
-} from "@/components/completion-celebration";
+  PROGRESS_MIGRATION_KEY,
+  PROGRESS_NOON_SYNC_KEY,
+  PROGRESS_STORAGE_KEY,
+  isNoonSyncDue,
+  localDateKey,
+  msUntilFollowingNoon,
+  sanitizeProgressKeys,
+} from "@/lib/progress-keys";
 
-const STORAGE_KEY = "agentic-ai-progress";
+const STORAGE_KEY = PROGRESS_STORAGE_KEY;
 
 type ProgressContextValue = {
   completed: Set<string>;
@@ -43,121 +49,136 @@ const ProgressContext = createContext<ProgressContextValue | null>(null);
 function readLocalProgress(): Set<string> {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) return new Set(JSON.parse(stored) as string[]);
+    if (!stored) return new Set();
+    const parsed = JSON.parse(stored) as unknown;
+    if (!Array.isArray(parsed)) return new Set();
+    return new Set(parsed.filter((item): item is string => typeof item === "string"));
   } catch {
-    // ignore
+    return new Set();
   }
-  return new Set();
 }
 
 function writeLocalProgress(completed: Set<string>) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify([...completed]));
 }
 
-async function fetchRemoteProgress(): Promise<string[]> {
-  const response = await fetch("/api/progress");
-  if (!response.ok) return [];
-  const data = await response.json();
-  return Array.isArray(data.completed) ? data.completed : [];
+function readCleanLocalProgress(): string[] {
+  const cleaned = sanitizeProgressKeys(readLocalProgress());
+  writeLocalProgress(new Set(cleaned));
+  return cleaned;
 }
 
 async function saveRemoteProgress(completed: string[]) {
-  await fetch("/api/progress", {
+  const response = await fetch("/api/progress", {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ completed }),
   });
-}
-
-function formatModuleTitle(moduleSlug: string, moduleTitle?: string) {
-  return moduleTitle ?? moduleSlug.replace(/-/g, " ");
+  if (!response.ok) {
+    throw new Error("Could not save progress");
+  }
 }
 
 export function ProgressProvider({ children }: { children: React.ReactNode }) {
   const { status } = useSession();
   const [completed, setCompleted] = useState<Set<string>>(new Set());
-  const [synced, setSynced] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
-  const [celebration, setCelebration] = useState<CelebrationState | null>(null);
+  const [burst, setBurst] = useState<{ id: number; title: string; detail: string } | null>(null);
+  const dismissBurst = useCallback(() => setBurst(null), []);
+  const syncingRef = useRef(false);
 
   useEffect(() => {
-    setCompleted(readLocalProgress());
+    setCompleted(new Set(readCleanLocalProgress()));
   }, []);
 
   useEffect(() => {
-    if (status !== "authenticated" || synced) return;
+    if (status !== "authenticated") return;
 
     let cancelled = false;
+    let timer = 0;
 
-    async function syncProgress() {
+    async function pushLocalProgress() {
+      if (cancelled || syncingRef.current) return;
+
+      const needsMigration = localStorage.getItem(PROGRESS_MIGRATION_KEY) !== "1";
+      const needsNoon = isNoonSyncDue(localStorage.getItem(PROGRESS_NOON_SYNC_KEY));
+      if (!needsMigration && !needsNoon) return;
+
+      const local = sanitizeProgressKeys(readLocalProgress());
+      syncingRef.current = true;
       setIsSyncing(true);
-      const local = readLocalProgress();
-      const remote = await fetchRemoteProgress();
-      const merged = new Set([...local, ...remote]);
-
-      if (cancelled) return;
-
-      setCompleted(merged);
-      writeLocalProgress(merged);
-
-      if (merged.size !== remote.length || [...local].some((item) => !remote.includes(item))) {
-        await saveRemoteProgress([...merged]);
-      }
-
-      if (!cancelled) {
-        setSynced(true);
-        setIsSyncing(false);
+      try {
+        await saveRemoteProgress(local);
+        if (needsMigration) localStorage.setItem(PROGRESS_MIGRATION_KEY, "1");
+        if (needsNoon || isNoonSyncDue(localStorage.getItem(PROGRESS_NOON_SYNC_KEY))) {
+          localStorage.setItem(PROGRESS_NOON_SYNC_KEY, localDateKey());
+        }
+      } catch {
+        // Leave the flags unset so the next visit can try the same replace again.
+      } finally {
+        syncingRef.current = false;
+        if (!cancelled) setIsSyncing(false);
       }
     }
 
-    void syncProgress();
+    function scheduleNextNoon() {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        void pushLocalProgress().finally(() => {
+          if (!cancelled) scheduleNextNoon();
+        });
+      }, msUntilFollowingNoon() + 1000);
+    }
+
+    function onVisible() {
+      if (document.visibilityState === "visible") void pushLocalProgress();
+    }
+
+    void pushLocalProgress();
+    scheduleNextNoon();
+    document.addEventListener("visibilitychange", onVisible);
 
     return () => {
       cancelled = true;
+      window.clearTimeout(timer);
+      document.removeEventListener("visibilitychange", onVisible);
     };
-  }, [status, synced]);
-
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      setSynced(false);
-    }
   }, [status]);
 
-  const dismissCelebration = useCallback(() => setCelebration(null), []);
+  const countedCompleted = useMemo(
+    () =>
+      [...completed].filter((key) => !isOptionalModuleKey(key) && !isChallengeKey(key)).length,
+    [completed]
+  );
 
   const toggleModule = useCallback(
     (phaseSlug: string, moduleSlug: string, moduleTitle?: string) => {
       const key = `${phaseSlug}/${moduleSlug}`;
-      const markingComplete = !completed.has(key);
+      const adding = !completed.has(key);
+
+      if (adding) {
+        playPop();
+        const counted = !isOptionalModuleKey(key) && !isChallengeKey(key);
+        setBurst({
+          id: Date.now(),
+          title: moduleTitle?.trim() || "This card",
+          detail: key.startsWith("notes/")
+            ? "Your notes will remember this one."
+            : counted
+              ? `${countedCompleted + 1} of ${totalModules} on the path.`
+              : "This one sits off the main path. It is still yours.",
+        });
+      }
 
       setCompleted((prev) => {
         const next = new Set(prev);
-        if (next.has(key)) {
-          next.delete(key);
-        } else {
-          next.add(key);
-        }
-
+        if (next.has(key)) next.delete(key);
+        else next.add(key);
         writeLocalProgress(next);
-
-        if (status === "authenticated") {
-          void saveRemoteProgress([...next]);
-        }
-
         return next;
       });
-
-      if (markingComplete) {
-        playAchievementSound();
-        setCelebration({
-          quote: getRandomCompletionQuote(),
-          moduleTitle: formatModuleTitle(moduleSlug, moduleTitle),
-        });
-      } else {
-        playUncheckSound();
-      }
     },
-    [completed, status]
+    [completed, countedCompleted]
   );
 
   const isCompleted = useCallback(
@@ -191,12 +212,6 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     [completed]
   );
 
-  const countedCompleted = useMemo(
-    () =>
-      [...completed].filter((key) => !isOptionalModuleKey(key) && !isChallengeKey(key)).length,
-    [completed]
-  );
-
   const value = useMemo<ProgressContextValue>(
     () => ({
       completed,
@@ -225,7 +240,15 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
   return (
     <ProgressContext.Provider value={value}>
       {children}
-      <CompletionCelebration celebration={celebration} onDismiss={dismissCelebration} />
+      {burst ? (
+        <CompleteBurst
+          key={burst.id}
+          title={burst.title}
+          detail={burst.detail}
+          seed={burst.id}
+          onDismiss={dismissBurst}
+        />
+      ) : null}
     </ProgressContext.Provider>
   );
 }

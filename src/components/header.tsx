@@ -24,21 +24,22 @@ import { BrandLogo } from "./brand-logo";
 
 const primaryNav = [
   { name: "Roadmap", href: "/roadmap" },
-  { name: "Challenge", href: "/challenge" },
+  { name: "Notes", href: "/notes" },
   { name: "Projects", href: "/projects" },
   { name: "Glossary", href: "/glossary" },
 ] as const;
 
 const moreLinks = [
+  { name: "Challenge", href: "/challenge", icon: Bot },
   { name: "Get API Keys", href: "/get-api-keys", icon: KeyRound },
   { name: "Blog", href: "/blog", icon: FileText },
   { name: "About", href: "/about", icon: Info },
 ] as const;
 
 const phaseLinks = [
-  { name: "Programming", href: "/roadmap/programming-foundations", icon: Terminal },
-  { name: "GenAI", href: "/roadmap/genai-foundations", icon: Brain },
-  { name: "Agents", href: "/roadmap/agent-foundations", icon: Bot },
+  { name: "Meet AI", href: "/roadmap/meet-ai", icon: Brain },
+  { name: "Generative AI", href: "/roadmap/generative-ai", icon: Bot },
+  { name: "How an agent thinks", href: "/roadmap/how-an-agent-thinks", icon: Terminal },
 ] as const;
 
 function isActive(pathname: string, href: string) {
@@ -114,12 +115,9 @@ export function Header() {
       <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-xl">
         <div className="mx-auto flex h-14 max-w-7xl items-center gap-4 px-4 sm:px-6">
           {/* Brand */}
-          <Link href="/" className="flex shrink-0 items-center gap-2">
+          <Link href="/" aria-label="Hello, human" className="flex shrink-0 items-center gap-2">
             <BrandLogo />
-            <span className="hidden font-semibold tracking-tight sm:block">
-              Agentic AI
-              <span className="ml-1.5 font-normal text-text-muted">2026</span>
-            </span>
+            <span className="hidden font-semibold tracking-tight sm:block">Hello, human</span>
           </Link>
 
           {/* Desktop nav */}
@@ -199,7 +197,6 @@ export function Header() {
             <div className="sm:hidden">
               <ThemeToggle compact />
             </div>
-
             <UserMenu />
 
             <button

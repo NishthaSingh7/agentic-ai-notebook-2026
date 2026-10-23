@@ -19,7 +19,7 @@ import { siteStats } from "@/data/site-stats";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "About Agentic AI Notebook 2026 — the complete AI Engineering curriculum for software engineers.",
+    "About Hello, human — a plain-English path for learning AI and using it in a project.",
 };
 
 const lessonFlow = [
@@ -77,13 +77,12 @@ export default function AboutPage() {
             {siteConfig.hero.eyebrow}
           </p>
           <h1 className="text-4xl sm:text-5xl font-bold tracking-tight leading-[1.12] mb-5 max-w-3xl">
-            The notebook that should have existed{" "}
-            <span className="gradient-text">the day you decided to learn agents</span>
+            A friend explaining AI,{" "}
+            <span className="gradient-text">with a path you can actually finish</span>
           </h1>
           <p className="text-lg text-text-secondary leading-relaxed max-w-2xl mb-10">
-            {siteConfig.name} is not another box-and-arrow roadmap. It is a full curriculum for
-            software engineers — lessons, diagrams, code, projects, and interview prep in one
-            place.
+            {siteConfig.name} is a free path for anyone who wants to understand AI and use it in a
+            project. The roadmap stays short. Notes is where studied topics get written up. You can open any card.
           </p>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-px rounded-2xl border border-border bg-border overflow-hidden max-w-3xl">
@@ -265,22 +264,21 @@ export default function AboutPage() {
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
         <h2 className="text-2xl sm:text-3xl font-bold mb-3">Start where you are</h2>
         <p className="text-text-secondary max-w-xl mb-8">
-          New to the stack? Begin with programming foundations. Already shipping backends? Jump to
-          GenAI and keep moving.
+          New to this? Start at Meet AI. Already comfortable? Open any chapter. The order is there if you want it.
         </p>
         <div className="flex flex-wrap gap-3">
           <Link
-            href="/roadmap"
+            href="/roadmap/meet-ai"
             className="inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-medium text-on-accent hover:bg-accent/90 transition-colors"
           >
-            View the roadmap
+            Start at the beginning
             <ArrowRight className="h-4 w-4" />
           </Link>
           <Link
-            href="/roadmap/programming-foundations"
+            href="/roadmap"
             className="inline-flex items-center gap-2 rounded-lg border border-border bg-surface px-6 py-3 text-sm font-medium hover:bg-surface-elevated transition-colors"
           >
-            Start with Programming
+            I already know some of this
           </Link>
         </div>
       </section>

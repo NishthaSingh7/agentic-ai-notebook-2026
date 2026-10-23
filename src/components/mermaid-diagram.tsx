@@ -16,6 +16,8 @@ interface MermaidDiagramProps {
   zoomable?: boolean;
   /** Initial zoom level (1 = 100%) */
   defaultZoom?: number;
+  /** Thumbnail cards show one open icon outside this component. */
+  hideCopy?: boolean;
 }
 
 const SKETCH_FONT = "Excalifont, Segoe UI, cursive";
@@ -167,6 +169,21 @@ function CopyMermaidButton({
   );
 }
 
+function fitDiagramSvg(rendered: string) {
+  const opened = rendered.replace(/<svg([^>]*)>/, (_match, attrs: string) => {
+    const cleaned = attrs.replace(/\s(?:width|height)="[^"]*"/g, "");
+    const padded = cleaned.replace(
+      /viewBox="([-\d.]+)[ ,]+([-\d.]+)[ ,]+([-\d.]+)[ ,]+([-\d.]+)"/,
+      (_view, x: string, y: string, w: string, h: string) => {
+        const pad = 28;
+        return `viewBox="${Number(x) - pad} ${Number(y) - pad} ${Number(w) + pad * 2} ${Number(h) + pad * 2}"`;
+      }
+    );
+    return `<svg${padded}>`;
+  });
+  return opened;
+}
+
 const MERMAID_FLOWCHART = {
   htmlLabels: true,
   useMaxWidth: false,
@@ -265,6 +282,7 @@ export function MermaidDiagram({
   editorial,
   zoomable = false,
   defaultZoom = 1,
+  hideCopy = false,
 }: MermaidDiagramProps) {
   const ref = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -306,13 +324,16 @@ export function MermaidDiagram({
       const mermaid = (await import("mermaid")).default;
       mermaid.initialize({
         startOnLoad: false,
-        flowchart: MERMAID_FLOWCHART,
+        flowchart: {
+          ...MERMAID_FLOWCHART,
+          useMaxWidth: compact && !zoomable,
+        },
         ...mermaidTheme(useSketch, editorial),
       });
       const id = `mermaid-${Math.random().toString(36).slice(2)}`;
       const { svg: rendered } = await mermaid.render(id, chart);
       if (!cancelled) {
-        setSvg(rendered);
+        setSvg(compact && !zoomable ? fitDiagramSvg(rendered) : rendered);
         setError(false);
       }
     }
@@ -350,7 +371,7 @@ export function MermaidDiagram({
     return () => {
       cancelled = true;
     };
-  }, [chart, sketch, editorial]);
+  }, [chart, sketch, editorial, compact, zoomable]);
 
   const zoomIn = useCallback(() => {
     setZoom((z) => Math.min(MAX_ZOOM, Math.round((z + ZOOM_STEP) * 100) / 100));
@@ -364,7 +385,7 @@ export function MermaidDiagram({
 
   const containerClass = cn(
     zoomable ? "not-prose" : "overflow-x-auto",
-    !zoomable && (compact ? "p-3 my-3 max-w-lg" : "p-5 my-4"),
+    !zoomable && (compact ? "my-1 w-full min-w-0 max-w-full overflow-x-auto p-1" : "p-5 my-4"),
     editorial
       ? "rounded-xl border border-[#d6d1c6] bg-[#fffdf8] shadow-sm challenge-mermaid"
       : sketch
@@ -383,7 +404,7 @@ export function MermaidDiagram({
           ) : (
             <span />
           )}
-          <CopyMermaidButton chart={chart} compact />
+          {hideCopy ? null : <CopyMermaidButton chart={chart} compact />}
         </div>
         <p className="text-sm text-amber-700 dark:text-amber-400/90 px-4 py-3 not-prose">
           Diagram could not be rendered. Refresh the page or report this module if it persists.
@@ -397,9 +418,9 @@ export function MermaidDiagram({
       ref={ref}
       dangerouslySetInnerHTML={{ __html: svg }}
       className={cn(
-        "inline-block [&_svg]:max-w-none [&_svg]:h-auto [&_svg]:overflow-visible",
+        "block w-full [&_svg]:h-auto [&_svg]:overflow-visible",
         sketch && !editorial && "mermaid-sketch",
-        !zoomable && compact && "scale-[0.92] origin-center"
+        compact && !zoomable && "mermaid-fit"
       )}
     />
   ) : (
@@ -529,9 +550,9 @@ export function MermaidDiagram({
           >
             {title}
           </p>
-          <CopyMermaidButton chart={chart} />
+          {hideCopy ? null : <CopyMermaidButton chart={chart} />}
         </div>
-      ) : (
+      ) : hideCopy ? null : (
         <div className="absolute top-1.5 right-1.5 z-10">
           <CopyMermaidButton chart={chart} compact />
         </div>
@@ -539,7 +560,7 @@ export function MermaidDiagram({
       <div
         className={cn(
           title && !compact ? "px-5 pb-5" : compact ? "pt-1" : "px-5 py-5",
-          "flex justify-center"
+          compact ? "flex justify-start" : "flex justify-center"
         )}
       >
         {diagramContent}
