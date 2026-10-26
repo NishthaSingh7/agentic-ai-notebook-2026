@@ -26,7 +26,7 @@ export interface ApiProvider {
 export const apiKeysIntro = {
   title: "Get your API keys before you build anything",
   subtitle:
-    "Every lesson with runnable code — LLM calls, RAG, agents — needs an API key. Free tiers are enough to complete Phase 1 and most early projects.",
+    "When a card asks you to call a model, you need an API key. Free tiers are enough for the early chapters and most small builds.",
   whyItMatters: [
     "You cannot call Gemini, GPT, or Grok without an API key — there is no workaround.",
     "Free tiers let you experiment without a credit card (Gemini & Grok) or with trial credits (OpenAI).",
@@ -39,7 +39,7 @@ export const apiProviders: ApiProvider[] = [
   {
     id: "gemini",
     name: "Google Gemini",
-    tagline: "Recommended — we use this most in the notebook",
+    tagline: "Recommended — a good first key for this path",
     recommended: true,
     consoleUrl: "https://aistudio.google.com/apikey",
     docsUrl: "https://ai.google.dev/gemini-api/docs",

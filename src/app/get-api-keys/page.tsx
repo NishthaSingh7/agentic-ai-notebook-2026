@@ -69,7 +69,7 @@ export default function GetApiKeysPage() {
             <h2 className="text-2xl font-bold mb-2">Choose your provider</h2>
             <p className="text-text-secondary text-sm">
               Start with <strong className="text-text-primary">Gemini</strong> — it&apos;s free, fast,
-              and what we use most in this notebook. Add OpenAI or Grok when you want to compare
+              and a good first key for this path. Add OpenAI or Grok when you want to compare
               models.
             </p>
           </div>
@@ -216,16 +216,16 @@ export default function GetApiKeysPage() {
 
         {/* CTA */}
         <section className="text-center pb-8">
-          <h2 className="text-2xl font-bold mb-3">Keys ready? Start building.</h2>
+          <h2 className="text-2xl font-bold mb-3">Keys ready? Start the path.</h2>
           <p className="text-text-secondary mb-6 max-w-lg mx-auto text-sm">
-            Head to Phase 1 — Generative AI Foundations and run the code in each module with your new
-            API key.
+            Head to Meet AI, then Generative AI. When a card asks you to call a model, use the key
+            you just made.
           </p>
           <Link
-              href="/roadmap/genai-foundations"
+              href="/roadmap/meet-ai"
               className="inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-medium text-on-accent hover:bg-accent/90 transition-colors"
             >
-              Start Phase 1 — GenAI
+              Start at Meet AI
               <ArrowRight className="h-4 w-4" />
             </Link>
         </section>

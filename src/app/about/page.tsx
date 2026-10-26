@@ -6,7 +6,6 @@ import {
   Code,
   Github,
   Heart,
-  MessageSquare,
   PenLine,
   Sparkles,
   Target,
@@ -22,79 +21,67 @@ export const metadata: Metadata = {
     "About Hello, human — a plain-English path for learning AI and using it in a project.",
 };
 
-const lessonFlow = [
-  "Concept",
-  "Why",
-  "Analogy",
-  "Technical",
-  "Architecture",
-  "Example",
-  "Code",
-  "Project",
-  "Interview",
-  "Revision",
-];
+const lessonFlow = ["A picture", "Story", "Plain words", "Example", "Try this", "Remember"];
 
 const audience = [
   {
     icon: Users,
-    title: "Software engineers",
-    desc: "Full stack, backend, frontend — you already ship code. This is the AI layer.",
+    title: "People who build things",
+    desc: "You write software, or you are learning to. This is the AI layer, told like a friend would tell it.",
   },
   {
     icon: Target,
     title: "Career switchers",
-    desc: "Experienced developers entering AI engineering without starting from a textbook.",
+    desc: "You already ship code. You want agents and models without starting from a textbook.",
   },
   {
     icon: BookOpen,
     title: "Self-learners",
-    desc: "A structured path. No bootcamp price tag. Progress that actually saves.",
+    desc: "A short path. No bootcamp price. Open any card when you want it.",
   },
   {
-    icon: MessageSquare,
-    title: "Interview prep",
-    desc: "Theory, coding, and system design for agent and AI platform roles.",
+    icon: Sparkles,
+    title: "Curious builders",
+    desc: "You want one helper you can actually finish, not nine unfinished apps.",
   },
 ];
 
 const contributions = [
-  { icon: PenLine, text: "Fix typos or unclear explanations in any module" },
-  { icon: BookOpen, text: "Add revision notes from your own study sessions" },
-  { icon: Code, text: "Suggest better code examples or real-world analogies" },
-  { icon: Sparkles, text: "Propose glossary terms or interview questions" },
+  { icon: PenLine, text: "Fix a line that is unclear, or a typo you spotted" },
+  { icon: BookOpen, text: "Add a note from something you already studied" },
+  { icon: Code, text: "Suggest a clearer example or a better try-this" },
+  { icon: Sparkles, text: "Propose a glossary term that would have helped you" },
 ];
 
 export default function AboutPage() {
   return (
     <div>
       <section className="relative overflow-hidden border-b border-border">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(194,65,12,0.10),transparent)]" />
-        <div className="absolute inset-0 grid-bg opacity-40" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(184,94,64,0.10),transparent)]" />
 
         <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24">
-          <p className="text-sm font-semibold uppercase tracking-wider text-accent mb-4">
+          <p className="mb-4 text-sm font-semibold uppercase tracking-wider text-accent">
             {siteConfig.hero.eyebrow}
           </p>
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight leading-[1.12] mb-5 max-w-3xl">
-            A friend explaining AI,{" "}
-            <span className="gradient-text">with a path you can actually finish</span>
+          <h1 className="mb-5 max-w-3xl text-4xl font-bold leading-[1.12] tracking-tight sm:text-5xl">
+            A friend explaining AI, with a path you can actually finish
           </h1>
-          <p className="text-lg text-text-secondary leading-relaxed max-w-2xl mb-10">
+          <p className="mb-10 max-w-2xl text-lg leading-relaxed text-text-secondary">
             {siteConfig.name} is a free path for anyone who wants to understand AI and use it in a
-            project. The roadmap stays short. Notes is where studied topics get written up. You can open any card.
+            project. The roadmap stays short. Notes is where studied topics get written up. You can
+            open any card.
           </p>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-px rounded-2xl border border-border bg-border overflow-hidden max-w-3xl">
+          <div className="grid max-w-3xl grid-cols-2 overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-4 gap-px">
             {[
-              { value: siteStats.phases, label: "Phases" },
-              { value: siteStats.modules, label: "Modules" },
-              { value: siteStats.projects, label: "Projects" },
+              { value: siteStats.phases, label: "Chapters" },
+              { value: siteStats.modules, label: "Cards" },
+              { value: siteStats.projects, label: "Small builds" },
               { value: siteStats.glossaryTerms, label: "Glossary terms" },
             ].map((stat) => (
               <div key={stat.label} className="bg-surface px-4 py-5 text-center">
                 <div className="text-2xl font-bold tabular-nums">{stat.value}</div>
-                <div className="text-xs text-text-muted mt-0.5">{stat.label}</div>
+                <div className="mt-0.5 text-xs text-text-muted">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -102,46 +89,44 @@ export default function AboutPage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
-        <p className="text-xs font-semibold uppercase tracking-wider text-accent mb-3">
-          Why this exists
-        </p>
-        <h2 className="text-2xl sm:text-3xl font-bold mb-8 max-w-2xl">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-accent">Why this exists</p>
+        <h2 className="mb-8 max-w-2xl text-2xl font-bold sm:text-3xl">
           Hundreds of AI roadmaps. Almost none teach you how to actually learn.
         </h2>
 
-        <div className="grid lg:grid-cols-2 gap-4">
+        <div className="grid gap-4 lg:grid-cols-2">
           <div className="rounded-2xl border border-border bg-surface p-6 sm:p-8">
-            <p className="text-xs font-semibold uppercase tracking-wider text-text-muted mb-4">
+            <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-text-muted">
               Typical roadmap sites
             </p>
             <ul className="space-y-3 text-sm text-text-secondary">
               {[
                 "Boxes and arrows — what to learn, never how",
-                "No notes to revise the night before an interview",
-                "No architecture, no code, no hour-by-hour build",
+                "No short card you can finish in one sitting",
+                "No picture, no story, no try-this",
                 "You still have to Google the rest",
               ].map((item) => (
                 <li key={item} className="flex gap-2.5">
-                  <X className="h-4 w-4 shrink-0 text-text-muted mt-0.5" />
+                  <X className="mt-0.5 h-4 w-4 shrink-0 text-text-muted" />
                   {item}
                 </li>
               ))}
             </ul>
           </div>
 
-          <div className="rounded-2xl border border-accent/30 bg-gradient-to-br from-accent/10 via-surface to-royal/10 p-6 sm:p-8">
-            <p className="text-xs font-semibold uppercase tracking-wider text-accent mb-4">
-              This notebook
+          <div className="rounded-2xl border border-accent/30 bg-surface-elevated p-6 sm:p-8">
+            <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-accent">
+              This path
             </p>
             <ul className="space-y-3 text-sm text-text-secondary">
               {[
-                "Every module is a lesson — concept through production",
-                "Diagrams first, then the why, then working code",
-                "Projects with blueprints, not a title and a prayer",
-                "Interview questions sitting next to the topic they test",
+                "Every card is a short lesson you can leave whenever",
+                "A picture, a story, plain words, an example, then a try",
+                "One small build at the end of each chapter",
+                "Notes for topics already studied, not a second course",
               ].map((item) => (
                 <li key={item} className="flex gap-2.5">
-                  <Sparkles className="h-4 w-4 shrink-0 text-accent mt-0.5" />
+                  <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
                   {item}
                 </li>
               ))}
@@ -152,15 +137,13 @@ export default function AboutPage() {
 
       <section className="border-y border-border bg-surface">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
-          <p className="text-xs font-semibold uppercase tracking-wider text-accent mb-3">
-            The approach
-          </p>
-          <h2 className="text-2xl sm:text-3xl font-bold mb-3 max-w-2xl">
-            Roadmap.sh energy. Course-level depth. Interview handbook included.
+          <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-accent">The approach</p>
+          <h2 className="mb-3 max-w-2xl text-2xl font-bold sm:text-3xl">
+            Spoken English. One spine. Open any card.
           </h2>
-          <p className="text-text-secondary max-w-2xl mb-8">
-            Think a learning path, a lab, and a revision notebook fused together. Every topic
-            follows the same spine so you never wonder what to do next.
+          <p className="mb-8 max-w-2xl text-text-secondary">
+            Every module on the path uses the same shape, so you never wonder what comes next on the
+            page.
           </p>
 
           <div className="flex flex-wrap gap-2">
@@ -169,9 +152,9 @@ export default function AboutPage() {
                 <span className="rounded-full border border-border bg-background px-3 py-1.5 text-sm font-medium">
                   {step}
                 </span>
-                {i < lessonFlow.length - 1 && (
-                  <ArrowRight className="h-3.5 w-3.5 text-text-muted hidden sm:block" />
-                )}
+                {i < lessonFlow.length - 1 ? (
+                  <ArrowRight className="hidden h-3.5 w-3.5 text-text-muted sm:block" />
+                ) : null}
               </span>
             ))}
           </div>
@@ -179,39 +162,33 @@ export default function AboutPage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
-        <div className="grid lg:grid-cols-[1fr_0.9fr] gap-10 items-start">
+        <div className="grid items-start gap-10 lg:grid-cols-[1fr_0.9fr]">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-accent mb-3">
-              Built for
+            <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-accent">Built for</p>
+            <h2 className="mb-4 text-2xl font-bold sm:text-3xl">People who want to use AI, not only name it</h2>
+            <p className="mb-8 leading-relaxed text-text-secondary">
+              If you can follow a short story and try one thing, you can walk this path. Intuition
+              first. A project you can finish.
             </p>
-            <h2 className="text-2xl sm:text-3xl font-bold mb-4">Engineers, by engineers</h2>
-            <p className="text-text-secondary leading-relaxed mb-8">
-              If you can ship software, you can learn this stack. Intuition over proofs. Production
-              over papers. Enough depth to pass interviews and keep systems up.
-            </p>
-            <div className="grid sm:grid-cols-2 gap-3">
+            <div className="grid gap-3 sm:grid-cols-2">
               {audience.map((item) => (
-                <div
-                  key={item.title}
-                  className="rounded-2xl border border-border bg-surface p-5"
-                >
-                  <item.icon className="h-5 w-5 text-accent mb-3" />
-                  <h3 className="font-semibold text-sm mb-1">{item.title}</h3>
-                  <p className="text-xs text-text-secondary leading-relaxed">{item.desc}</p>
+                <div key={item.title} className="rounded-2xl border border-border bg-surface p-5">
+                  <item.icon className="mb-3 h-5 w-5 text-accent" />
+                  <h3 className="mb-1 text-sm font-semibold">{item.title}</h3>
+                  <p className="text-xs leading-relaxed text-text-secondary">{item.desc}</p>
                 </div>
               ))}
             </div>
           </div>
 
           <div className="rounded-3xl border border-border bg-surface p-6 sm:p-8">
-            <p className="text-xs font-semibold uppercase tracking-wider text-text-muted mb-3">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-text-muted">
               Not built for
             </p>
-            <h3 className="text-xl font-bold mb-3">Researchers and proof-first paths</h3>
-            <p className="text-sm text-text-secondary leading-relaxed">
-              AI researchers, PhD students, or anyone who wants heavy mathematical derivations.
-              This curriculum is engineering-focused — interviews and production, with intuition
-              over equations.
+            <h3 className="mb-3 text-xl font-bold">Researchers and proof-first paths</h3>
+            <p className="text-sm leading-relaxed text-text-secondary">
+              AI researchers, PhD students, or anyone who wants heavy mathematical derivations. This
+              path is for understanding and using AI in a project, with plain words over equations.
             </p>
           </div>
         </div>
@@ -219,31 +196,28 @@ export default function AboutPage() {
 
       <section
         id="contribute"
-        className="scroll-mt-24 border-y border-border bg-gradient-to-br from-accent/8 via-surface to-royal/8"
+        className="scroll-mt-24 border-y border-border bg-surface-elevated"
       >
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent/10 border border-accent/20">
+          <div className="mb-4 flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-accent/20 bg-accent/10">
               <Heart className="h-5 w-5 text-accent" />
             </div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-accent">
-              Open curriculum
-            </p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-accent">Open path</p>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-bold mb-3">Contribute while you learn</h2>
-          <p className="text-text-secondary max-w-2xl mb-8">
-            The notebook is meant to grow with the people using it. Spot something unclear? Have a
-            better example? Leave it better than you found it — that is how this project is supposed
-            to work.
+          <h2 className="mb-3 text-2xl font-bold sm:text-3xl">Contribute while you learn</h2>
+          <p className="mb-8 max-w-2xl text-text-secondary">
+            This site is meant to grow with the people using it. Spot something unclear? Have a
+            better example? Leave it better than you found it.
           </p>
 
-          <ul className="grid sm:grid-cols-2 gap-3 mb-8 max-w-3xl">
+          <ul className="mb-8 grid max-w-3xl gap-3 sm:grid-cols-2">
             {contributions.map((item) => (
               <li
                 key={item.text}
                 className="flex items-start gap-3 rounded-xl border border-border bg-background/70 px-4 py-3 text-sm text-text-secondary"
               >
-                <item.icon className="h-4 w-4 text-accent shrink-0 mt-0.5" />
+                <item.icon className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
                 {item.text}
               </li>
             ))}
@@ -253,7 +227,7 @@ export default function AboutPage() {
             href={siteConfig.copyright.repoUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-5 py-2.5 text-sm font-medium hover:bg-surface-elevated transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-5 py-2.5 text-sm font-medium hover:bg-surface transition-colors"
           >
             <Github className="h-4 w-4" />
             Open on GitHub
@@ -262,14 +236,15 @@ export default function AboutPage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
-        <h2 className="text-2xl sm:text-3xl font-bold mb-3">Start where you are</h2>
-        <p className="text-text-secondary max-w-xl mb-8">
-          New to this? Start at Meet AI. Already comfortable? Open any chapter. The order is there if you want it.
+        <h2 className="mb-3 text-2xl font-bold sm:text-3xl">Start where you are</h2>
+        <p className="mb-8 max-w-xl text-text-secondary">
+          New to this? Start at Meet AI. Already comfortable? Open any chapter. The order is there if
+          you want it.
         </p>
         <div className="flex flex-wrap gap-3">
           <Link
             href="/roadmap/meet-ai"
-            className="inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-medium text-on-accent hover:bg-accent/90 transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-medium text-on-accent hover:bg-accent-dim transition-colors"
           >
             Start at the beginning
             <ArrowRight className="h-4 w-4" />
