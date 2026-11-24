@@ -1,119 +1,27 @@
-# Agentic AI Notebook 2026
+# agentic-ai-notebook-2026
 
-**Study agents. Build systems. Ship to production.**
+## Project name
+Agentic AI Notebook 2026
 
-A free, open-source curriculum notebook for **software engineers** and **future AI engineers** who want to learn Agentic AI the practical way — structured lessons, real code, diagrams, examples, and hands-on projects.
+## Year
+2026
 
-**Live site:** [agentic-ai-notebook-2026.netlify.app](https://agentic-ai-notebook-2026.netlify.app)
+## Purpose
+A free, open-source Agentic AI curriculum for software engineers — structured lessons, real code, diagrams, examples, and hands-on projects from programming foundations to production-grade agent systems.
 
----
+## Features
+- 30 phases covering GenAI, RAG, agents, memory, tools, MCP, frameworks, eval, security, runtime, AG-UI, and production
+- Hundreds of modules with concept, diagram, code example, project tie-in, and revision notes
+- Portfolio-style projects from beginner to production
+- Glossary terms with definitions, analogies, and interview tips
+- Google sign-in and MongoDB progress sync (guests use localStorage)
+- Mermaid architecture diagrams and Framer Motion UI
 
-## Who is this for?
+## Tech Stack used
+- Next.js 15, React 19, TypeScript, MDX
+- Auth.js (NextAuth) with Google Sign-In
+- MongoDB Atlas, Tailwind CSS 4
+- Mermaid, Framer Motion, Lucide React
 
-This website is built for **engineers, by engineers** — whether you are already shipping software or preparing to become an AI engineer. No fluff, no hype lists. Just a clear path from programming foundations to production-grade agent systems.
-
-**You will learn:**
-
-- LLMs, embeddings, prompt engineering, and context engineering
-- RAG pipelines, vector search, and graph RAG
-- Agent loops, memory, tool calling, and MCP
-- Frameworks like LangGraph, OpenAI Agents SDK, Claude Agent SDK, CrewAI, PydanticAI, Microsoft Agent Framework, and Google ADK
-- AG-UI, evaluation, security, durable runtimes, and production deployment
-
----
-
-## What's inside
-
-| | |
-|---|---|
-| **30 phases** | Programming → GenAI → RAG → Agents → Memory → Context → Tools → MCP → Frameworks (LangGraph, OpenAI, Claude, CrewAI, PydanticAI, Microsoft AF, ADK) → Eval → Security → Runtime → AG-UI → Production → Capstones (+ optional Phase 1.1 ML) |
-| **383 modules** | Concept, diagram, code example, project tie-in, and revision notes |
-| **8 projects** | Beginner to production portfolio ideas |
-| **74 glossary terms** | Definitions, analogies, and interview tips |
-
-All roadmap phases and modules are live with lesson content. Interview prep is built but hidden from navigation until a later release.
-
----
-
-## Run locally
-
-```bash
-# Install dependencies
-npm install
-
-# Copy env template and fill in values (see Auth setup below)
-cp .env.example .env.local
-
-# Development (with hot reload)
-npm run dev
-
-# Production build + server preview
-npm run serve
-
-# Production build only
-npm run build
-```
-
-Open [http://localhost:3000](http://localhost:3000).
-
----
-
-## Auth setup (Phase 2)
-
-Google Sign-In and MongoDB power saved progress across devices.
-
-1. **MongoDB Atlas** — create a free cluster and database user. Copy the connection string into `MONGODB_URI`.
-2. **Google OAuth** — in [Google Cloud Console](https://console.cloud.google.com/apis/credentials), create an OAuth 2.0 Web client.
-   - Authorized redirect URI (local): `http://localhost:3000/api/auth/callback/google`
-   - Authorized redirect URI (production): `https://agentic-ai-notebook-2026.netlify.app/api/auth/callback/google`
-3. **Auth.js secret** — run `openssl rand -base64 32` and set `AUTH_SECRET`.
-4. Copy `.env.example` → `.env.local` and fill in all values.
-5. On Netlify, add the same env vars under **Site settings → Environment variables**.
-
-Signed-in users sync module progress to MongoDB. Guests still use browser `localStorage`.
-
----
-
-## Tech stack
-
-- **Next.js 15** · React 19 · TypeScript
-- **Auth.js (NextAuth)** · Google Sign-In
-- **MongoDB Atlas** · user sessions & progress sync
-- **Tailwind CSS v4**
-- **Mermaid** for architecture diagrams
-- **Framer Motion** for UI animations
-
----
-
-## Contribute — we'd love your help
-
-This is an **open curriculum**. If you are learning along the way, your contributions help the next engineer on this path.
-
-**Ways to contribute:**
-
-- Fix typos or unclear explanations
-- Add better code examples or diagrams
-- Expand glossary terms or interview questions
-- Write or improve lesson content for draft phases
-- Share revision notes from your own study
-
-1. Fork the repo
-2. Create a branch (`git checkout -b improve/rag-chunking-lesson`)
-3. Make your changes
-4. Open a Pull Request
-
-See the [About page](src/app/about/page.tsx) for more on how to contribute.
-
----
-
-## Author
-
-Built by **[NishthaSingh7](https://github.com/NishthaSingh7)** — follow for updates and contribute if this helps your learning journey.
-
----
-
-## License
-
-Copyright © 2026 [Nishtha Singh](https://github.com/NishthaSingh7). Released under the [MIT License](LICENSE).
-
-You may fork and use this project, but please keep the original copyright notice and credit the source repository.
+## Project link
+https://agentic-ai-notebook-2026.netlify.app
